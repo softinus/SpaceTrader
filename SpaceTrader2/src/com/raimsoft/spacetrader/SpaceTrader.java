@@ -60,7 +60,7 @@ public class SpaceTrader extends Activity implements SensorEventListener
 			switch ( event.sensor.getType() )
 			{
 				case	Sensor.TYPE_ACCELEROMETER:
-						gMain.fSensorX = event.values[1];
+						gMain.fSensorX = event.values[0];
 						break;
 			}
 		}
