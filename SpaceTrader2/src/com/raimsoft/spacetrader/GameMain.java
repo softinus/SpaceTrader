@@ -1,11 +1,11 @@
 package com.raimsoft.spacetrader;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.raimsoft.spacetrader.R;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.Log;
@@ -16,7 +16,7 @@ import bayaba.engine.lib.Sprite;
 public class GameMain
 {
 	public float fSensorX = 0; // 가로축 센서 값
-	public float fShipVelo = 0; // 함선속도
+	public float fShipVelo = 13.0f; // 함선속도
 	
 	public GL10 gl;
 	public Context MainContext;
@@ -30,7 +30,8 @@ public class GameMain
 	
 	private GameObject objShip= new GameObject();
 	//private GameObject objStar= new GameObject();
-	private ArrayList<GameObject> arrStar= new ArrayList<GameObject>();
+	//private ArrayList<GameObject> arrStar= new ArrayList<GameObject>();
+	private Queue<GameObject> qStar= new LinkedList<GameObject>();
 	
 	private Random rand = new Random();
 	
@@ -53,23 +54,37 @@ public class GameMain
 			
 		objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY-100, 0, 0 );
 		
-		for(int i=0; i<=500; ++i)
-			arrStar.add( new GameObject() );
+		for(int i=0; i<=30; ++i)
+			qStar.offer(new GameObject());
 		
 		this.MakeStar();
 	}
 	
 	private void MakeStar()
 	{
+//		GameObject[] arrStar= (GameObject[]) qStar.toArray();
+//		
+//		for(int i=0; i<arrStar.length; ++i)
+//		{
+//			arrStar[i].SetObject( sprStar, 0, 0, rand.nextInt((int)gInfo.ScreenX), -1*i*(rand.nextInt(50)+25), 0, 0 );
+//			float fRandomScale= rand.nextFloat();
+//			arrStar[i].scalex= fRandomScale;
+//			arrStar[i].scaley= fRandomScale;
+//		}
+		
 		int nCount= 0;
-		for(GameObject GO : arrStar)
+		for(GameObject GO : qStar)
 		{
 			++nCount;
-			GO.SetObject( sprStar, 0, 0, rand.nextInt((int)gInfo.ScreenX), -1*nCount*(rand.nextInt(50)+25), 0, 0 );
+			GO.SetObject( sprStar, 0, 0, rand.nextInt((int)gInfo.ScreenX), -1*nCount*(rand.nextInt(50)+25)+gInfo.ScreenY, 0, 0 );
 			float fRandomScale= rand.nextFloat();
 			GO.scalex= fRandomScale;
 			GO.scaley= fRandomScale;
 		}
+		
+		
+		
+		
 	}
 	
 	public void DoGame()
@@ -87,7 +102,7 @@ public class GameMain
 	{		
 		//main_bg.PutImage(gInfo, 0, 0, 0);
 		
-		for(GameObject GO : arrStar)
+		for(GameObject GO : qStar)
 			GO.DrawSprite(gInfo);
 				
 		objShip.DrawSprite(gInfo);
@@ -113,12 +128,22 @@ public class GameMain
 	
 	private void UpdateStar()
 	{
-		for(GameObject GO : arrStar)
-			GO.y += 13;
+		for(GameObject GO : qStar)
+			GO.y += fShipVelo;
 				
-		if(arrStar.get(arrStar.size()-1).y > gInfo.ScreenY)
+		if( qStar.peek() != null )
 		{
-			MakeStar();
+			if( qStar.peek().y > gInfo.ScreenY )
+			{
+				qStar.poll();
+				
+				GameObject star= new GameObject();
+				star.SetObject( sprStar, 0, 0, rand.nextInt((int)gInfo.ScreenX), -1*(rand.nextInt(50)+25), 0, 0 );
+				float fRandomScale= rand.nextFloat();
+				star.scalex= fRandomScale;
+				star.scaley= fRandomScale;
+				qStar.offer(star);
+			}
 		}
 	}
 }
