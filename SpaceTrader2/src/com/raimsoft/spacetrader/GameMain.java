@@ -27,11 +27,13 @@ public class GameMain
 	private Sprite main_bg= new Sprite();
 	private Sprite sprShip = new Sprite();
 	private Sprite sprStar= new Sprite();
+	private Sprite sprMetoer= new Sprite();
 	
 	private GameObject objShip= new GameObject();
 	//private GameObject objStar= new GameObject();
 	//private ArrayList<GameObject> arrStar= new ArrayList<GameObject>();
 	private Queue<GameObject> qStar= new LinkedList<GameObject>();
+	private Queue<GameObject> qMetoer= new LinkedList<GameObject>();
 	
 	private Random rand = new Random();
 	
@@ -51,27 +53,24 @@ public class GameMain
 		main_bg.LoadSprite( gl, MainContext, R.drawable.main_bg, "main_bg.spr" );
 		sprShip.LoadSprite( gl, MainContext, R.drawable.resource_2, "ship_1.spr" );
 		sprStar.LoadSprite( gl, MainContext, R.drawable.resource_2, "star_1.spr" );
+		sprMetoer.LoadSprite( gl, MainContext, R.drawable.resource_2, "meteor.spr" );
 			
 		objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY-100, 0, 0 );
+		objShip.scalex= 0.5f;
+		objShip.scaley= 0.5f;
 		
 		for(int i=0; i<=30; ++i)
 			qStar.offer(new GameObject());
 		
+		for(int i=0; i<=3; ++i)
+			qMetoer.offer(new GameObject());
+		
 		this.MakeStar();
+		this.MakeMetoer();
 	}
 	
 	private void MakeStar()
-	{
-//		GameObject[] arrStar= (GameObject[]) qStar.toArray();
-//		
-//		for(int i=0; i<arrStar.length; ++i)
-//		{
-//			arrStar[i].SetObject( sprStar, 0, 0, rand.nextInt((int)gInfo.ScreenX), -1*i*(rand.nextInt(50)+25), 0, 0 );
-//			float fRandomScale= rand.nextFloat();
-//			arrStar[i].scalex= fRandomScale;
-//			arrStar[i].scaley= fRandomScale;
-//		}
-		
+	{		
 		int nCount= 0;
 		for(GameObject GO : qStar)
 		{
@@ -81,10 +80,16 @@ public class GameMain
 			GO.scalex= fRandomScale;
 			GO.scaley= fRandomScale;
 		}
-		
-		
-		
-		
+	}
+	
+	private void MakeMetoer()
+	{		
+		int nCount= 0;
+		for(GameObject GO : qMetoer)
+		{
+			++nCount;
+			GO.SetObject( sprMetoer, 0, 0, rand.nextInt((int)gInfo.ScreenX), -1*nCount*500, rand.nextInt(4), 0 );
+		}
 	}
 	
 	public void DoGame()
@@ -105,12 +110,16 @@ public class GameMain
 		for(GameObject GO : qStar)
 			GO.DrawSprite(gInfo);
 				
+		for(GameObject GO : qMetoer)
+			GO.DrawSprite(gInfo);
+				
 		objShip.DrawSprite(gInfo);
 	}
 	
 	private void Update()
 	{
 		this.UpdateStar();
+		this.UpdateMetoer();
 		this.UpdateShip();
 	}
 	
@@ -143,6 +152,24 @@ public class GameMain
 				star.scalex= fRandomScale;
 				star.scaley= fRandomScale;
 				qStar.offer(star);
+			}
+		}
+	}
+	
+	private void UpdateMetoer()
+	{
+		for(GameObject GO : qMetoer)
+			GO.y += fShipVelo;
+				
+		if( qMetoer.peek() != null )
+		{
+			if( qMetoer.peek().y > gInfo.ScreenY )
+			{
+				qMetoer.poll();
+				
+				GameObject mto= new GameObject();
+				mto.SetObject( sprMetoer, 0, 0, rand.nextInt((int)gInfo.ScreenX), -500, rand.nextInt(4), 0 );
+				qMetoer.offer(mto);
 			}
 		}
 	}
