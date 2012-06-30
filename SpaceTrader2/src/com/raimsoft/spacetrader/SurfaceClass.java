@@ -5,37 +5,37 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class SurfaceClass implements android.opengl.GLSurfaceView.Renderer
 {
-	public GameMain sImg;
+	public Game game;
 	public float scaleX, scaleY, sy;
 
-	public SurfaceClass( GameMain dImg )
+	public SurfaceClass( Game _game )
 	{
-		sImg = dImg;
+		game = _game;
 	}
 	
 	@Override
 	public void onSurfaceCreated( GL10 gl, EGLConfig config )
 	{
-		gl.glClearColor( sImg.gInfo.BackR, sImg.gInfo.BackG, sImg.gInfo.BackB, 1.0f );
+		gl.glClearColor( game.gInfo.BackR, game.gInfo.BackG, game.gInfo.BackB, 1.0f );
 		gl.glClearDepthf( 1.0f );
 		gl.glMatrixMode( GL10.GL_PROJECTION );
 		gl.glHint( GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST );
 		
-		scaleX = sImg.gInfo.ScreenXsize * (sImg.gInfo.ScreenXsize / sImg.gInfo.ScreenX);
-		scaleY = sImg.gInfo.ScreenYsize * (sImg.gInfo.ScreenYsize / sImg.gInfo.ScreenY);
-		sy = sImg.gInfo.ScreenYsize - scaleY;
+		scaleX = game.gInfo.ScreenXsize * (game.gInfo.ScreenXsize / game.gInfo.ScreenX);
+		scaleY = game.gInfo.ScreenYsize * (game.gInfo.ScreenYsize / game.gInfo.ScreenY);
+		sy = game.gInfo.ScreenYsize - scaleY;
 
 		gl.glOrthof( 0.0f, scaleX, scaleY, 0.0f, 1.0f, 1.0f );
 		gl.glViewport( 0, 0, (int)scaleX, (int)scaleY );
 
-		sImg.gl = gl;
-		sImg.LoadData();
+		game.SetGL(gl);
+		game.LoadData();
 	}
 	
 	@Override
 	public void onSurfaceChanged( GL10 gl, int width, int height )
 	{
-		gl.glOrthof( 0.0f, sImg.gInfo.ScreenXsize, sImg.gInfo.ScreenYsize, 0.0f, 1.0f, -1.0f );
+		gl.glOrthof( 0.0f, game.gInfo.ScreenXsize, game.gInfo.ScreenYsize, 0.0f, 1.0f, -1.0f );
 		gl.glMatrixMode( GL10.GL_MODELVIEW );
 		gl.glViewport( 0, (int)sy, (int)scaleX, (int)scaleY );
 		
@@ -54,7 +54,7 @@ public class SurfaceClass implements android.opengl.GLSurfaceView.Renderer
 			gl.glClear( GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT );
 			gl.glLoadIdentity();
 			
-			sImg.DoGame();
+			game.DoGame();
 		}
 	}
 }

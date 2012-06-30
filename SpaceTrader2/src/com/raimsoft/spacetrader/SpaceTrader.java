@@ -14,7 +14,7 @@ import bayaba.engine.lib.GameInfo;
 public class SpaceTrader extends Activity implements SensorEventListener
 {
 	private GLView GLView;
-	private GameMain gMain;
+	private Game game;
 	public GameInfo gInfo;
 	
 	private SensorManager sManager;
@@ -38,9 +38,9 @@ public class SpaceTrader extends Activity implements SensorEventListener
         gInfo.ScreenYsize = super.getWindowManager().getDefaultDisplay().getHeight();
         gInfo.SetScale();
         
-        gMain = new GameMain( this, gInfo );
-        GLView = new GLView( this, gMain );
-        GLView.setRenderer( new SurfaceClass(gMain) );
+        game = new Game( this, gInfo );
+        GLView = new GLView( this, game );
+        GLView.setRenderer( new SurfaceClass(game) );
         
         setContentView( GLView );
     }
@@ -60,7 +60,7 @@ public class SpaceTrader extends Activity implements SensorEventListener
 			switch ( event.sensor.getType() )
 			{
 				case	Sensor.TYPE_ACCELEROMETER:
-						gMain.fSensorX = event.values[0];
+						GlobalInput.fSensorX = event.values[0];
 						break;
 			}
 		}
