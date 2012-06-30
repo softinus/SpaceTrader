@@ -6,15 +6,15 @@ import android.view.MotionEvent;
 public class GLView extends GLSurfaceView
 {
 	Context mContext;	
-	public GameMain sImg;
+	public Game game;
 
-	public GLView( Context context, GameMain img )
+	public GLView( Context context, Game img )
 	{
 		super( context );
 		setFocusable( true );
 		
 		mContext = context;
-		sImg = img;
+		game = img;
 	}
 
 	@Override
@@ -29,12 +29,18 @@ public class GLView extends GLSurfaceView
 			case	MotionEvent.ACTION_POINTER_DOWN :
 			case	MotionEvent.ACTION_MOVE	:
 					{
+						GlobalInput.bTouch= true;
+						GlobalInput.fTouchX= event.getX() * game.gInfo.ScalePx;
+						GlobalInput.fTouchY= event.getY() * game.gInfo.ScalePy;
 					}
 					break;
 	
 			case	MotionEvent.ACTION_UP :
 			case	MotionEvent.ACTION_POINTER_UP :
 					{
+						GlobalInput.bTouch= false;
+						GlobalInput.fTouchX= event.getX() * game.gInfo.ScalePx;
+						GlobalInput.fTouchY= event.getY() * game.gInfo.ScalePy;
 					}
 					break;
 		}
