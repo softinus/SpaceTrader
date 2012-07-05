@@ -4,5 +4,6 @@ public enum EnumScene
 {
 	E_MAIN,
 	E_GAME_WRAP,
-	E_GAME_DOCKING
+	E_GAME_DOCKING,
+	E_GAME_MAP
 }

@@ -122,6 +122,11 @@ public class SGameWrap extends SBase
 		{
 			if( objShip.CheckPos( (int)MTO.x , (int)MTO.y ) )
 			{
+				//gInfo.QuakeX= 500.0f;
+				//gInfo.QuakeY= 500.0f;
+				//gInfo.QuakeTimer=System.currentTimeMillis()+1000;
+				gInfo.SetQuake(1000, 6, 2);
+				gInfo.DoQuake();
 				objShip.SetCrash(true, (int)MTO.x, (int)MTO.y);
 			}
 		}

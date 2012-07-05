@@ -10,6 +10,7 @@ import com.raimsoft.spacetrader.scene.EnumScene;
 import com.raimsoft.spacetrader.scene.SBase;
 import com.raimsoft.spacetrader.scene.SGameWrap;
 import com.raimsoft.spacetrader.scene.SMainMenu;
+import com.raimsoft.spacetrader.scene.SWorldMap;
 
 public class Game
 {	
@@ -37,6 +38,13 @@ public class Game
 		{
 			GL10 gl= currScene.backupGL();
 			currScene= new SGameWrap(mContext, gInfo);
+			currScene.SetGL(gl);
+			currScene.LoadData();
+		}
+		else if( currScene.GetMode() == EnumScene.E_GAME_MAP )
+		{
+			GL10 gl= currScene.backupGL();
+			currScene= new SWorldMap(mContext, gInfo);
 			currScene.SetGL(gl);
 			currScene.LoadData();
 		}
