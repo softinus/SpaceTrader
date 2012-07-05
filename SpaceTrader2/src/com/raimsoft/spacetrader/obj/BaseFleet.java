@@ -128,8 +128,8 @@ public class BaseFleet extends GameObject
 			{
 				nHP= 0;
 				this.bDestroyed= true;
-				this.objDestroy.x= x;
-				this.objDestroy.y= y;
+				this.objDestroy.x= this.x;
+				this.objDestroy.y= this.y;
 			}
 			
 			objSpark.show= true;

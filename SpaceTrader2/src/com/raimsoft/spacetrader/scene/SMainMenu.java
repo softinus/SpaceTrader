@@ -49,9 +49,7 @@ public class SMainMenu extends SBase
 		int nX= (int) GlobalInput.fTouchX;
 		int nY= (int) GlobalInput.fTouchY;
 		boolean bTouch= GlobalInput.bTouch;
-		
-		Log.d("Touch point", "X : "+nX+", Y : "+nY);
-		
+				
 		if( btnPlay.CheckPos(nX, nY) && bTouch )
 		{
 			this.SetMode(EnumScene.E_GAME_WRAP);
@@ -61,7 +59,10 @@ public class SMainMenu extends SBase
 			btnPlay.motion= 1;
 
 		if( btnHelp.CheckPos(nX, nY) && bTouch )
+		{
+			this.SetMode(EnumScene.E_GAME_MAP);
 			btnHelp.motion= 4;
+		}
 		else
 			btnHelp.motion= 3;
 		
