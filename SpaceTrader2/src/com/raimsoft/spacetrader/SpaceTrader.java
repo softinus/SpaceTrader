@@ -1,5 +1,7 @@
 package com.raimsoft.spacetrader;
 
+import com.raimsoft.spacetrader.scene.EnumScene;
+
 import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -49,7 +51,7 @@ public class SpaceTrader extends Activity implements SensorEventListener
     @Override
 	public void onBackPressed()
 	{
-    	System.exit(0);
+    	game.onBackPressed();
 	}
 
 	@Override

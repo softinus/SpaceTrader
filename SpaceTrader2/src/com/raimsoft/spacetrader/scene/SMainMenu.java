@@ -1,13 +1,14 @@
 package com.raimsoft.spacetrader.scene;
 
 import android.content.Context;
-import android.util.Log;
+import android.media.MediaPlayer;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.Sprite;
 
 import com.raimsoft.spacetrader.GlobalInput;
 import com.raimsoft.spacetrader.R;
 import com.raimsoft.spacetrader.obj.GameButton;
+import com.raimsoft.spacetrader.util.SoundManager;
 
 public class SMainMenu extends SBase
 {
@@ -24,12 +25,25 @@ public class SMainMenu extends SBase
 	private GameButton btnRank= new GameButton();
 	private GameButton btnOption= new GameButton();
 	private GameButton btnExit= new GameButton();
+	
+	private MediaPlayer Music;
+	private SoundManager Sound;
 
 	
 	@Override
 	public void LoadData()
 	{
 		super.LoadData();
+		
+		Music = MediaPlayer.create(mContext, R.raw.main_theme);
+		Music.setLooping(true);
+		Music.start();
+		
+		Sound= new SoundManager(mContext);
+		Sound.Create();
+		Sound.Load(0, R.raw.button1);		
+		
+		
 		main_bg.LoadSprite( gl, mContext, R.drawable.main_bg, "main_bg.spr" );		
 		sprTitle.LoadSprite( gl, mContext, R.drawable.main_buttons, "main_buttons.spr" );
 		sprButton.LoadSprite( gl, mContext, R.drawable.main_buttons, "main_buttons.spr" );
@@ -52,37 +66,68 @@ public class SMainMenu extends SBase
 				
 		if( btnPlay.CheckPos(nX, nY) && bTouch )
 		{
-			this.SetMode(EnumScene.E_GAME_WRAP);
 			btnPlay.motion= 2;
+			Sound.Play(0);
+			this.SetScene(EnumScene.E_GAME_WRAP);
 		}
 		else
 			btnPlay.motion= 1;
 
 		if( btnHelp.CheckPos(nX, nY) && bTouch )
 		{
-			this.SetMode(EnumScene.E_GAME_MAP);
+			Sound.Play(0);
 			btnHelp.motion= 4;
+			this.SetScene(EnumScene.E_GAME_MAP);
 		}
 		else
 			btnHelp.motion= 3;
 		
 		if( btnRank.CheckPos(nX, nY) && bTouch )
+		{
+			Sound.Play(0);
 			btnRank.motion= 6;
+		}
 		else
 			btnRank.motion= 5;
 		
 		if( btnOption.CheckPos(nX, nY) && bTouch )
+		{
+			Sound.Play(0);
 			btnOption.motion= 8;
+		}
 		else
 			btnOption.motion= 7;
 		
 		if( btnExit.CheckPos(nX, nY) && bTouch )
+		{
+			Sound.Play(0);
 			btnExit.motion= 10;
+			System.exit(0);
+		}
 		else
 			btnExit.motion= 9;
+		
+//		nX= (int) GlobalInput.fTouchX_End;
+//		nY= (int) GlobalInput.fTouchY_End;
+//		
+//		Log.d("GLView::onTouchEvent", "X_END : "+nX + "     Y_END : "+nY);
+//		
+//		if( btnPlay.CheckPos(nX, nY) && btnPlay.motion==2 )
+//			this.SetMode(EnumScene.E_GAME_WRAP);
+//
+//		if( btnHelp.CheckPos(nX, nY) && btnHelp.motion==4 )
+//			this.SetMode(EnumScene.E_GAME_MAP);
+//		
+//		if( btnRank.CheckPos(nX, nY) && btnRank.motion==6 )
+//		
+//		if( btnOption.CheckPos(nX, nY) && btnOption.motion==8 )
+//		
+//		if( btnExit.CheckPos(nX, nY) && btnExit.motion==10 )
+//			System.exit(0);
 	}
 
 	
+
 	@Override
 	public void Render()
 	{
@@ -96,5 +141,25 @@ public class SMainMenu extends SBase
 		btnRank.DrawSprite(gInfo);
 		btnOption.DrawSprite(gInfo);
 		btnExit.DrawSprite(gInfo);
+	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		super.onBackPressed();
+		
+		System.exit(0);
+	}
+	
+	@Override
+	public void ReleaseMemory()
+	{
+		super.ReleaseMemory();
+		
+		sprButton.Release();
+		sprTitle.Release();
+		Sound.Destroy();
+		Music.release();
+		
 	}
 }

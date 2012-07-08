@@ -4,5 +4,5 @@ import bayaba.engine.lib.GameObject;
 
 public class GameButton extends GameObject
 {
-
+	//String strContext
 }

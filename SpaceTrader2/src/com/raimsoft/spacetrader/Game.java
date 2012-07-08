@@ -9,6 +9,7 @@ import com.immersion.uhl.Launcher;
 import com.raimsoft.spacetrader.scene.EnumScene;
 import com.raimsoft.spacetrader.scene.SBase;
 import com.raimsoft.spacetrader.scene.SGameWrap;
+import com.raimsoft.spacetrader.scene.SLogo;
 import com.raimsoft.spacetrader.scene.SMainMenu;
 import com.raimsoft.spacetrader.scene.SWorldMap;
 
@@ -28,15 +29,25 @@ public class Game
 		this.ChangeScene();
 	}
 	
-	private void ChangeScene()
+	public void ChangeScene()
 	{
-		if( currScene == null) 
+		if( currScene == null) 	// 처음 시작시 어디로 갈 것인가?
 		{
+			currScene= new SLogo(mContext, gInfo);
+			//currScene= new SMainMenu(mContext, gInfo);
+		}
+		else if( currScene.GetMode() == EnumScene.E_MAIN )
+		{
+			GL10 gl= currScene.backupGL();
+			currScene.ReleaseMemory();
 			currScene= new SMainMenu(mContext, gInfo);
+			currScene.SetGL(gl);
+			currScene.LoadData();
 		}
 		else if( currScene.GetMode() == EnumScene.E_GAME_WRAP )
 		{
 			GL10 gl= currScene.backupGL();
+			currScene.ReleaseMemory();
 			currScene= new SGameWrap(mContext, gInfo);
 			currScene.SetGL(gl);
 			currScene.LoadData();
@@ -44,10 +55,23 @@ public class Game
 		else if( currScene.GetMode() == EnumScene.E_GAME_MAP )
 		{
 			GL10 gl= currScene.backupGL();
+			currScene.ReleaseMemory();
 			currScene= new SWorldMap(mContext, gInfo);
 			currScene.SetGL(gl);
 			currScene.LoadData();
 		}
+	}
+	
+	public void onBackPressed()
+	{
+		currScene.onBackPressed();
+	}
+	
+	// 설정한 씬으로 강제 전환 (상위클래스에서 주로 이용)
+	public void ChangeScene(EnumScene eMode)
+	{
+		currScene.SetScene(eMode);
+		this.ChangeScene();
 	}
 	
 	public void SetGL(GL10 _gl)
@@ -58,6 +82,13 @@ public class Game
 	public void LoadData()
 	{
 		currScene.LoadData();
+	}
+	
+
+	// 현재 씬 상태를 가져옴
+	public EnumScene GetCurrSceneEnum()
+	{
+		return currScene.GetMode();
 	}
 	
 
