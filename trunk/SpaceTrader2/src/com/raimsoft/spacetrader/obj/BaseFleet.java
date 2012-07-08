@@ -9,6 +9,7 @@ import bayaba.engine.lib.Sprite;
 
 import com.immersion.uhl.Launcher;
 import com.raimsoft.spacetrader.R;
+import com.raimsoft.spacetrader.util.SoundManager;
 
 public class BaseFleet extends GameObject
 {
@@ -21,7 +22,7 @@ public class BaseFleet extends GameObject
 	public boolean bDestroyed= false;
 	
 	private Launcher UHL;
-
+	private SoundManager Sound;
 	
 //	/**
 //	 * @return the nHP
@@ -83,6 +84,13 @@ public class BaseFleet extends GameObject
 		
 		UHL= new Launcher(_context);
 		
+		Sound= new SoundManager(_context);
+		Sound.Create();
+		Sound.Load(0, R.raw.explode);
+		Sound.Load(1, R.raw.spaceship_engine);
+		Sound.Load(2, R.raw.spaceship_spark);
+		Sound.Load(3, R.raw.systems_online);
+		
 		sprFire= new Sprite();
 		sprSpark= new Sprite();
 		sprDestroy= new Sprite();
@@ -96,7 +104,9 @@ public class BaseFleet extends GameObject
 		sprHP.LoadSprite(_gl, _context, R.drawable.resource_2, "number.spr");
 		sprSpark.LoadSprite(_gl, _context, R.drawable.eff_spark_lightning, "eff_light.spr");
 		sprFire.LoadSprite( _gl, _context, R.drawable.fire, "fire.spr" );
-		sprDestroy.LoadSprite( _gl, _context, R.drawable.eff_spark_fire, "eff_fire.spr" );
+		sprDestroy.LoadSprite( _gl, _context, R.drawable.eff_bomb, "eff_bomb.spr" );
+		
+		Sound.Play(3);
 	}
 
 
@@ -123,9 +133,13 @@ public class BaseFleet extends GameObject
 		if(bCrash)
 		{
 			if(nHP-3 > 0)
+			{
+				Sound.Play(2,1 );
 				nHP -= 3;
+			}
 			else
 			{
+				Sound.Play(0);
 				nHP= 0;
 				this.bDestroyed= true;
 				this.objDestroy.x= this.x;
@@ -133,12 +147,12 @@ public class BaseFleet extends GameObject
 			}
 			
 			objSpark.show= true;
-			objSpark.x= x;
-			objSpark.y= y;
+			objSpark.x= this.x;
+			objSpark.y= this.y;
 			this.effect= 1;
 			this.fHandeling= 1.0f; 
 			this.fVelocity= 3.0f;
-			SetFireScale(0.3f);
+			SetFireScale(0.75f);
 			
 			UHL.play(Launcher.IMPACT_METAL_66);
 		}
@@ -158,9 +172,9 @@ public class BaseFleet extends GameObject
 	{
 		super.SetObject(s_pat, s_type, s_layer, s_x, s_y, s_motion, s_frame);
 		objSpark.SetObject(sprSpark, 0, 0, x, y, 0, 0);
-		objFire1.SetObject(sprFire, 0, 0, this.x-21, this.y+25, 0, 0);
-		objFire2.SetObject(sprFire, 0, 0, this.x+11, this.y+25, 0, 0);
-		objFire3.SetObject(sprFire, 0, 0, this.x+25, this.y+25, 0, 0);
+		objFire1.SetObject(sprFire, 0, 0, this.x-21, this.y+55, 0, 0);
+		objFire2.SetObject(sprFire, 0, 0, this.x+11, this.y+55, 0, 0);
+		objFire3.SetObject(sprFire, 0, 0, this.x+25, this.y+55, 0, 0);
 		objDestroy.SetObject(sprDestroy, 0, 0, x, y, 0, 0);
 		
 		SetFireScale(1.0f);
@@ -168,15 +182,15 @@ public class BaseFleet extends GameObject
 	
 	private void SetFireScale(float _ratio)
 	{
-		objSpark.scalex= 0.5f;
-		objSpark.scaley= 0.5f;
+		objSpark.scalex= 0.75f;
+		objSpark.scaley= 0.75f;
 				
-		objFire1.scalex= 0.6f * _ratio;
-		objFire1.scaley= 0.6f * _ratio;
-		objFire2.scalex= 0.4f * _ratio;
-		objFire2.scaley= 0.4f * _ratio;
-		objFire3.scalex= 0.4f * _ratio;
-		objFire3.scaley= 0.4f * _ratio;
+		objFire1.scalex= 0.5f * _ratio;
+		objFire1.scaley= 0.5f * _ratio;
+		objFire2.scalex= 0.3f * _ratio;
+		objFire2.scaley= 0.3f * _ratio;
+		objFire3.scalex= 0.3f * _ratio;
+		objFire3.scaley= 0.3f * _ratio;
 	}
 	
 	
@@ -197,7 +211,7 @@ public class BaseFleet extends GameObject
 	{
 		if(this.bDestroyed)
 		{
-			objDestroy.AddFrameLoop(0.3f);
+			objDestroy.AddFrame(0.3f);
 			objDestroy.DrawSprite(info);
 			return;
 		}
@@ -213,6 +227,15 @@ public class BaseFleet extends GameObject
 		
 		objSpark.AddFrameLoop(0.4f);
 		objSpark.DrawSprite(info);
+	}
+	
+	// 메모리해제
+	public void Release()
+	{
+		sprDestroy.Release();
+		sprFire.Release();
+		sprHP.Release();
+		sprSpark.Release();
 	}
 	
 	

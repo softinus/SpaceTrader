@@ -45,7 +45,7 @@ public class GLView extends GLSurfaceView
 		
 						GlobalInput.fTouchX_gap= GlobalInput.fTouchX - fTouchX_before;
 						GlobalInput.fTouchY_gap= GlobalInput.fTouchY - fTouchY_before;
-						Log.d("GLView::onTouchEvent", "X_GAP : "+GlobalInput.fTouchX_gap + "     Y_GAP : "+GlobalInput.fTouchY_gap);
+						//Log.d("GLView::onTouchEvent", "X_GAP : "+GlobalInput.fTouchX_gap + "     Y_GAP : "+GlobalInput.fTouchY_gap);
 						
 						fTouchX_before= GlobalInput.fTouchX;
 						fTouchY_before= GlobalInput.fTouchY;
@@ -56,6 +56,8 @@ public class GLView extends GLSurfaceView
 			case	MotionEvent.ACTION_POINTER_UP :
 					{
 						GlobalInput.bTouch= false;
+						GlobalInput.fTouchX_End= event.getX() * game.gInfo.ScalePx;
+						GlobalInput.fTouchY_End= event.getX() * game.gInfo.ScalePy;
 //						GlobalInput.fTouchX= event.getX() * game.gInfo.ScalePx;
 //						GlobalInput.fTouchY= event.getY() * game.gInfo.ScalePy;
 					}

@@ -12,7 +12,7 @@ public class SBase
 	protected GL10 gl;
 	
 	public boolean bModeChanged= false;
-	private EnumScene eMode= EnumScene.E_GAME_WRAP;
+	protected EnumScene eMode;
 	
 	/**
 	 * @param mContext
@@ -39,24 +39,25 @@ public class SBase
 	}
 	
 	public void LoadData()
-	{
-	}
+	{	}
 	public void Render()
-	{
-		
-	}
+	{	}
 	
 	public void Update()
-	{
-		
-	}
+	{	}
+	
+	public void ReleaseMemory()
+	{	}
+	
+	public void onBackPressed()
+	{	}
 	
 	public EnumScene GetMode()
 	{
 		return eMode;
 	}
 	
-	public void SetMode(EnumScene _eScene)
+	public void SetScene(EnumScene _eScene)
 	{
 		bModeChanged= true;
 		eMode= _eScene;
