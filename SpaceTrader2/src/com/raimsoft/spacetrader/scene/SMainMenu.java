@@ -2,6 +2,9 @@ package com.raimsoft.spacetrader.scene;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import bayaba.engine.lib.ButtonObject;
+import bayaba.engine.lib.ButtonType;
+import bayaba.engine.lib.Font;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.Sprite;
 
@@ -20,14 +23,16 @@ public class SMainMenu extends SBase
 	private Sprite main_bg= new Sprite();
 	private Sprite sprTitle= new Sprite();
 	private Sprite sprButton= new Sprite();
-	private GameButton btnPlay= new GameButton();
-	private GameButton btnHelp= new GameButton();
-	private GameButton btnRank= new GameButton();
-	private GameButton btnOption= new GameButton();
-	private GameButton btnExit= new GameButton();
+	private ButtonObject btnPlay= new ButtonObject();
+	private ButtonObject btnHelp= new ButtonObject();
+	private ButtonObject btnRank= new ButtonObject();
+	private ButtonObject btnOption= new ButtonObject();
+	private ButtonObject btnExit= new ButtonObject();
 	
 	private MediaPlayer Music;
 	private SoundManager Sound;
+	
+	private Font font = new Font();
 
 	
 	@Override
@@ -48,11 +53,13 @@ public class SMainMenu extends SBase
 		sprTitle.LoadSprite( gl, mContext, R.drawable.main_buttons, "main_buttons.spr" );
 		sprButton.LoadSprite( gl, mContext, R.drawable.main_buttons, "main_buttons.spr" );
 		
-		btnPlay.SetObject(sprButton, 0, 0, 152, 330, 1	, 0);
-		btnHelp.SetObject(sprButton, 0, 0, 152, 400, 3, 0);
-		btnRank.SetObject(sprButton, 0, 0, 152, 470, 5, 0);
-		btnOption.SetObject(sprButton, 0, 0, 152, 540, 7, 0);
-		btnExit.SetObject(sprButton, 0, 0, 152, 610, 9, 0);
+		
+		btnPlay.SetButton(sprButton, ButtonType.TYPE_ONE_CLICK, 0, 152, 330, 1);
+		btnHelp.SetButton(sprButton, ButtonType.TYPE_ONE_CLICK, 0, 152, 400, 3);
+		btnRank.SetButton(sprButton, ButtonType.TYPE_ONE_CLICK, 0, 152, 470, 5);
+		btnOption.SetButton(sprButton, ButtonType.TYPE_ONE_CLICK, 0, 152, 540, 7);
+		btnExit.SetButton(sprButton, ButtonType.TYPE_ONE_CLICK, 0, 152, 610, 9);
+		
 	}
 
 	@Override
@@ -68,7 +75,7 @@ public class SMainMenu extends SBase
 		{
 			btnPlay.motion= 2;
 			Sound.Play(0);
-			this.SetScene(EnumScene.E_GAME_WRAP);
+			this.SetScene(EnumScene.E_GAME_STORY);
 		}
 		else
 			btnPlay.motion= 1;
@@ -77,7 +84,7 @@ public class SMainMenu extends SBase
 		{
 			Sound.Play(0);
 			btnHelp.motion= 4;
-			this.SetScene(EnumScene.E_GAME_MAP);
+			this.SetScene(EnumScene.E_GAME_SYSTEMMAP);
 		}
 		else
 			btnHelp.motion= 3;
@@ -86,6 +93,7 @@ public class SMainMenu extends SBase
 		{
 			Sound.Play(0);
 			btnRank.motion= 6;
+			this.SetScene(EnumScene.E_GAME_GALAXYMAP);
 		}
 		else
 			btnRank.motion= 5;
@@ -136,11 +144,15 @@ public class SMainMenu extends SBase
 		main_bg.PutImage(gInfo, 0, 0);
 		sprTitle.PutImage(gInfo, 113, 55, 0);
 		
-		btnPlay.DrawSprite(gInfo);
-		btnHelp.DrawSprite(gInfo);
-		btnRank.DrawSprite(gInfo);
-		btnOption.DrawSprite(gInfo);
-		btnExit.DrawSprite(gInfo);
+		font.BeginFont();
+		
+		btnPlay.DrawSprite(gl, gInfo, font);
+		btnHelp.DrawSprite(gl, gInfo, font);
+		btnRank.DrawSprite(gl,gInfo, font);
+		btnOption.DrawSprite(gl, gInfo, font);
+		btnExit.DrawSprite(gl, gInfo, font);
+		
+		font.EndFont();
 	}
 	
 	@Override

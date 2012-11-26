@@ -52,6 +52,9 @@ public class SBase
 	public void onBackPressed()
 	{	}
 	
+	public void onTouchEvent()
+	{	}
+	
 	public EnumScene GetMode()
 	{
 		return eMode;
