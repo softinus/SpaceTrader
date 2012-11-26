@@ -5,10 +5,6 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="lib" path="libs/UHL.jar"/>
-	<classpathentry kind="lib" path="libs/bayabalib_pro20120708.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/SpaceTrader2/docs/doc_pro.zip!/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="libs/bayabalib_pro20121113.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

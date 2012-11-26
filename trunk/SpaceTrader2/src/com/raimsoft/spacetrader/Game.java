@@ -8,10 +8,12 @@ import bayaba.engine.lib.GameInfo;
 import com.immersion.uhl.Launcher;
 import com.raimsoft.spacetrader.scene.EnumScene;
 import com.raimsoft.spacetrader.scene.SBase;
+import com.raimsoft.spacetrader.scene.SGalaxyMap;
 import com.raimsoft.spacetrader.scene.SGameWrap;
 import com.raimsoft.spacetrader.scene.SLogo;
 import com.raimsoft.spacetrader.scene.SMainMenu;
-import com.raimsoft.spacetrader.scene.SWorldMap;
+import com.raimsoft.spacetrader.scene.SStartStory;
+import com.raimsoft.spacetrader.scene.SSystemMap;
 
 public class Game
 {	
@@ -44,6 +46,14 @@ public class Game
 			currScene.SetGL(gl);
 			currScene.LoadData();
 		}
+		else if( currScene.GetMode() == EnumScene.E_GAME_STORY )
+		{
+			GL10 gl= currScene.backupGL();
+			currScene.ReleaseMemory();
+			currScene= new SStartStory(mContext, gInfo);
+			currScene.SetGL(gl);
+			currScene.LoadData();
+		}
 		else if( currScene.GetMode() == EnumScene.E_GAME_WRAP )
 		{
 			GL10 gl= currScene.backupGL();
@@ -52,11 +62,19 @@ public class Game
 			currScene.SetGL(gl);
 			currScene.LoadData();
 		}
-		else if( currScene.GetMode() == EnumScene.E_GAME_MAP )
+		else if( currScene.GetMode() == EnumScene.E_GAME_SYSTEMMAP )
 		{
 			GL10 gl= currScene.backupGL();
 			currScene.ReleaseMemory();
-			currScene= new SWorldMap(mContext, gInfo);
+			currScene= new SSystemMap(mContext, gInfo);
+			currScene.SetGL(gl);
+			currScene.LoadData();
+		}
+		else if( currScene.GetMode() == EnumScene.E_GAME_GALAXYMAP )
+		{
+			GL10 gl= currScene.backupGL();
+			currScene.ReleaseMemory();
+			currScene= new SGalaxyMap(mContext, gInfo);
 			currScene.SetGL(gl);
 			currScene.LoadData();
 		}
@@ -65,6 +83,11 @@ public class Game
 	public void onBackPressed()
 	{
 		currScene.onBackPressed();
+	}
+	
+	public void onTouchEvent()
+	{
+		currScene.onTouchEvent();
 	}
 	
 	// 설정한 씬으로 강제 전환 (상위클래스에서 주로 이용)

@@ -16,7 +16,7 @@ public class ProgressMeter
 	GameObject objProgress= new GameObject();
 	GameObject objFlag= new GameObject();
 	
-	public float fDistanceKM= 18000000.0f;
+	public float fDistanceKM= 2200000.0f;	//움직이는거리
 	public float fCurr= 0.0f;
 	private float fDistance= 0.0f;
 	
