@@ -59,7 +59,7 @@ public class SoundManager
 
 	public void Play(int key)
 	{
-		Log.d(LOG_TAG, "play...START");
+		//Log.d(LOG_TAG, "play...START");
 
 		int streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		mSoundPool.play(
@@ -67,19 +67,19 @@ public class SoundManager
 				streamVolume, streamVolume,
 				1, 0, 1f);
 
-		Log.d(LOG_TAG, "play...END");
+		//Log.d(LOG_TAG, "play...END");
 	}
 	
 	public void Play(int key, int volumn)
 	{
-		Log.d(LOG_TAG, "play...START");
+	//	Log.d(LOG_TAG, "play...START");
 
 		mSoundPool.play(
 				mSoundPoolMap.get(key),
 				volumn, volumn,
 				1, 0, 1f);
 
-		Log.d(LOG_TAG, "play...END");
+	//	Log.d(LOG_TAG, "play...END");
 	}
 
 

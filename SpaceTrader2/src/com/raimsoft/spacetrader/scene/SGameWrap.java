@@ -17,6 +17,7 @@ import com.raimsoft.spacetrader.GlobalInput;
 import com.raimsoft.spacetrader.R;
 import com.raimsoft.spacetrader.obj.BaseFleet;
 import com.raimsoft.spacetrader.obj.Meteor;
+import com.raimsoft.spacetrader.obj.Missile;
 import com.raimsoft.spacetrader.obj.ProgressMeter;
 import com.raimsoft.spacetrader.obj.Radar;
 import com.raimsoft.spacetrader.util.SoundManager;
@@ -26,13 +27,15 @@ public class SGameWrap extends SBase
 	private Sprite sprStar = new Sprite();
 	private Sprite sprShip= new Sprite();
 	private Sprite sprMetoer= new Sprite();
+	private Sprite sprMissile= new Sprite();
 	
 	private boolean bReleased= false;
 	private int nMeteorCount= 0;
 	
 	private BaseFleet objShip;					// 나의 함선
-	private Radar objRader;
-	private ProgressMeter objProgress;
+	private Missile	objMissile;					// 미사일
+	private Radar objRader;						// 레이더
+	private ProgressMeter objProgress;			// 프로그레스바
 	
 	private Queue<GameObject> qStar= new LinkedList<GameObject>();
 	private Queue<Meteor> qMetoer= new LinkedList<Meteor>();
@@ -62,6 +65,7 @@ public class SGameWrap extends SBase
 		sprShip.LoadSprite( gl, mContext, R.drawable.resource_2, "ship_1.spr" );
 		sprStar.LoadSprite( gl, mContext, R.drawable.resource_2, "star_1.spr" );
 		sprMetoer.LoadSprite( gl, mContext, R.drawable.resource_2, "meteor.spr" );
+		sprMissile.LoadSprite(gl, mContext, R.drawable.resource_2, "missile_1.spr");
 		
 		objRader= new Radar(gl, gInfo, mContext);
 		objProgress= new ProgressMeter(gl, gInfo, mContext);
@@ -70,8 +74,11 @@ public class SGameWrap extends SBase
 		objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY-100, 0, 0 );
 		objShip.scalex= 0.5f;
 		objShip.scaley= 0.5f;
+
+		objMissile= new Missile(gl, mContext);
+		objMissile.SetObject(sprMissile, 0, 0, objShip.x, objShip.y, 0, 0);
 		
-		for(int i=0; i<=50; ++i)
+		for(int i=0; i<=35; ++i)
 			qStar.offer(new GameObject());
 		
 		for(int i=0; i<=10; ++i)
@@ -98,6 +105,7 @@ public class SGameWrap extends SBase
 			MTO.DrawSprite(gl, gInfo);
 				
 		objShip.DrawSprite(gInfo);
+		objMissile.DrawSprite(gInfo);
 		objRader.DrawObjects(gInfo);
 		objProgress.DrawObjects(gInfo);
 	}
@@ -115,8 +123,10 @@ public class SGameWrap extends SBase
 		
 		objRader.UpdateObjects();
 		objProgress.UpdateObjects();
+		objMissile.UpdateObjects();
 	}
 	
+	// 별 만듦
 	private void MakeStar()
 	{		
 		int nCount= 0;
@@ -130,6 +140,7 @@ public class SGameWrap extends SBase
 		}
 	}
 	
+	// 소행성 만든다.
 	private void MakeMetoer()
 	{		
 		int nCount= 0;
@@ -137,6 +148,16 @@ public class SGameWrap extends SBase
 		{
 			++nCount;
 			MTO.SetObject( sprMetoer, 0, 0, rand.nextInt((int)gInfo.ScreenX), -1*nCount*500, rand.nextInt(3), 0 );
+		}
+	}
+	
+	// 미사일 발사
+	private void FireMissile()
+	{
+		if(!objMissile.isFired())	// 발사안했으면
+		{
+			objMissile.SetObject(sprMissile, 0, 0, objShip.x, objShip.y, 0, 0);
+			objMissile.SetFire(true);
 		}
 	}
 	
@@ -159,6 +180,9 @@ public class SGameWrap extends SBase
 				objShip.SetCrash(true, (int)MTO.x, (int)MTO.y);
 			}
 		}
+		
+		if(GlobalInput.bTouch)	// 터치하면 미사일 나감.
+			FireMissile();
 		
 		// 화면 밖으로 나가는 것 체크
 		if(objShip.x-GlobalInput.fSensorX*2.0f < 0)
@@ -244,6 +268,7 @@ public class SGameWrap extends SBase
 		bReleased= true;
 		
 		objShip.Release();
+		objMissile.Release();
 		sprMetoer.Release();
 		sprShip.Release();
 		sprStar.Release();

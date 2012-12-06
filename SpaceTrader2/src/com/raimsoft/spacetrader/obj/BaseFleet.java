@@ -17,7 +17,7 @@ public class BaseFleet extends GameObject
 {
 	private Random MyRand = new Random();
 	private static int MAX_PARTICLE = 20;
-	private GameObject Particle0[] = new GameObject[MAX_PARTICLE];
+	//private GameObject Particle0[] = new GameObject[MAX_PARTICLE];
 	private GameObject Particle1[] = new GameObject[MAX_PARTICLE];
 	private GameObject Particle2[] = new GameObject[MAX_PARTICLE];
 	private GameObject Particle3[] = new GameObject[MAX_PARTICLE];
@@ -112,7 +112,7 @@ public class BaseFleet extends GameObject
 		sprGlow.LoadSprite( _gl, _context, R.drawable.glow, "glow.spr" );
 		sprDestroy.LoadSprite( _gl, _context, R.drawable.eff_bomb, "eff_bomb.spr" );
 		
-		for ( int i = 0; i < MAX_PARTICLE; i++ ) Particle0[i] = new GameObject();
+		//for ( int i = 0; i < MAX_PARTICLE; i++ ) Particle0[i] = new GameObject();
 		for ( int i = 0; i < MAX_PARTICLE; i++ ) Particle1[i] = new GameObject();
 		for ( int i = 0; i < MAX_PARTICLE; i++ ) Particle2[i] = new GameObject();
 		for ( int i = 0; i < MAX_PARTICLE; i++ ) Particle3[i] = new GameObject();
@@ -195,19 +195,19 @@ public class BaseFleet extends GameObject
 		int cnt0= 0, cnt1= 0, cnt2=0, cnt3=0;		
 		for ( int i = 0; i < MAX_PARTICLE; i++ )
 		{
-			if ( Particle0[i].dead == true )
-			{
-				Particle0[i].SetObject( sprGlow, 0, 0, x, y, 0, 8 );	// 위치
-				Particle0[i].dead = false;
-				Particle0[i].angle= 180;						// 각도
-				Particle0[i].angle -= MyRand.nextInt(14)-7;	// 각도범위
-				Particle0[i].speed = 1f+(MyRand.nextInt(5) * 0.5f);	// 나가는속도
-				Particle0[i].effect = 1;
-				Particle0[i].trans= 0.7f;	// 투명시작
-				Particle0[i].scalex= 0.6f;
-				Particle0[i].scaley= 0.6f;
-				if ( ++cnt0 == 2 ) break;
-			}
+//			if ( Particle0[i].dead == true )
+//			{
+//				Particle0[i].SetObject( sprGlow, 0, 0, x, y, 0, 8 );	// 위치
+//				Particle0[i].dead = false;
+//				Particle0[i].angle= 180;						// 각도
+//				Particle0[i].angle -= MyRand.nextInt(14)-7;	// 각도범위
+//				Particle0[i].speed = 1f+(MyRand.nextInt(5) * 0.5f);	// 나가는속도
+//				Particle0[i].effect = 1;
+//				Particle0[i].trans= 0.7f;	// 투명시작
+//				Particle0[i].scalex= 0.6f;
+//				Particle0[i].scaley= 0.6f;
+//				if ( ++cnt0 == 2 ) break;
+//			}
 		}
 		for ( int i = 0; i < MAX_PARTICLE; i++ )
 		{
@@ -303,16 +303,16 @@ public class BaseFleet extends GameObject
 //		objFire3.AddFrameLoop(1.0f);
 //		objFire3.DrawSprite(info);
 		SetGlowParticle();
-		for ( int i = 0; i < MAX_PARTICLE; i++ )
-		{
-			if ( Particle0[i].dead == false )
-			{
-				Particle0[i].Zoom( info, 0.03f, 0.03f );				
-				Particle0[i].trans -= 0.05f;
-				if ( Particle0[i].trans <= 0 ) Particle0[i].dead = true;				
-				Particle0[i].MovebyAngle( info, Particle0[i].angle, Particle0[i].speed );
-			}
-		}
+//		for ( int i = 0; i < MAX_PARTICLE; i++ )
+//		{
+//			if ( Particle0[i].dead == false )
+//			{
+//				Particle0[i].Zoom( info, 0.03f, 0.03f );				
+//				Particle0[i].trans -= 0.05f;
+//				if ( Particle0[i].trans <= 0 ) Particle0[i].dead = true;				
+//				Particle0[i].MovebyAngle( info, Particle0[i].angle, Particle0[i].speed );
+//			}
+//		}
 		for ( int i = 0; i < MAX_PARTICLE; i++ )
 		{
 			if ( Particle1[i].dead == false )
@@ -346,7 +346,7 @@ public class BaseFleet extends GameObject
 		
 		for ( int i = 0; i < MAX_PARTICLE; i++ )
 		{
-			if ( Particle0[i].dead == false ) Particle0[i].DrawSprite( info );
+			//if ( Particle0[i].dead == false ) Particle0[i].DrawSprite( info );
 			if ( Particle1[i].dead == false ) Particle1[i].DrawSprite( info );
 			if ( Particle2[i].dead == false ) Particle2[i].DrawSprite( info );
 			if ( Particle3[i].dead == false ) Particle3[i].DrawSprite( info );
