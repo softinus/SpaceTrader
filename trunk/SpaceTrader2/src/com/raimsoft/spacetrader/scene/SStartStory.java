@@ -1,10 +1,12 @@
 package com.raimsoft.spacetrader.scene;
 
+import com.raimsoft.spacetrader.GlobalInput;
 import com.raimsoft.spacetrader.R;
 
 import android.content.Context;
 import bayaba.engine.lib.Font;
 import bayaba.engine.lib.GameInfo;
+import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
 
 public class SStartStory extends SBase
@@ -14,6 +16,11 @@ public class SStartStory extends SBase
 	private Sprite sprStory2= new Sprite();
 	private Sprite sprStory3= new Sprite();
 	private Sprite sprStory4= new Sprite();
+	
+	private GameObject objStory1= new GameObject();
+	private GameObject objStory2= new GameObject();
+	private GameObject objStory3= new GameObject();
+	private GameObject objStory4= new GameObject();
 	
 	private Font font = new Font();
 	
@@ -32,6 +39,19 @@ public class SStartStory extends SBase
 		sprStory2.LoadSprite( gl, mContext, R.drawable.story2, "story2.spr" );
 		sprStory3.LoadSprite( gl, mContext, R.drawable.story3, "story3.spr" );
 		sprStory4.LoadSprite( gl, mContext, R.drawable.story4, "story4.spr" );
+	
+		//objLogo.SetObject(sprLogo, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY/2, 0, 0);
+		
+		objStory1.SetObject(sprStory1,0,0, 0,0, 0,0);
+		objStory2.SetObject(sprStory2,0,0, 0,0, 0,0);
+		objStory3.SetObject(sprStory3,0,0, 0,0, 0,0);
+		objStory4.SetObject(sprStory4,0,0, 0,0, 0,0);
+		
+//		objStory1.trans= 0.0f;
+//		objStory2.trans= 0.0f;
+//		objStory3.trans= 0.0f;
+//		objStory4.trans= 0.0f;
+		
 	}
 
 	@Override
@@ -39,22 +59,44 @@ public class SStartStory extends SBase
 	{
 		super.Render();
 		
+		
+		
 		if		( (-200.0f < fScrollY) && ( fScrollY <= 0) )
-			sprStory1.PutImage(gInfo, 0, 0);
+		{
+			//objStory1.DrawSprite(gInfo);
+		}
 		else if ( (-400.0f < fScrollY) && ( fScrollY <= -200) )
-			sprStory2.PutImage(gInfo, 0, 0);
+		{
+			//objStory2.DrawSprite(gInfo);
+		}
 		else if ( (-600.0f < fScrollY) && ( fScrollY <= -400) )
-			sprStory3.PutImage(gInfo, 0, 0);
+		{
+			//objStory3.DrawSprite(gInfo);
+		}
 		else if ( (-800.0f < fScrollY) && ( fScrollY <= -600) )
-			sprStory4.PutImage(gInfo, 0, 0);
+		{
+			//objStory4.DrawSprite(gInfo);
+		}
 		else if ( (-1000.0f < fScrollY) && ( fScrollY <= -800) )
-			sprStory1.PutImage(gInfo, 0, 0);
+		{
+			//objStory1.DrawSprite(gInfo);
+		}
 		else if ( (-1200.0f < fScrollY) && ( fScrollY <= -1000) )
-			sprStory2.PutImage(gInfo, 0, 0);
+		{
+			//objStory2.DrawSprite(gInfo);
+		}
 		else if ( (-1400.0f < fScrollY) && ( fScrollY <= -1200) )
-			sprStory3.PutImage(gInfo, 0, 0);
+		{
+			//objStory3.DrawSprite(gInfo);
+		}
 		else if ( (-1600.0f < fScrollY) && ( fScrollY <= -1400) )
-			sprStory4.PutImage(gInfo, 0, 0);
+		{
+			//objStory4.DrawSprite(gInfo);
+		}
+		else if ( (-1800.0f < fScrollY) && ( fScrollY <= -1600) )
+		{
+			//objStory1.DrawSprite(gInfo);
+		}
 		else
 			this.SetScene(EnumScene.E_GAME_WRAP);
 			
@@ -112,37 +154,7 @@ public class SStartStory extends SBase
 		font.DrawFont(gl, 20, fScrollY+gInfo.ScreenY+1170, 20.0f, " 인간 연합은 과거의 유물이 되었다.");
 		
 		
-		
-		
 
-
-//
-//
-// 
-//
-//
-
-//
-//
-//
-//
-
-//
-//
-
-//
-//
-//
-//흙을 밟으며 살수 있기 때문에..
-//
-
-//하지만 인간의 욕심은 달라진 환경에서도 그대로였다.
-//적응력이 떨어진 행성들은 수세대에 걸처 번영한 행성들에게 잡혀 살았다.
-//수많은 군주들이 합쳐 새로운 연합을 창설했다.
-//인간 연합은 과거의 유물이 되었다.
-
-		 
-		
 		
 		font.EndFont();
 	}
@@ -161,7 +173,10 @@ public class SStartStory extends SBase
 		super.Update();
 		
 		
-		fScrollY -= 0.30f;
+		if(GlobalInput.bTouch)
+			fScrollY -= 5.00f;
+		else
+			fScrollY -= 0.50f;
 		
 		//if(sprStory1)
 	}
