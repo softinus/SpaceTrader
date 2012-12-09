@@ -174,7 +174,8 @@ public class SStartStory extends SBase
 		
 		
 		if(GlobalInput.bTouch)
-			fScrollY -= 5.00f;
+			//fScrollY -= 10.00f;
+			this.SetScene(EnumScene.E_GAME_WRAP);			
 		else
 			fScrollY -= 0.50f;
 		
