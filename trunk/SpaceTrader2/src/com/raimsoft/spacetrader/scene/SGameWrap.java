@@ -7,7 +7,6 @@ import java.util.Random;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.Log;
-import android.widget.ProgressBar;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
@@ -20,7 +19,7 @@ import com.raimsoft.spacetrader.obj.Meteor;
 import com.raimsoft.spacetrader.obj.Missile;
 import com.raimsoft.spacetrader.obj.ProgressMeter;
 import com.raimsoft.spacetrader.obj.Radar;
-import com.raimsoft.spacetrader.util.SoundManager;
+import com.raimsoft.spacetrader.obj.Star;
 
 public class SGameWrap extends SBase
 {
@@ -37,7 +36,7 @@ public class SGameWrap extends SBase
 	private Radar objRader;						// 레이더
 	private ProgressMeter objProgress;			// 프로그레스바
 	
-	private Queue<GameObject> qStar= new LinkedList<GameObject>();
+	private Queue<Star> qStar= new LinkedList<Star>();
 	private Queue<Meteor> qMetoer= new LinkedList<Meteor>();
 	
 	private Random rand = new Random();
@@ -77,9 +76,11 @@ public class SGameWrap extends SBase
 
 		objMissile= new Missile(gl, mContext);
 		objMissile.SetObject(sprMissile, 0, 0, objShip.x, objShip.y, 0, 0);
+		objMissile.scalex= 0.5f;
+		objMissile.scaley= 0.5f;
 		
-		for(int i=0; i<=35; ++i)
-			qStar.offer(new GameObject());
+		for(int i=0; i<=40; ++i)
+			qStar.offer(new Star());
 		
 		for(int i=0; i<=10; ++i)
 		{
@@ -98,14 +99,14 @@ public class SGameWrap extends SBase
 		
 		super.Render();
 		
-		for(GameObject GO : qStar)
+		for(Star GO : qStar)
 			GO.DrawSprite(gInfo);
 				
 		for(Meteor MTO : qMetoer)
 			MTO.DrawSprite(gl, gInfo);
 				
-		objShip.DrawSprite(gInfo);
 		objMissile.DrawSprite(gInfo);
+		objShip.DrawSprite(gInfo);
 		objRader.DrawObjects(gInfo);
 		objProgress.DrawObjects(gInfo);
 	}
@@ -120,10 +121,11 @@ public class SGameWrap extends SBase
 		this.UpdateStar();
 		this.UpdateMetoer();
 		this.UpdateShip();
+		this.UpdateMissile();
 		
 		objRader.UpdateObjects();
 		objProgress.UpdateObjects();
-		objMissile.UpdateObjects();
+		objMissile.UpdateObjects(gInfo);
 	}
 	
 	// 별 만듦
@@ -161,6 +163,24 @@ public class SGameWrap extends SBase
 		}
 	}
 	
+	private void UpdateMissile()
+	{
+		if(objMissile.y < -2*objMissile.GetYsize())
+			objMissile.SetFire(false);
+		
+		for(Meteor MTO : qMetoer)	// 미사일과 메테오 충돌체크
+		{
+			if(!objMissile.isFired() || MTO.dead)	// 발사중 아니면 || 메테오 터진거면 충돌체크안함. 
+				continue;
+			
+			if( objMissile.CheckPos( (int)MTO.x , (int)MTO.y ) )	// 메테오와 함선 충돌체크
+			{
+				objMissile.SetFire(false);
+				MTO.SetCrash(true, (int)MTO.x, (int)MTO.y);
+			}
+		}
+	}
+	
 	
 
 	private void UpdateShip()
@@ -173,7 +193,10 @@ public class SGameWrap extends SBase
 		objShip.SetCrash(false, 0, 0); 
 		for(Meteor MTO : qMetoer)
 		{
-			if( objShip.CheckPos( (int)MTO.x , (int)MTO.y ) )
+			if(MTO.dead)	// 터진 메테오는 체크 안함.
+				continue;
+			
+			if( objShip.CheckPos( (int)MTO.x , (int)MTO.y ) )	// 메테오와 함선 충돌체크
 			{
 				gInfo.SetQuake(1000, 6, 2);
 				gInfo.DoQuake();
@@ -207,7 +230,7 @@ public class SGameWrap extends SBase
 			{
 				qStar.poll();
 				
-				GameObject star= new GameObject();
+				Star star= new Star();
 				star.SetObject( sprStar, 0, 0, rand.nextInt((int)gInfo.ScreenX), -1*(rand.nextInt(50)+25), 0, 0 );
 				float fRandomScale= rand.nextFloat();
 				star.scalex= fRandomScale;
@@ -218,9 +241,12 @@ public class SGameWrap extends SBase
 	}
 	
 	private void UpdateMetoer()
-	{
+	{		
 		for(Meteor MTO : qMetoer)
 		{
+			//if(MTO.dead)
+				//return;
+			
 			MTO.angle += MTO.lfAngle;
 			MTO.y += objShip.GetVelocity()/2;
 		}

@@ -1,17 +1,12 @@
 package com.raimsoft.spacetrader.obj;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-
 import javax.microedition.khronos.opengles.GL10;
 
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
 
 public class Meteor extends GameObject
-{
-	
+{	
 	/**
 	 * @param lfAngle
 	 */
@@ -23,10 +18,36 @@ public class Meteor extends GameObject
 
 	public double lfAngle= 0.0f;		// 처음으로 지정되서 렌더시 계속 쓰는 앵글값
 
-
+	/**
+	 * 충돌값 세팅시
+	 * @param bCrash the bCrash to set
+	 */
+	public void SetCrash(boolean bCrash, int x, int y)
+	{		
+		if(this.dead)
+			return;
+				
+		if(bCrash)
+		{
+			dead= true;
+		}
+		else
+		{
+			
+		}
+	}
+	
+	
+	
 	public void DrawSprite(GL10 gl, GameInfo info)
 	{
-		super.DrawSprite(info);
+		if(this.dead)
+		{
+			return;
+		}
+		
+		if( (0-this.GetYsize()*2 < this.y) && (info.ScreenY+this.GetYsize()*2 > this.y) )
+			super.DrawSprite(info);
 		
 //		int xSize= this.GetXsize()/2;
 //		int ySize= this.GetYsize()/2;

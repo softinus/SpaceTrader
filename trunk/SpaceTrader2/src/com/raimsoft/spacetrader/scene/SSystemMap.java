@@ -86,7 +86,7 @@ public class SSystemMap  extends SBase
 		sprPanel.LoadSprite(gl, mContext, R.drawable.map_panel, "map_panel.spr");
 		objPanel.SetObject(sprPanel, 0, 0, 0, gInfo.ScreenY, 0, 0);
 		objPanel.trans= 0.5f;
-		objPanel.scroll= false;
+		objPanel.scroll= false; 
 		
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");		
 		for(Planet PN : arrPlanet)
