@@ -19,6 +19,7 @@ public class ProgressMeter
 	public float fDistanceKM= 2200000.0f;	//움직이는거리
 	public float fCurr= 0.0f;
 	private float fDistance= 0.0f;
+	public boolean bArrived= false;
 	
 	
 	public ProgressMeter(GL10 gl, GameInfo gInfo, Context mContext)
@@ -36,8 +37,12 @@ public class ProgressMeter
 	
 	public void UpdateObjects()
 	{
-		if(fDistance >= 1.0f)
+		if(bArrived)	// 도착하면 끝
 			return;
+		
+		if(fDistance >= 1.0f)
+			bArrived= true;
+			
 		
 		fDistance= fCurr / fDistanceKM * 100;
 		objProgress.scaley= fDistance;

@@ -42,7 +42,7 @@ public class SGameWrap extends SBase
 	private Random rand = new Random();
 	private MediaPlayer Music;
 	private Launcher UHL;
-	
+		
 	public SGameWrap(Context _context, GameInfo _Info)
 	{
 		super(_context, _Info);
@@ -70,7 +70,7 @@ public class SGameWrap extends SBase
 		objProgress= new ProgressMeter(gl, gInfo, mContext);
 	
 		objShip= new BaseFleet(gl, mContext);
-		objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY-100, 0, 0 );
+		objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY+60, 0, 0 );
 		objShip.scalex= 0.5f;
 		objShip.scaley= 0.5f;
 
@@ -118,7 +118,9 @@ public class SGameWrap extends SBase
 		
 		super.Update();
 		
-		this.UpdateStar();
+		if(!objProgress.bArrived)
+			this.UpdateStar();
+		
 		this.UpdateMetoer();
 		this.UpdateShip();
 		this.UpdateMissile();
@@ -159,14 +161,14 @@ public class SGameWrap extends SBase
 		if(!objMissile.isFired())	// 발사안했으면
 		{
 			objMissile.SetObject(sprMissile, 0, 0, objShip.x, objShip.y, 0, 0);
-			objMissile.SetFire(true);
+			objMissile.SetFire(true, false);
 		}
 	}
 	
 	private void UpdateMissile()
 	{
 		if(objMissile.y < -2*objMissile.GetYsize())
-			objMissile.SetFire(false);
+			objMissile.SetFire(false, false);
 		
 		for(Meteor MTO : qMetoer)	// 미사일과 메테오 충돌체크
 		{
@@ -175,7 +177,7 @@ public class SGameWrap extends SBase
 			
 			if( objMissile.CheckPos( (int)MTO.x , (int)MTO.y ) )	// 메테오와 함선 충돌체크
 			{
-				objMissile.SetFire(false);
+				objMissile.SetFire(false, true);
 				MTO.SetCrash(true, (int)MTO.x, (int)MTO.y);
 			}
 		}
@@ -188,6 +190,23 @@ public class SGameWrap extends SBase
 		if(objShip.bDestroyed)	// 터지면 함선 업데이트 안함
 			return;
 		
+		if(objProgress.bArrived)
+		{
+			objShip.bControlable= false;
+			
+			if(-1500 <= objShip.y)	// 처음에 아래에서 나오는 연출
+				objShip.y -= 12f;
+			else
+				SetScene(EnumScene.E_MAIN);
+				
+		}
+		
+		//info.MoveCamera(0.0f, -200.0f, 0.5f);
+		if(gInfo.ScreenY-100 <= objShip.y)	// 처음에 아래에서 나오는 연출
+			objShip.y -= 1.5f;
+		else
+			objShip.bControlable= true;
+		
 		objProgress.fCurr += objShip.GetVelocity();	// 프로그레스바에 속도만큼 계산해준다.
 		
 		objShip.SetCrash(false, 0, 0); 
@@ -196,7 +215,7 @@ public class SGameWrap extends SBase
 			if(MTO.dead)	// 터진 메테오는 체크 안함.
 				continue;
 			
-			if( objShip.CheckPos( (int)MTO.x , (int)MTO.y ) )	// 메테오와 함선 충돌체크
+			if( objShip.CheckPos( (int)MTO.x , (int)MTO.y ) && !objProgress.bArrived )	// 메테오와 함선 충돌체크
 			{
 				gInfo.SetQuake(1000, 6, 2);
 				gInfo.DoQuake();
@@ -214,7 +233,8 @@ public class SGameWrap extends SBase
 		if(objShip.x-GlobalInput.fSensorX*2.0f > gInfo.ScreenX)
 			return;
 		
-		objShip.MoveSensorX( GlobalInput.fSensorX * objShip.getHandeling() );
+		if(objShip.bControlable)
+			objShip.MoveSensorX( GlobalInput.fSensorX * objShip.getHandeling() );	// 함선 좌우 이동
 
 		
 	}

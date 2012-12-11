@@ -29,6 +29,7 @@ public class BaseFleet extends GameObject
 	private float fHandeling= 2.0f;
 	private int nHP= 1000;
 	public boolean bDestroyed= false;
+	public boolean bControlable= false;
 	
 	private Launcher UHL;
 	private SoundManager Sound;
