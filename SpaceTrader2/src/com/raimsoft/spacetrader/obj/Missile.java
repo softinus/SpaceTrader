@@ -42,6 +42,7 @@ public class Missile extends GameObject
 		Sound= new SoundManager(_context);
 		Sound.Create();
 		Sound.Load(0, R.raw.missile_2);
+		Sound.Load(1, R.raw.explode);
 		
 		
 	}
@@ -69,16 +70,20 @@ public class Missile extends GameObject
 
 	
 	// 발사 체크
-	public void SetFire(boolean _bFire)
+	public void SetFire(boolean _bFire, boolean _bCollision)
 	{
 		if(_bFire)
 		{
 			Sound.Play(0);
-			Log.d("Missile::", "Fire missile!!!");
+			//Log.d("Missile::", "Fire missile!!!");
 		}
 		else
 		{
-			Log.d("Missile::", "Missile offline");
+			if(_bCollision)
+				Sound.Play(1);
+			
+			Sound.Stop(0);
+			//Log.d("Missile::", "Missile offline");
 			//this.x= -200;	// 임시로 안보이게 밖으로 보냄
 			for ( int i = 0; i < MAX_PARTICLE; i++ )
 			{
