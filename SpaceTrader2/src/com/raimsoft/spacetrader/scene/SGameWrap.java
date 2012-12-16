@@ -83,7 +83,7 @@ public class SGameWrap extends SBase
 		objMissile.scaley= 0.5f;
 		
 		objStation= new GameObject();
-		objStation.SetObject(sprStation, 0, 0, 100, -380, 0, 0);
+		objStation.SetObject(sprStation, 0, 0, 100, -320, 0, 0);
 //		objStation.scalex= 0.85f;
 //		objStation.scaley= 0.85f;
 		
@@ -113,7 +113,7 @@ public class SGameWrap extends SBase
 		for(Star GO : qStar)
 			GO.DrawSprite(gInfo);
 		
-		if(objProgress.GetPercentToDestination() >= 75.0f)
+		if(objProgress.GetPercentToDestination() >= 70.0f)
 			objStation.DrawSprite(gInfo);		
 				
 		for(Meteor MTO : qMetoer)
@@ -206,9 +206,9 @@ public class SGameWrap extends SBase
 		if(objShip.bDestroyed)	// 터지면 함선 업데이트 안함
 			return;
 		
-		if(objProgress.GetPercentToDestination() >= 75.0f)
+		if(objProgress.GetPercentToDestination() >= 70.0f)
 		{
-			objStation.y += objShip.GetVelocity()/10.0f;	// 스테이션 보여줌
+			objStation.y += objShip.GetVelocity()/12.0f;	// 스테이션 보여줌
 		}		
 		
 		if(objProgress.GetPercentToDestination() >= 95.0f)
@@ -233,21 +233,31 @@ public class SGameWrap extends SBase
 		}
 		
 		//info.MoveCamera(0.0f, -200.0f, 0.5f);
-		if( (objShip.nEventCount==0) && (gInfo.ScreenY-150 <= objShip.y) )	// 처음에 아래에서 나오는 연출
+		if( (objShip.nEventCount==0) && (gInfo.ScreenY-300 <= objShip.y) )	// 처음에 아래에서 나오는 연출
 		{
-			objShip.fEventSpped = objShip.fEventSpped * 0.98f;
+			objShip.fEventSpped = objShip.fEventSpped * 0.979f;
 			objShip.y -= objShip.fEventSpped;
 		}
 		else
-		{
-			objShip.nEventCount= 1;
-			objShip.fEventSpped= 0.7f;
+		{`
+			if((objShip.nEventCount==0))
+			{
+				objShip.nEventCount= 1;
+				objShip.fEventSpped= 4.65f;
+			}			
 		}
-		if( (objShip.nEventCount==1) && (gInfo.ScreenY-100 >= objShip.y) )
+		if( (objShip.nEventCount==1) && (gInfo.ScreenY-100 > objShip.y) )
 		{
-			objShip.fEventSpped = objShip.fEventSpped * 0.98f;
-			objShip.y += objShip.fEventSpped;
-			objShip.nEventCount= 2;
+			objShip.fEventSpped = objShip.fEventSpped * 0.978f;
+			objShip.y += objShip.fEventSpped; 
+		}
+		else if((objShip.nEventCount==1) && (gInfo.ScreenY-100 <= objShip.y))
+		{
+			objShip.nEventCount= 2;			
+		}
+		
+		if((objShip.nEventCount==2))	// 다 내려왓음
+		{
 			objShip.bControlable= true;
 		}
 		
@@ -257,6 +267,9 @@ public class SGameWrap extends SBase
 		for(Meteor MTO : qMetoer)
 		{
 			if(MTO.dead)	// 터진 메테오는 체크 안함.
+				continue;
+			
+			if(!objShip.bControlable)	// 조종 불가능시에는 맞지 않음
 				continue;
 			
 			if( objShip.CheckPos( (int)MTO.x , (int)MTO.y ) && !objProgress.bArrived )	// 메테오와 함선 충돌체크
