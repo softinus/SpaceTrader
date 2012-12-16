@@ -43,9 +43,18 @@ public class ProgressMeter
 		if(fDistance >= 1.0f)
 			bArrived= true;
 			
-		
+		 
 		fDistance= fCurr / fDistanceKM * 100;
 		objProgress.scaley= fDistance;
+	}
+	
+	/**
+	 * 퍼센트로 계산해준다 (시작=0.0f, 끝=100.0f)
+	 * @return
+	 */
+	public float GetPercentToDestination() 
+	{
+		return (fDistance*100);
 	}
 	
 	public void DrawObjects(GameInfo gInfo)

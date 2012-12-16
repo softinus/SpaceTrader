@@ -22,12 +22,16 @@ public class BaseFleet extends GameObject
 	private GameObject Particle2[] = new GameObject[MAX_PARTICLE];
 	private GameObject Particle3[] = new GameObject[MAX_PARTICLE];
 	
-	private Sprite	sprGlow, sprSpark, sprDestroy, sprHP;
+	private Sprite	sprGlow, sprSpark, sprHP;// sprDestroy
 	private GameObject objSpark, objDestroy;
 	private boolean bCrash= false;
+	
 	private float fVelocity= 13.0f;
+	public 	float fEventSpped= 5.0f;
+	public  int nEventCount= 0;	// 연출0번 --(함선가속)--> 연출1번 --(함선감속)--> 연출2번 --> (시작)
+	
 	private float fHandeling= 2.0f;
-	private int nHP= 1000;
+	private int nHP= 5000;
 	public boolean bDestroyed= false;
 	public boolean bControlable= false;
 	
@@ -103,7 +107,7 @@ public class BaseFleet extends GameObject
 		
 		sprGlow= new Sprite();
 		sprSpark= new Sprite();
-		sprDestroy= new Sprite();
+//		sprDestroy= new Sprite();
 		sprHP= new Sprite();
 		objDestroy= new GameObject();
 		objSpark= new GameObject();
@@ -111,7 +115,7 @@ public class BaseFleet extends GameObject
 		sprHP.LoadSprite(_gl, _context, R.drawable.resource_2, "number.spr");
 		sprSpark.LoadSprite(_gl, _context, R.drawable.eff_spark_lightning, "eff_light.spr");
 		sprGlow.LoadSprite( _gl, _context, R.drawable.glow, "glow.spr" );
-		sprDestroy.LoadSprite( _gl, _context, R.drawable.eff_bomb, "eff_bomb.spr" );
+	//	sprDestroy.LoadSprite( _gl, _context, R.drawable.eff_bomb, "eff_bomb.spr" );
 		
 		//for ( int i = 0; i < MAX_PARTICLE; i++ ) Particle0[i] = new GameObject();
 		for ( int i = 0; i < MAX_PARTICLE; i++ ) Particle1[i] = new GameObject();
@@ -151,7 +155,7 @@ public class BaseFleet extends GameObject
 			}
 			else
 			{
-				Sound.Play(0);
+				Sound.Play(0); 
 				nHP= 0;
 				this.bDestroyed= true;
 				this.objDestroy.x= this.x;
@@ -162,17 +166,20 @@ public class BaseFleet extends GameObject
 			objSpark.x= this.x;
 			objSpark.y= this.y;
 			this.effect= 1;
-			this.fHandeling= 1.0f; 
-			this.fVelocity= 3.0f;
+			this.fHandeling= 1.09f; 
+			this.fVelocity= 3.5f;
 			//SetFireScale(0.75f);			
 			UHL.play(Launcher.IMPACT_METAL_66);
 		}
 		else
 		{
-			objSpark.show= false;
-			this.effect= 0;
-			this.fHandeling= 2.0f;
-			this.fVelocity= 13.0f;
+			if(this.fHandeling==1.09f)	// 부딪힌 바로 다음에만 변경해줌
+			{
+				objSpark.show= false;
+				this.effect= 0;
+				this.fHandeling= 2.0f;
+				this.fVelocity= 13.0f;
+			}
 			//SetFireScale(1.0f);
 		}
 	}
@@ -186,7 +193,7 @@ public class BaseFleet extends GameObject
 //		objFire1.SetObject(sprGlow, 0, 0, this.x-21, this.y+55, 0, 0);
 //		objFire2.SetObject(sprGlow, 0, 0, this.x+11, this.y+55, 0, 0);
 //		objFire3.SetObject(sprGlow, 0, 0, this.x+25, this.y+55, 0, 0);
-		objDestroy.SetObject(sprDestroy, 0, 0, x, y, 0, 0);
+	//	objDestroy.SetObject(sprDestroy, 0, 0, x, y, 0, 0);
 		
 		//SetFireScale(1.0f);
 	}
@@ -362,7 +369,7 @@ public class BaseFleet extends GameObject
 	// 메모리해제
 	public void Release()
 	{
-		sprDestroy.Release();
+		//sprDestroy.Release();
 		sprGlow.Release();
 		sprHP.Release();
 		sprSpark.Release();

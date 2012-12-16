@@ -16,7 +16,7 @@ import com.raimsoft.spacetrader.util.SoundManager;
 public class Missile extends GameObject
 {
 	private Random MyRand = new Random();
-	private static int MAX_PARTICLE = 20;
+	private static int MAX_PARTICLE = 15;
 	
 	private GameObject Particle1[] = new GameObject[MAX_PARTICLE];
 	
@@ -135,13 +135,13 @@ public class Missile extends GameObject
 			{
 				if ( Particle1[i].dead == true )
 				{
-					Particle1[i].SetObject( sprGlow, 0, 0, x, y+42, 0, 3 );	// 위치
+					Particle1[i].SetObject( sprGlow, 0, 0, x, y+33, 0, 3 );	// 위치
 					Particle1[i].dead = false;
 					Particle1[i].angle= 180;						// 각도
 					Particle1[i].angle -= MyRand.nextInt(40)-20;	// 각도범위
-					Particle1[i].speed = 10f + (MyRand.nextInt(5) * 0.5f);	// 나가는속도
+					Particle1[i].speed = 8f + (MyRand.nextInt(5) * 0.5f);	// 나가는속도
 					Particle1[i].effect = 1;
-					Particle1[i].trans= 0.5f;	// 투명시작
+					Particle1[i].trans= 0.35f;	// 투명시작
 //					Particle1[i].scalex= 0.75f;
 //					Particle1[i].scaley= 0.8f;
 					if ( ++cnt1 == 2 ) break;

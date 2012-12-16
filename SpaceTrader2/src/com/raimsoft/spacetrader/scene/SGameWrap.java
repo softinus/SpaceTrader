@@ -27,6 +27,7 @@ public class SGameWrap extends SBase
 	private Sprite sprShip= new Sprite();
 	private Sprite sprMetoer= new Sprite();
 	private Sprite sprMissile= new Sprite();
+	private Sprite sprStation= new Sprite();
 	
 	private boolean bReleased= false;
 	private int nMeteorCount= 0;
@@ -35,6 +36,7 @@ public class SGameWrap extends SBase
 	private Missile	objMissile;					// 미사일
 	private Radar objRader;						// 레이더
 	private ProgressMeter objProgress;			// 프로그레스바
+	private GameObject	objStation;				// 스테이션
 	
 	private Queue<Star> qStar= new LinkedList<Star>();
 	private Queue<Meteor> qMetoer= new LinkedList<Meteor>();
@@ -65,6 +67,7 @@ public class SGameWrap extends SBase
 		sprStar.LoadSprite( gl, mContext, R.drawable.resource_2, "star_1.spr" );
 		sprMetoer.LoadSprite( gl, mContext, R.drawable.resource_2, "meteor.spr" );
 		sprMissile.LoadSprite(gl, mContext, R.drawable.resource_2, "missile_1.spr");
+		sprStation.LoadSprite(gl, mContext, R.drawable.station_dummy1, "station_1.spr");
 		
 		objRader= new Radar(gl, gInfo, mContext);
 		objProgress= new ProgressMeter(gl, gInfo, mContext);
@@ -79,7 +82,14 @@ public class SGameWrap extends SBase
 		objMissile.scalex= 0.5f;
 		objMissile.scaley= 0.5f;
 		
-		for(int i=0; i<=40; ++i)
+		objStation= new GameObject();
+		objStation.SetObject(sprStation, 0, 0, 100, -380, 0, 0);
+//		objStation.scalex= 0.85f;
+//		objStation.scaley= 0.85f;
+		
+		
+		
+		for(int i=0; i<=50; ++i)
 			qStar.offer(new Star());
 		
 		for(int i=0; i<=10; ++i)
@@ -98,9 +108,13 @@ public class SGameWrap extends SBase
 		if(bReleased) return;
 		
 		super.Render();
+
 		
 		for(Star GO : qStar)
 			GO.DrawSprite(gInfo);
+		
+		if(objProgress.GetPercentToDestination() >= 75.0f)
+			objStation.DrawSprite(gInfo);		
 				
 		for(Meteor MTO : qMetoer)
 			MTO.DrawSprite(gl, gInfo);
@@ -109,6 +123,8 @@ public class SGameWrap extends SBase
 		objShip.DrawSprite(gInfo);
 		objRader.DrawObjects(gInfo);
 		objProgress.DrawObjects(gInfo);
+		
+		
 	}
 
 	@Override
@@ -175,7 +191,7 @@ public class SGameWrap extends SBase
 			if(!objMissile.isFired() || MTO.dead)	// 발사중 아니면 || 메테오 터진거면 충돌체크안함. 
 				continue;
 			
-			if( objMissile.CheckPos( (int)MTO.x , (int)MTO.y ) )	// 메테오와 함선 충돌체크
+			if( gInfo.CrashCheck(MTO, objMissile, -5, -5) )	// 메테오와 미사일 충돌체크
 			{
 				objMissile.SetFire(false, true);
 				MTO.SetCrash(true, (int)MTO.x, (int)MTO.y);
@@ -190,22 +206,50 @@ public class SGameWrap extends SBase
 		if(objShip.bDestroyed)	// 터지면 함선 업데이트 안함
 			return;
 		
-		if(objProgress.bArrived)
+		if(objProgress.GetPercentToDestination() >= 75.0f)
 		{
-			objShip.bControlable= false;
+			objStation.y += objShip.GetVelocity()/10.0f;	// 스테이션 보여줌
+		}		
+		
+		if(objProgress.GetPercentToDestination() >= 95.0f)
+		{			
+			objShip.SetVelocity( objShip.GetVelocity()*0.99f );	// 서서히 속도를 줄인다.
+			float fVolumn= ((100.0f-objProgress.GetPercentToDestination())*20.0f)/100.0f;
+			if(fVolumn<= 0.0f)
+				Music.setVolume(0.0f, 0.0f);
+			else
+				Music.setVolume(fVolumn, fVolumn);	// 볼륨도 서서히 줄임
 			
-			if(-1500 <= objShip.y)	// 처음에 아래에서 나오는 연출
+		}
+		
+		if(objProgress.bArrived)
+		{			
+			if(-1500 <= objShip.y)	// 끝
 				objShip.y -= 12f;
 			else
 				SetScene(EnumScene.E_MAIN);
-				
+			
+			return;			
 		}
 		
 		//info.MoveCamera(0.0f, -200.0f, 0.5f);
-		if(gInfo.ScreenY-100 <= objShip.y)	// 처음에 아래에서 나오는 연출
-			objShip.y -= 1.5f;
+		if( (objShip.nEventCount==0) && (gInfo.ScreenY-150 <= objShip.y) )	// 처음에 아래에서 나오는 연출
+		{
+			objShip.fEventSpped = objShip.fEventSpped * 0.98f;
+			objShip.y -= objShip.fEventSpped;
+		}
 		else
+		{
+			objShip.nEventCount= 1;
+			objShip.fEventSpped= 0.7f;
+		}
+		if( (objShip.nEventCount==1) && (gInfo.ScreenY-100 >= objShip.y) )
+		{
+			objShip.fEventSpped = objShip.fEventSpped * 0.98f;
+			objShip.y += objShip.fEventSpped;
+			objShip.nEventCount= 2;
 			objShip.bControlable= true;
+		}
 		
 		objProgress.fCurr += objShip.GetVelocity();	// 프로그레스바에 속도만큼 계산해준다.
 		
@@ -279,10 +323,14 @@ public class SGameWrap extends SBase
 				++nMeteorCount;	// 메테오 지금까지 나온 카운트
 				qMetoer.poll();
 				
-				Meteor mto= new Meteor( rand.nextInt(9)-4 );
-				mto.SetObject( sprMetoer, 0, 0, rand.nextInt((int)gInfo.ScreenX), -1* rand.nextInt(2500)-150, rand.nextInt(3), 0 );
-				Log.d("Create Meteor", "------> offer ------> Y : "+mto.y);
-				qMetoer.offer(mto);
+ 				if(objProgress.GetPercentToDestination() <= 60.0f)	// 목적지에 90% 이상 왔으면 더 이상 메테오 없음.
+				{
+					Meteor mto= new Meteor( rand.nextInt(9)-4 );
+					mto.SetObject( sprMetoer, 0, 0, rand.nextInt((int)gInfo.ScreenX), -1* rand.nextInt(2500)-150, rand.nextInt(3), 0 );
+					Log.d("Create Meteor", "------> offer ------> Y : "+mto.y);
+					qMetoer.offer(mto);
+				}
+				
 				
 //				for(int i=0; i<nMeteorCount/10; ++i)
 //				{
@@ -297,7 +345,8 @@ public class SGameWrap extends SBase
 			}
 		}
 	}
-
+	
+	
 	@Override
 	public void onBackPressed()
 	{
@@ -322,3 +371,4 @@ public class SGameWrap extends SBase
 	}
 
 }
+
