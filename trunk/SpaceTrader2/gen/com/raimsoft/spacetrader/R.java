@@ -27,10 +27,11 @@ public final class R {
         public static final int progress=0x7f02000d;
         public static final int radar=0x7f02000e;
         public static final int resource_2=0x7f02000f;
-        public static final int story1=0x7f020010;
-        public static final int story2=0x7f020011;
-        public static final int story3=0x7f020012;
-        public static final int story4=0x7f020013;
+        public static final int station_dummy1=0x7f020010;
+        public static final int story1=0x7f020011;
+        public static final int story2=0x7f020012;
+        public static final int story3=0x7f020013;
+        public static final int story4=0x7f020014;
     }
     public static final class layout {
         public static final int main=0x7f030000;
