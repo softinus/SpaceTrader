@@ -22,9 +22,8 @@ public class BaseFleet extends GameObject
 	private GameObject Particle2[] = new GameObject[MAX_PARTICLE];
 	private GameObject Particle3[] = new GameObject[MAX_PARTICLE];
 	
-	private Sprite	sprGlow, sprSpark, sprHP;// sprDestroy
-	private GameObject objSpark, objDestroy;
-	private boolean bCrash= false;
+	private Sprite	sprGlow, sprSpark, sprHP, sprShield;// sprDestroy
+	private GameObject objSpark, objDestroy, objShield;
 	
 	private float fVelocity= 13.0f;
 	public 	float fEventSpped= 8.5f;
@@ -32,8 +31,11 @@ public class BaseFleet extends GameObject
 	
 	private float fHandeling= 2.0f;
 	private int nHP= 5000;
-	public boolean bDestroyed= false;
-	public boolean bControlable= false;
+	
+	private boolean bCrash= false;		// 충돌 여부
+	public boolean bDestroyed= false;	// 파괴당한 여부
+	public boolean bControlable= false;	// 조종 가능 여부
+	public boolean bSheild= true;		// 보호막 여부
 	
 	private Launcher UHL;
 	private SoundManager Sound;
@@ -109,12 +111,17 @@ public class BaseFleet extends GameObject
 		sprSpark= new Sprite();
 //		sprDestroy= new Sprite();
 		sprHP= new Sprite();
+		sprShield= new Sprite();
+		
 		objDestroy= new GameObject();
 		objSpark= new GameObject();
+		objShield= new GameObject();
+		
 	
 		sprHP.LoadSprite(_gl, _context, R.drawable.resource_2, "number.spr");
 		sprSpark.LoadSprite(_gl, _context, R.drawable.eff_spark_lightning, "eff_light.spr");
 		sprGlow.LoadSprite( _gl, _context, R.drawable.glow, "glow.spr" );
+		sprShield.LoadSprite(_gl, _context, R.drawable.resource_2, "shield.spr");
 	//	sprDestroy.LoadSprite( _gl, _context, R.drawable.eff_bomb, "eff_bomb.spr" );
 		
 		//for ( int i = 0; i < MAX_PARTICLE; i++ ) Particle0[i] = new GameObject();
@@ -190,6 +197,7 @@ public class BaseFleet extends GameObject
 	{
 		super.SetObject(s_pat, s_type, s_layer, s_x, s_y, s_motion, s_frame);
 		objSpark.SetObject(sprSpark, 0, 0, x, y, 0, 0);
+		objShield.SetObject(sprShield, 0, 0, x, y, 0, 0);
 //		objFire1.SetObject(sprGlow, 0, 0, this.x-21, this.y+55, 0, 0);
 //		objFire2.SetObject(sprGlow, 0, 0, this.x+11, this.y+55, 0, 0);
 //		objFire3.SetObject(sprGlow, 0, 0, this.x+25, this.y+55, 0, 0);
@@ -362,8 +370,18 @@ public class BaseFleet extends GameObject
 
 		super.DrawSprite(info);		
 		
-		objSpark.AddFrameLoop(0.4f);
-		objSpark.DrawSprite(info);
+		if(objSpark.show)
+		{
+			objSpark.AddFrameLoop(0.4f);
+			objSpark.DrawSprite(info);
+		}
+		
+		if(bSheild)
+		{
+			objShield.x= this.x;
+			objShield.y= this.y;
+			objShield.DrawSprite(info);
+		}
 	}
 	
 	// 메모리해제

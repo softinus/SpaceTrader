@@ -46,7 +46,7 @@ public class Meteor extends GameObject
 			return;
 		}
 		
-		if( (0-this.GetYsize()*2 < this.y) && (info.ScreenY+this.GetYsize()*2 > this.y) )
+		if( -50 < this.y )//if( (0-this.GetYsize()*2 < this.y) && (info.ScreenY+this.GetYsize()*2 > this.y) )
 			super.DrawSprite(info);
 		
 //		int xSize= this.GetXsize()/2;

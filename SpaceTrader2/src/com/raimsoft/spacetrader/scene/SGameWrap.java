@@ -23,11 +23,15 @@ import com.raimsoft.spacetrader.obj.Star;
 
 public class SGameWrap extends SBase
 {
+	private static int MAX_PARTICLE = 14;
+	private Random MyRand = new Random();
+	
 	private Sprite sprStar = new Sprite();
 	private Sprite sprShip= new Sprite();
 	private Sprite sprMetoer= new Sprite();
 	private Sprite sprMissile= new Sprite();
 	private Sprite sprStation= new Sprite();
+	private Sprite sprGlow= new Sprite();
 	
 	private boolean bReleased= false;
 	private int nMeteorCount= 0;
@@ -37,6 +41,8 @@ public class SGameWrap extends SBase
 	private Radar objRader;						// 레이더
 	private ProgressMeter objProgress;			// 프로그레스바
 	private GameObject	objStation;				// 스테이션
+	
+	private GameObject Particle_BOOM[] = new GameObject[MAX_PARTICLE];
 	
 	private Queue<Star> qStar= new LinkedList<Star>();
 	private Queue<Meteor> qMetoer= new LinkedList<Meteor>();
@@ -68,6 +74,7 @@ public class SGameWrap extends SBase
 		sprMetoer.LoadSprite( gl, mContext, R.drawable.resource_2, "meteor.spr" );
 		sprMissile.LoadSprite(gl, mContext, R.drawable.resource_2, "missile_1.spr");
 		sprStation.LoadSprite(gl, mContext, R.drawable.station_dummy1, "station_1.spr");
+		sprGlow.LoadSprite(gl, mContext, R.drawable.glow, "glow.spr");
 		
 		objRader= new Radar(gl, gInfo, mContext);
 		objProgress= new ProgressMeter(gl, gInfo, mContext);
@@ -86,6 +93,8 @@ public class SGameWrap extends SBase
 		objStation.SetObject(sprStation, 0, 0, 100, -320, 0, 0);
 //		objStation.scalex= 0.85f;
 //		objStation.scaley= 0.85f;
+		
+		for ( int i = 0; i < MAX_PARTICLE; i++ ) Particle_BOOM[i] = new GameObject();
 		
 		
 		
@@ -121,6 +130,10 @@ public class SGameWrap extends SBase
 				
 		objMissile.DrawSprite(gInfo);
 		objShip.DrawSprite(gInfo);
+		
+		for ( int i = 0; i < MAX_PARTICLE; i++ )	// 파괴 이펙트
+			if ( Particle_BOOM[i].dead == false ) Particle_BOOM[i].DrawSprite( gInfo );
+		
 		objRader.DrawObjects(gInfo);
 		objProgress.DrawObjects(gInfo);
 		
@@ -140,10 +153,42 @@ public class SGameWrap extends SBase
 		this.UpdateMetoer();
 		this.UpdateShip();
 		this.UpdateMissile();
+		this.UpdateGlow();
 		
 		objRader.UpdateObjects();
 		objProgress.UpdateObjects();
 		objMissile.UpdateObjects(gInfo);
+	}
+	
+	private void UpdateGlow()
+	{		
+		for ( int i = 0; i < MAX_PARTICLE; i++ )
+		{
+			if ( Particle_BOOM[i].dead == false )
+			{
+				Particle_BOOM[i].Zoom( gInfo, 0.02f, 0.02f );
+				
+				Particle_BOOM[i].trans -= 0.05f;
+				if ( Particle_BOOM[i].trans <= 0 ) Particle_BOOM[i].dead = true;			
+				
+				Particle_BOOM[i].MovebyAngle( gInfo, Particle_BOOM[i].angle, 7.0f );
+			}
+		}
+	}
+	
+	private void MakeGlow(float x, float y)
+	{		
+		for ( int i = 0; i < MAX_PARTICLE; i++ )
+		{
+			if ( Particle_BOOM[i].dead == true )
+			{
+				Particle_BOOM[i].SetObject( sprGlow, 0, 0, x, y, 0, 8 );
+				Particle_BOOM[i].dead = false;
+				Particle_BOOM[i].angle = (float)MyRand.nextInt( 360 );
+				Particle_BOOM[i].effect = 1;
+			}
+		}
+
 	}
 	
 	// 별 만듦
@@ -193,6 +238,7 @@ public class SGameWrap extends SBase
 			
 			if( gInfo.CrashCheck(MTO, objMissile, -5, -5) )	// 메테오와 미사일 충돌체크
 			{
+				this.MakeGlow(MTO.x, MTO.y);
 				objMissile.SetFire(false, true);
 				MTO.SetCrash(true, (int)MTO.x, (int)MTO.y);
 			}
@@ -239,7 +285,7 @@ public class SGameWrap extends SBase
 			objShip.y -= objShip.fEventSpped;
 		}
 		else
-		{`
+		{
 			if((objShip.nEventCount==0))
 			{
 				objShip.nEventCount= 1;
@@ -258,6 +304,7 @@ public class SGameWrap extends SBase
 		
 		if((objShip.nEventCount==2))	// 다 내려왓음
 		{
+			objShip.bSheild= false;
 			objShip.bControlable= true;
 		}
 		
