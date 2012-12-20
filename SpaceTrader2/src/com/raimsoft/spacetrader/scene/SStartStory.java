@@ -1,21 +1,19 @@
 package com.raimsoft.spacetrader.scene;
 
-import com.raimsoft.spacetrader.GlobalInput;
-import com.raimsoft.spacetrader.R;
-
 import android.content.Context;
 import bayaba.engine.lib.Font;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
-import bayaba.engine.lib.Sprite;
+
+import com.raimsoft.spacetrader.GlobalInput;
 
 public class SStartStory extends SBase
 {
 	private float fScrollY= 0.0f;
-	private Sprite sprStory1= new Sprite();
-	private Sprite sprStory2= new Sprite();
-	private Sprite sprStory3= new Sprite();
-	private Sprite sprStory4= new Sprite();
+//	private Sprite sprStory1= new Sprite();
+//	private Sprite sprStory2= new Sprite();
+//	private Sprite sprStory3= new Sprite();
+//	private Sprite sprStory4= new Sprite();
 	
 	private GameObject objStory1= new GameObject();
 	private GameObject objStory2= new GameObject();
@@ -35,17 +33,17 @@ public class SStartStory extends SBase
 	{
 		super.LoadData();
 		
-		sprStory1.LoadSprite( gl, mContext, R.drawable.story1, "story1.spr" );
-		sprStory2.LoadSprite( gl, mContext, R.drawable.story2, "story2.spr" );
-		sprStory3.LoadSprite( gl, mContext, R.drawable.story3, "story3.spr" );
-		sprStory4.LoadSprite( gl, mContext, R.drawable.story4, "story4.spr" );
+//		sprStory1.LoadSprite( gl, mContext, R.drawable.story1, "story1.spr" );
+//		sprStory2.LoadSprite( gl, mContext, R.drawable.story2, "story2.spr" );
+//		sprStory3.LoadSprite( gl, mContext, R.drawable.story3, "story3.spr" );
+//		sprStory4.LoadSprite( gl, mContext, R.drawable.story4, "story4.spr" );
 	
 		//objLogo.SetObject(sprLogo, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY/2, 0, 0);
 		
-		objStory1.SetObject(sprStory1,0,0, 0,0, 0,0);
-		objStory2.SetObject(sprStory2,0,0, 0,0, 0,0);
-		objStory3.SetObject(sprStory3,0,0, 0,0, 0,0);
-		objStory4.SetObject(sprStory4,0,0, 0,0, 0,0);
+//		objStory1.SetObject(sprStory1,0,0, 0,0, 0,0);
+//		objStory2.SetObject(sprStory2,0,0, 0,0, 0,0);
+//		objStory3.SetObject(sprStory3,0,0, 0,0, 0,0);
+//		objStory4.SetObject(sprStory4,0,0, 0,0, 0,0);
 		
 //		objStory1.trans= 0.0f;
 //		objStory2.trans= 0.0f;

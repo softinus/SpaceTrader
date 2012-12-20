@@ -10,7 +10,6 @@ import bayaba.engine.lib.Sprite;
 
 import com.raimsoft.spacetrader.GlobalInput;
 import com.raimsoft.spacetrader.R;
-import com.raimsoft.spacetrader.obj.GameButton;
 import com.raimsoft.spacetrader.util.SoundManager;
 
 public class SMainMenu extends SBase

@@ -50,5 +50,13 @@ public class SGalaxyMap extends SBase
 		y3= 0;
 		y4= (int)gInfo.ScreenY;
 	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		super.onBackPressed();
+		
+		this.SetScene(EnumScene.E_MAIN);
+	}
 
 }

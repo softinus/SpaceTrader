@@ -6,14 +6,7 @@ import android.content.Context;
 import bayaba.engine.lib.GameInfo;
 
 import com.immersion.uhl.Launcher;
-import com.raimsoft.spacetrader.scene.EnumScene;
-import com.raimsoft.spacetrader.scene.SBase;
-import com.raimsoft.spacetrader.scene.SGalaxyMap;
-import com.raimsoft.spacetrader.scene.SGameWrap;
-import com.raimsoft.spacetrader.scene.SLogo;
-import com.raimsoft.spacetrader.scene.SMainMenu;
-import com.raimsoft.spacetrader.scene.SStartStory;
-import com.raimsoft.spacetrader.scene.SSystemMap;
+import com.raimsoft.spacetrader.scene.*;
 
 public class Game
 {	
@@ -59,6 +52,14 @@ public class Game
 			GL10 gl= currScene.backupGL();
 			currScene.ReleaseMemory();
 			currScene= new SGameWrap(mContext, gInfo);
+			currScene.SetGL(gl);
+			currScene.LoadData();
+		}
+		else if( currScene.GetMode() == EnumScene.E_GAME_DOCKING )
+		{
+			GL10 gl= currScene.backupGL();
+			currScene.ReleaseMemory();
+			currScene= new SStation(mContext, gInfo);
 			currScene.SetGL(gl);
 			currScene.LoadData();
 		}
