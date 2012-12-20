@@ -273,7 +273,7 @@ public class SGameWrap extends SBase
 			if(-1500 <= objShip.y)	// 끝
 				objShip.y -= 12f;
 			else
-				SetScene(EnumScene.E_MAIN);
+				SetScene(EnumScene.E_GAME_DOCKING);
 			
 			return;			
 		}
