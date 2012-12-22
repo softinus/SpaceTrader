@@ -1,7 +1,5 @@
 package com.raimsoft.spacetrader;
 
-import com.raimsoft.spacetrader.scene.EnumScene;
-
 import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -24,10 +22,13 @@ public class SpaceTrader extends Activity implements SensorEventListener
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);      
         
+//        Baasio.getInstance().init(this,
+//        		"https://api.baas.io",
+//        		"junhyeok@tangibleidea.co.kr",
+//        		"spacetrader");
 
-        super.onCreate(savedInstanceState);
         getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -1,6 +1,7 @@
 package com.raimsoft.spacetrader.scene;
 
 import com.raimsoft.spacetrader.R;
+import com.raimsoft.spacetrader.obj.GameButton;
 
 import android.content.Context;
 import bayaba.engine.lib.ButtonObject;
@@ -21,11 +22,11 @@ public class SStation extends SBase
 	private Sprite bg_station= new Sprite();
 	private Sprite sprStationButton= new Sprite();
 	
-	private ButtonObject btnInfo= new ButtonObject();
-	private ButtonObject btnNews= new ButtonObject();
-	private ButtonObject btnTrade= new ButtonObject();
-	private ButtonObject btnManager= new ButtonObject();
-	private ButtonObject btnExit= new ButtonObject();
+	private GameButton btnInfo= new GameButton();
+	private GameButton btnNews= new GameButton();
+	private GameButton btnTrade= new GameButton();
+	private GameButton btnManager= new GameButton();
+	private GameButton btnExit= new GameButton();
 	
 	private Font font = new Font();
 	
@@ -37,20 +38,20 @@ public class SStation extends SBase
 		bg_station.LoadSprite(gl, mContext, R.drawable.station, "bg_station.spr");
 		sprStationButton.LoadSprite(gl, mContext, R.drawable.station, "station_buttons.spr");
 		
-		btnInfo.SetButton(sprStationButton, ButtonType.TYPE_ONE_CLICK, 0, 240, 300, 0);
-		btnInfo.SetText(0, 120, 18, 0.75f, 0.75f, 0.75f, 32f, "스테이션 정보");
+		btnInfo.SetButton(mContext, sprStationButton, 240, 300, 0);
+		btnInfo.SetTextCenter(32f, "스테이션 정보");
 		
-		btnNews.SetButton(sprStationButton, ButtonType.TYPE_ONE_CLICK, 0, 240, 400, 0);
-		btnNews.SetText(0, 155, 18, 0.75f, 0.75f, 0.75f, 32f, "월드 뉴스");
+		btnNews.SetButton(mContext, sprStationButton, 240, 400, 0);
+		btnNews.SetTextCenter(32f, "월드 뉴스");
 		
-		btnTrade.SetButton(sprStationButton, ButtonType.TYPE_ONE_CLICK, 0, 240, 500, 0);
-		btnTrade.SetText(0, 155, 18, 0.75f, 0.75f, 0.75f, 32f, "상품 거래");
+		btnTrade.SetButton(mContext, sprStationButton, 240, 500, 0);
+		btnTrade.SetTextCenter(32f, "상품 거래");
 		
-		btnManager.SetButton(sprStationButton, ButtonType.TYPE_ONE_CLICK, 0, 240, 600, 0);
-		btnManager.SetText(0, 155, 18, 0.75f, 0.75f, 0.75f, 32f, "함선 관리");
+		btnManager.SetButton(mContext, sprStationButton, 240, 600, 0);
+		btnManager.SetTextCenter(32f, "함선 관리");
 		
-		btnExit.SetButton(sprStationButton, ButtonType.TYPE_ONE_CLICK, 0, 240, 700, 0);
-		btnExit.SetText(0, 105, 18, 0.75f, 0.75f, 0.75f, 32f, "스테이션 나가기");
+		btnExit.SetButton(mContext, sprStationButton, 240, 700, 0);
+		btnExit.SetTextCenter(32f, "스테이션 나가기");
 		
 		
 	}
@@ -62,11 +63,11 @@ public class SStation extends SBase
 		bg_station.PutImage(gInfo, 0, 0);
 		
 		font.BeginFont();		
-			btnInfo.DrawSprite(gl, gInfo, font);
-			btnNews.DrawSprite(gl, gInfo, font);
-			btnTrade.DrawSprite(gl, gInfo, font);
-			btnManager.DrawSprite(gl, gInfo, font);
-			btnExit.DrawSprite(gl, gInfo, font);
+			btnInfo.DrawButtonWithText(gInfo, gl, font);
+			btnNews.DrawButtonWithText(gInfo, gl, font);
+			btnTrade.DrawButtonWithText(gInfo, gl, font);
+			btnManager.DrawButtonWithText(gInfo, gl, font);
+			btnExit.DrawButtonWithText(gInfo, gl, font);
 		font.EndFont();
 		
 	}
@@ -75,10 +76,15 @@ public class SStation extends SBase
 	{
 		super.Update();
 		
+		btnInfo.ButtonUpdate();
+		btnNews.ButtonUpdate();
+		btnTrade.ButtonUpdate();
+		btnManager.ButtonUpdate();
+		btnExit.ButtonUpdate();
 		
-		if( btnInfo.click == ButtonType.STATE_CLK_BUTTON )
+		if(btnExit.CheckOver())
 		{
-			btnInfo.ResetButton();
+			SetScene(EnumScene.E_GAME_SYSTEMMAP);
 		}
 	}
 	@Override
