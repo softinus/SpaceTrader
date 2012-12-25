@@ -1,12 +1,12 @@
 package com.raimsoft.spacetrader.scene;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.MotionEvent;
 import bayaba.engine.lib.Font;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
@@ -35,6 +35,10 @@ public class SSystemMap  extends SBase
 	
 	private int PLANET_NUMS= 10;
 	private int PLANET_TYPES= 4;
+	
+	private float fStartX= -1.1f, fCurrX= -1.1f, fScrollDes, fOldX=-1.1f, fGapX= -1.1f;
+	private boolean bDirectionR= true;
+	
 	
 	private ArrayList<String> arrPlanetName= new ArrayList<String>();
 
@@ -80,7 +84,6 @@ public class SSystemMap  extends SBase
 		Sound.Create();
 		Sound.Load(0, R.raw.button1);
 		
-		GlobalInput.fTouchX_gap= 0.0f;
 		gInfo.ScrollX=30;
 		
 		sprPanel.LoadSprite(gl, mContext, R.drawable.map_panel, "map_panel.spr");
@@ -128,7 +131,6 @@ public class SSystemMap  extends SBase
 		sprBackgroundA.PutImage(gInfo, 0, 0, 0);
 		gInfo.TileData.DrawMap( 0, gInfo );		
 		
-				
 		for(Planet PN : arrPlanet)
 		{			
 			if( PN.nIndex == PLANET_NUMS-1 )	// 마지막 행성이면 다음 라인 없음
@@ -149,13 +151,90 @@ public class SSystemMap  extends SBase
 		objSelection.DrawSprite(gInfo);
 		objPanel.DrawSprite(gInfo);
 		
-		if(objPanel.show)	// 패널이 보일 때만 정보가 보인다.
+		txtInfo.BeginFont();
+		
+			if(objPanel.show)	// 패널이 보일 때만 정보가 보인다.
+			{
+				txtInfo.DrawFont(gl, 20, gInfo.ScreenY-100, 23.0f, "행성-"+nSelectionIndex );
+				txtInfo.DrawFont(gl, 20, gInfo.ScreenY-40, 28.0f, arrPlanet.get(nSelectionIndex).strName );	
+			}		
+			
+			if(bDirectionR)
+				txtInfo.DrawFont(gl, 0, 0, 24f, "Dir : Right");
+			else
+				txtInfo.DrawFont(gl, 0, 0, 24f, "Dir : Left");
+			
+			txtInfo.DrawFont(gl, 0, 30, 24f, "startX : "+Float.toString(fStartX));
+			txtInfo.DrawFont(gl, 0, 60, 24f, "fCurrX : "+Float.toString(fCurrX));
+			txtInfo.DrawFont(gl, 0, 90, 24f, "fOldX : "+Float.toString(fOldX));
+			txtInfo.DrawFont(gl, 0, 120, 24f, "fGapX : "+Float.toString(fGapX));
+			txtInfo.DrawFont(gl, 0, 150, 24f, "fScrollDes : "+Float.toString(fScrollDes));
+			txtInfo.DrawFont(gl, 0, 180, 24f, "ScrollX : "+Float.toString(gInfo.ScrollX));
+		
+		txtInfo.EndFont();
+		
+	}
+	
+	void Scroll()
+	{
+		if(gInfo.ScrollX < arrPlanet.get(0).x)
 		{
-			txtInfo.BeginFont();
-			txtInfo.DrawFont(gl, 20, gInfo.ScreenY-100, 23.0f, "행성-"+nSelectionIndex );
-			txtInfo.DrawFont(gl, 20, gInfo.ScreenY-40, 28.0f, arrPlanet.get(nSelectionIndex).strName );
-			txtInfo.EndFont();
+			fGapX= 0.0f;
+			gInfo.ScrollX = arrPlanet.get(0).x;
+			return;
 		}
+		if(gInfo.ScrollX > arrPlanet.get(arrPlanet.size()-1).x)
+		{
+			fGapX= 0.0f;
+			gInfo.ScrollX = arrPlanet.get(arrPlanet.size()-1).x;
+			return;
+		}
+//		
+		switch(GlobalInput.nTouchEvent)
+		{
+		case	MotionEvent.ACTION_DOWN	:
+		case	MotionEvent.ACTION_POINTER_DOWN :
+			if(fStartX==-1.1f)
+				fStartX= GlobalInput.fTouchX;
+			break;
+		case	MotionEvent.ACTION_MOVE	:
+			fCurrX= GlobalInput.fTouchX;
+			fGapX= (fCurrX-fOldX) * -1;
+			fOldX= GlobalInput.fTouchX;			
+			
+			//fScrollDes= (fCurrX - fStartX)/3.5f;
+			fScrollDes= fGapX*3.5f;
+			
+			if((bDirectionR) && (fGapX<0.0f))	// Right로 가고있는데 방향이 바뀌면
+				fStartX= GlobalInput.fTouchX;
+			
+			if((!bDirectionR) && (fGapX>0.0f))
+				fStartX= GlobalInput.fTouchX;
+			
+			// 방향체크
+			if(fGapX > 0.0f)
+				bDirectionR= true;
+			else if(fGapX < 0.0f)
+				bDirectionR= false;
+			
+			
+			if(fGapX!=0.0f)	// 이전 터치하고 차이가 있으면
+				gInfo.ScrollX += fScrollDes;
+			
+
+			break;
+		case	MotionEvent.ACTION_UP :
+		case	MotionEvent.ACTION_POINTER_UP :
+			fScrollDes= 0.0f;
+			fStartX= -1.1f;
+			if(Math.abs(fGapX) > 0.1f)	// 갭이 남아있으면
+			{
+				fGapX = fGapX * 0.97f;
+				gInfo.ScrollX += fGapX/2;
+			}
+			break;
+		}
+
 	}
 
 	/* (non-Javadoc)
@@ -166,14 +245,7 @@ public class SSystemMap  extends SBase
 	{
 		super.Update();
 		
-		// 센서로 스크롤하는 부분
-		if(gInfo.ScrollX > 0)
-			gInfo.ScrollX -= GlobalInput.fSensorX;
-		else
-			gInfo.ScrollX += 10;
-	
-		
-
+		Scroll();
 		
 		// Selection Tool
 		if(GlobalInput.bTouch)
