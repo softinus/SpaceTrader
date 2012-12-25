@@ -64,7 +64,7 @@ public class SGameWrap extends SBase
 	{
 		super.LoadData(); 
 		
-		Music = MediaPlayer.create(mContext, R.raw.game);
+		Music = MediaPlayer.create(mContext, R.raw.space_music);
 		Music.setLooping(true);
 		Music.start();
 		
