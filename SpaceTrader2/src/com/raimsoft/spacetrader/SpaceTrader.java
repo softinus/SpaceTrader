@@ -1,6 +1,10 @@
 package com.raimsoft.spacetrader;
 
+import org.usergrid.android.client.callbacks.ApiResponseCallback;
+import org.usergrid.java.client.response.ApiResponse;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -9,7 +13,11 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 import bayaba.engine.lib.GameInfo;
+
+import com.kth.baasio.Baasio;
+import com.kth.baasio.auth.AuthUtils;
 
 public class SpaceTrader extends Activity implements SensorEventListener
 {
@@ -24,10 +32,49 @@ public class SpaceTrader extends Activity implements SensorEventListener
     {
         super.onCreate(savedInstanceState);      
         
-//        Baasio.getInstance().init(this,
-//        		"https://api.baas.io",
-//        		"junhyeok@tangibleidea.co.kr",
-//        		"spacetrader");
+        Baasio.getInstance().init(this,
+        		"https://api.baas.io",
+        		"june",
+        		"spacetrader");
+        
+//        AuthUtils.signup(
+//        	    this,                        // context
+//        	    "raimsoft",                     // username  (애플리케이션 내의 유일한 값)
+//        	    "choi jun hyeok",              // full name
+//        	    "test@test.com",             // e-mail    (애플리케이션 내의 유일한 값)
+//        	    "testtest",                     // password
+//        	    new ApiResponseCallback() {
+//        	        @Override
+//        	        public void onException(Exception e) { }            // Exception 발생
+//
+//        	        @Override
+//        	        public void onResponse(ApiResponse response)
+//        	        {
+//        	        	if(response==null)
+//        	        		ShowAlertDialog("[회원가입]", "회원가입 실패", "확인");
+//        	        	else
+//        	        		ShowAlertDialog("[회원가입]", response.toString(), "확인");
+//        	        }    // 결과
+//        	    });
+        
+        AuthUtils.login(
+        	    this,                    // context
+        	    "raimsoft",                 // username
+        	    "testtest",                 // password
+        	    new ApiResponseCallback()
+        	    {
+        	        @Override
+        	        public void onException(Exception e) { }            // Exception 발생
+
+        	        @Override
+        	        public void onResponse(ApiResponse response)
+        	        {
+        	        	if(response==null)
+        	        		ShowAlertDialog("[로그인]", "로그인 실패", "확인");
+        	        	else
+        	        		ShowAlertDialog("[로그인 성공]", response.toString(), "확인");
+        	        }    // 결과
+        	    });
 
         getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -106,4 +153,16 @@ public class SpaceTrader extends Activity implements SensorEventListener
 		// TODO Auto-generated method stub
 		
 	}  
+	
+	
+	private void ShowAlertDialog(String strTitle, String strContent, String strButton)
+	{
+		new AlertDialog.Builder(this)
+		.setTitle( strTitle )
+		.setMessage( strContent )
+		.setPositiveButton( strButton , null)
+		.setCancelable(false)
+		.create()
+		.show();
+	}
 }
