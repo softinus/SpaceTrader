@@ -160,16 +160,16 @@ public class SSystemMap  extends SBase
 			}		
 			
 			if(bDirectionR)
-				txtInfo.DrawFont(gl, 0, 0, 24f, "Dir : Right");
+				txtInfo.DrawFont(gl, 0, 0, 12f, "Dir : Right");
 			else
-				txtInfo.DrawFont(gl, 0, 0, 24f, "Dir : Left");
+				txtInfo.DrawFont(gl, 0, 0, 12f, "Dir : Left");
 			
-			txtInfo.DrawFont(gl, 0, 30, 24f, "startX : "+Float.toString(fStartX));
-			txtInfo.DrawFont(gl, 0, 60, 24f, "fCurrX : "+Float.toString(fCurrX));
-			txtInfo.DrawFont(gl, 0, 90, 24f, "fOldX : "+Float.toString(fOldX));
-			txtInfo.DrawFont(gl, 0, 120, 24f, "fGapX : "+Float.toString(fGapX));
-			txtInfo.DrawFont(gl, 0, 150, 24f, "fScrollDes : "+Float.toString(fScrollDes));
-			txtInfo.DrawFont(gl, 0, 180, 24f, "ScrollX : "+Float.toString(gInfo.ScrollX));
+			txtInfo.DrawFont(gl, 0, 20, 12f, "startX : "+Float.toString(fStartX));
+			txtInfo.DrawFont(gl, 0, 40, 12f, "fCurrX : "+Float.toString(fCurrX));
+			txtInfo.DrawFont(gl, 0, 60, 12f, "fOldX : "+Float.toString(fOldX));
+			txtInfo.DrawFont(gl, 0, 80, 12f, "fGapX : "+Float.toString(fGapX));
+			txtInfo.DrawFont(gl, 0, 100, 12f, "fScrollDes : "+Float.toString(fScrollDes));
+			txtInfo.DrawFont(gl, 0, 120, 12f, "ScrollX : "+Float.toString(gInfo.ScrollX));
 		
 		txtInfo.EndFont();
 		
@@ -177,16 +177,16 @@ public class SSystemMap  extends SBase
 	
 	void Scroll()
 	{
-		if(gInfo.ScrollX < arrPlanet.get(0).x)
+		if(gInfo.ScrollX < arrPlanet.get(0).x)	// 왼쪽 끝으로 스크롤이 나가는 것을 방지
 		{
 			fGapX= 0.0f;
 			gInfo.ScrollX = arrPlanet.get(0).x;
 			return;
 		}
-		if(gInfo.ScrollX > arrPlanet.get(arrPlanet.size()-1).x)
+		if(gInfo.ScrollX > arrPlanet.get(arrPlanet.size()-1).x-240)	// 오른쪽 끝으로 스크롤 방지
 		{
 			fGapX= 0.0f;
-			gInfo.ScrollX = arrPlanet.get(arrPlanet.size()-1).x;
+			gInfo.ScrollX = arrPlanet.get(arrPlanet.size()-1).x-240;
 			return;
 		}
 //		
@@ -199,10 +199,11 @@ public class SSystemMap  extends SBase
 			break;
 		case	MotionEvent.ACTION_MOVE	:
 			fCurrX= GlobalInput.fTouchX;
-			fGapX= (fCurrX-fOldX)*-1;
+			if(fOldX!=0.0f)	// oldX값이 있으면 (처음 start입력이 아닌 경우만)
+				fGapX= (fCurrX-fOldX)*-1;
 			fOldX= GlobalInput.fTouchX;			
 			
-			fScrollDes= (fCurrX - fStartX)/4f;
+			fScrollDes= (fCurrX - fStartX)/2.5f;
 			//fScrollDes= fGapX*3.5f;
 			
 			if((bDirectionR) && (fGapX<0.0f))	// Right로 가고있는데 방향이 바뀌면
@@ -237,7 +238,7 @@ public class SSystemMap  extends SBase
 			if(Math.abs(fGapX) > 0.1f)	// 갭이 남아있으면
 			{
 				fGapX = fGapX * 0.97f;
-				gInfo.ScrollX += fGapX/7.5f;
+				gInfo.ScrollX += fGapX/5.5f;
 			}
 			break;
 		}
