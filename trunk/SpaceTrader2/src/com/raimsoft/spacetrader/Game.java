@@ -59,7 +59,7 @@ public class Game
 		{
 			GL10 gl= currScene.backupGL();
 			currScene.ReleaseMemory();
-			currScene= new SStation(mContext, gInfo);
+			//currScene= new SStation(mContext, gInfo);
 			currScene.SetGL(gl);
 			currScene.LoadData();
 		}
