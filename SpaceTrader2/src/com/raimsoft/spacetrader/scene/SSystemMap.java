@@ -199,11 +199,11 @@ public class SSystemMap  extends SBase
 			break;
 		case	MotionEvent.ACTION_MOVE	:
 			fCurrX= GlobalInput.fTouchX;
-			fGapX= (fCurrX-fOldX) * -1;
+			fGapX= (fCurrX-fOldX)*-1;
 			fOldX= GlobalInput.fTouchX;			
 			
-			//fScrollDes= (fCurrX - fStartX)/3.5f;
-			fScrollDes= fGapX*3.5f;
+			fScrollDes= (fCurrX - fStartX)/4f;
+			//fScrollDes= fGapX*3.5f;
 			
 			if((bDirectionR) && (fGapX<0.0f))	// Right로 가고있는데 방향이 바뀌면
 				fStartX= GlobalInput.fTouchX;
@@ -219,7 +219,7 @@ public class SSystemMap  extends SBase
 			
 			
 			if(fGapX!=0.0f)	// 이전 터치하고 차이가 있으면
-				gInfo.ScrollX += fScrollDes;
+				gInfo.ScrollX += fScrollDes*-1;
 			
 
 			break;
@@ -227,10 +227,17 @@ public class SSystemMap  extends SBase
 		case	MotionEvent.ACTION_POINTER_UP :
 			fScrollDes= 0.0f;
 			fStartX= -1.1f;
+			fOldX= -0.0f;
+			fCurrX= -0.0f;
+//			if(Math.abs(fGapX) < 50f)	// 갭이 너무 크면
+//			{
+//				fGapX = fGapX * 0.97f;
+//				gInfo.ScrollX += fGapX/7.5f;
+//			}
 			if(Math.abs(fGapX) > 0.1f)	// 갭이 남아있으면
 			{
 				fGapX = fGapX * 0.97f;
-				gInfo.ScrollX += fGapX/2;
+				gInfo.ScrollX += fGapX/7.5f;
 			}
 			break;
 		}
