@@ -70,6 +70,7 @@ public class SStation extends SBase
 	{
 		super.Render();
 		
+		
 		bg_station.PutImage(gInfo, 0, 0);
 		int  nX= (int) (gInfo.ScreenX/2);
 		int  nY= (int) (gInfo.ScreenY/2);

@@ -230,11 +230,7 @@ public class SSystemMap  extends SBase
 			fStartX= -1.1f;
 			fOldX= -0.0f;
 			fCurrX= -0.0f;
-//			if(Math.abs(fGapX) < 50f)	// 갭이 너무 크면
-//			{
-//				fGapX = fGapX * 0.97f;
-//				gInfo.ScrollX += fGapX/7.5f;
-//			}
+			
 			if(Math.abs(fGapX) > 0.1f)	// 갭이 남아있으면
 			{
 				fGapX = fGapX * 0.97f;

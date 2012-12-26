@@ -278,35 +278,7 @@ public class SGameWrap extends SBase
 			return;			
 		}
 		
-		//info.MoveCamera(0.0f, -200.0f, 0.5f);
-		if( (objShip.nEventCount==0) && (gInfo.ScreenY-300 <= objShip.y) )	// 처음에 아래에서 나오는 연출
-		{
-			objShip.fEventSpped = objShip.fEventSpped * 0.979f;
-			objShip.y -= objShip.fEventSpped;
-		}
-		else
-		{
-			if((objShip.nEventCount==0))
-			{
-				objShip.nEventCount= 1;
-				objShip.fEventSpped= 4.65f;
-			}			
-		}
-		if( (objShip.nEventCount==1) && (gInfo.ScreenY-100 > objShip.y) )
-		{
-			objShip.fEventSpped = objShip.fEventSpped * 0.978f;
-			objShip.y += objShip.fEventSpped; 
-		}
-		else if((objShip.nEventCount==1) && (gInfo.ScreenY-100 <= objShip.y))
-		{
-			objShip.nEventCount= 2;			
-		}
-		
-		if((objShip.nEventCount==2))	// 다 내려왓음
-		{
-			objShip.bSheild= false;
-			objShip.bControlable= true;
-		}
+		StartDisplay();
 		
 		objProgress.fCurr += objShip.GetVelocity();	// 프로그레스바에 속도만큼 계산해준다.
 		
@@ -341,6 +313,52 @@ public class SGameWrap extends SBase
 			objShip.MoveSensorX( GlobalInput.fSensorX * objShip.getHandeling() );	// 함선 좌우 이동
 
 		
+	}
+
+	/**
+	 * 시작 연출 부분
+	 */
+	private void StartDisplay()
+	{
+		//info.MoveCamera(0.0f, -200.0f, 0.5f);
+		if( (objShip.nEventCount==0) && (gInfo.ScreenY-300 <= objShip.y) )	// 처음에 아래에서 나오는 연출
+		{
+			objShip.fEventSpeed = objShip.fEventSpeed * 0.979f;
+			objShip.y -= objShip.fEventSpeed;
+		}
+		else	// y 300 도달하면
+		{
+			if((objShip.nEventCount==0))	// 다음 액션
+			{
+				objShip.nEventCount= 1;
+				objShip.fEventSpeed= 0.55f;
+			}			
+		}
+		if( (objShip.nEventCount==1) && (gInfo.ScreenY-200 > objShip.y) )	// 두번째 액션
+		{
+			objShip.fEventSpeed = objShip.fEventSpeed * 1.024f;
+			objShip.y += objShip.fEventSpeed; 
+		}
+		else if((objShip.nEventCount==1) && (gInfo.ScreenY-200 <= objShip.y))	// 200까지 도달하면
+		{
+			objShip.nEventCount= 2;		// 다음 액션
+		}
+		
+		if( (objShip.nEventCount==2) && (gInfo.ScreenY-100 > objShip.y) )	// 세번째 액션
+		{
+			objShip.fEventSpeed = objShip.fEventSpeed * 0.971f;
+			objShip.y += objShip.fEventSpeed; 
+		}
+		else if((objShip.nEventCount==2) && (gInfo.ScreenY-100 <= objShip.y))	// 100까지 도달하면
+		{
+			objShip.nEventCount= 3;		// 다음 액션
+		}		
+		
+		if((objShip.nEventCount==3))	// 다 내려왓음
+		{
+			objShip.bSheild= false;
+			objShip.bControlable= true;
+		}
 	}
 	
 	private void UpdateStar()

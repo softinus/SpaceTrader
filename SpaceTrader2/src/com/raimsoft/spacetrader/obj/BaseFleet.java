@@ -26,7 +26,7 @@ public class BaseFleet extends GameObject
 	private GameObject objSpark, objDestroy, objShield;
 	
 	private float fVelocity= 13.0f;
-	public 	float fEventSpped= 8.5f;
+	public 	float fEventSpeed= 8.5f;
 	public  int nEventCount= 0;	// 연출0번 --(함선가속)--> 연출1번 --(함선감속)--> 연출2번 --> (시작)
 	
 	private float fHandeling= 2.0f;
