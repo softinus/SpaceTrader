@@ -6,10 +6,8 @@ import bayaba.engine.lib.Font;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.Sprite;
 
-import com.raimsoft.spacetrader.GlobalInput;
 import com.raimsoft.spacetrader.R;
 import com.raimsoft.spacetrader.obj.GameButton;
-import com.raimsoft.spacetrader.util.SoundManager;
 
 public class SMainMenu extends SBase
 {
@@ -30,7 +28,7 @@ public class SMainMenu extends SBase
 	private MediaPlayer Music;
 	
 	
-	//private Font font = new Font();
+	private Font font = new Font();
 
 	
 	@Override
@@ -126,15 +124,15 @@ public class SMainMenu extends SBase
 		main_bg.PutImage(gInfo, 0, 0);
 		sprTitle.PutImage(gInfo, 113, 55, 0);
 		
-		//font.BeginFont();
-		
 		btnPlay.DrawSprite(gInfo);
 		btnHelp.DrawSprite(gInfo);
 		btnRank.DrawSprite(gInfo);
 		btnOption.DrawSprite(gInfo);
 		btnExit.DrawSprite(gInfo);
 		
-		//font.EndFont();
+		font.BeginFont();
+			font.DrawFont(gl, 0, 0, 16f, "Dev version : "+mContext.getString(R.string.version));
+		font.EndFont();
 	}
 	
 	@Override

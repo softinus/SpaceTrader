@@ -49,13 +49,13 @@ public class SGameWrap extends SBase
 	
 	private Random rand = new Random();
 	private MediaPlayer Music;
-	private Launcher UHL;
+	//private Launcher UHL;
 		
 	public SGameWrap(Context _context, GameInfo _Info)
 	{
 		super(_context, _Info);
 		
-		UHL= new Launcher(_context);
+		//UHL= new Launcher(_context);
 		this.eMode= EnumScene.E_GAME_WRAP;
 	}
 	
