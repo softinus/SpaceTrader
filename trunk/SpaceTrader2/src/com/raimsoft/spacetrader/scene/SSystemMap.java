@@ -36,7 +36,7 @@ public class SSystemMap  extends SBase
 	private int PLANET_NUMS= 10;
 	private int PLANET_TYPES= 4;
 	
-	private float fStartX= -1.1f, fCurrX= -1.1f, fScrollDes, fOldX=-1.1f, fGapX= -1.1f;
+	private float fStartX= -1.1f, fCurrX= -1.1f, fScrollDes, fOldX=-0.0f, fGapX= 0.0f;
 	private boolean bDirectionR= true;
 	
 	
@@ -203,6 +203,7 @@ public class SSystemMap  extends SBase
 				fGapX= (fCurrX-fOldX)*-1;
 			fOldX= GlobalInput.fTouchX;			
 			
+			//fScrollDes= ((fCurrX - fStartX)/10f) + fGapX*2f;
 			fScrollDes= (fCurrX - fStartX)/2.5f;
 			//fScrollDes= fGapX*3.5f;
 			
