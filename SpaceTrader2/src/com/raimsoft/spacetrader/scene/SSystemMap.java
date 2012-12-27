@@ -200,12 +200,15 @@ public class SSystemMap  extends SBase
 		case	MotionEvent.ACTION_MOVE	:
 			fCurrX= GlobalInput.fTouchX;
 			if(fOldX!=0.0f)	// oldX값이 있으면 (처음 start입력이 아닌 경우만)
+			{
 				fGapX= (fCurrX-fOldX)*-1;
+				fScrollDes= fGapX*-2.5f;
+			}
 			fOldX= GlobalInput.fTouchX;			
 			
 			//fScrollDes= ((fCurrX - fStartX)/10f) + fGapX*2f;
-			fScrollDes= (fCurrX - fStartX)/2.5f;
-			//fScrollDes= fGapX*3.5f;
+			//fScrollDes= (fCurrX - fStartX)/2.5f;
+			
 			
 			if((bDirectionR) && (fGapX<0.0f))	// Right로 가고있는데 방향이 바뀌면
 				fStartX= GlobalInput.fTouchX;

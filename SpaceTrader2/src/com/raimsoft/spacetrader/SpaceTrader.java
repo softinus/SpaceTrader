@@ -1,19 +1,21 @@
 package com.raimsoft.spacetrader;
 
 import org.usergrid.android.client.callbacks.ApiResponseCallback;
+import org.usergrid.java.client.entities.Entity;
 import org.usergrid.java.client.response.ApiResponse;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 import bayaba.engine.lib.GameInfo;
 
 import com.kth.baasio.Baasio;
@@ -26,6 +28,8 @@ public class SpaceTrader extends Activity implements SensorEventListener
 	public GameInfo gInfo;
 	
 	private SensorManager sManager;
+	private boolean bJoinFailed= true;
+	private String strUserID="test2";
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -37,32 +41,15 @@ public class SpaceTrader extends Activity implements SensorEventListener
         		"june",
         		"spacetrader");
         
-//        AuthUtils.signup(
-//        	    this,                        // context
-//        	    "raimsoft",                     // username  (애플리케이션 내의 유일한 값)
-//        	    "choi jun hyeok",              // full name
-//        	    "test@test.com",             // e-mail    (애플리케이션 내의 유일한 값)
-//        	    "testtest",                     // password
-//        	    new ApiResponseCallback() {
-//        	        @Override
-//        	        public void onException(Exception e) { }            // Exception 발생
-//
-//        	        @Override
-//        	        public void onResponse(ApiResponse response)
-//        	        {
-//        	        	if(response==null)
-//        	        		ShowAlertDialog("[회원가입]", "회원가입 실패", "확인");
-//        	        	else
-//        	        		ShowAlertDialog("[회원가입]", response.toString(), "확인");
-//        	        }    // 결과
-//        	    });
+
         
-        AuthUtils.login(
-        	    this,                    // context
-        	    "raimsoft",                 // username
-        	    "testtest",                 // password
-        	    new ApiResponseCallback()
-        	    {
+        AuthUtils.signup(
+        	    this,                        // context
+        	    strUserID,                     // username  (애플리케이션 내의 유일한 값)
+        	    "choi jun hyeok",              // full name
+        	    "test@test.com",             // e-mail    (애플리케이션 내의 유일한 값)
+        	    "testtest",                     // password
+        	    new ApiResponseCallback() {
         	        @Override
         	        public void onException(Exception e) { }            // Exception 발생
 
@@ -70,11 +57,62 @@ public class SpaceTrader extends Activity implements SensorEventListener
         	        public void onResponse(ApiResponse response)
         	        {
         	        	if(response==null)
-        	        		ShowAlertDialog("[로그인]", "로그인 실패", "확인");
+        	        		ShowAlertDialog("[회원가입]", "회원가입 실패", "확인");
         	        	else
-        	        		ShowAlertDialog("[로그인 성공]", response.toString(), "확인");
+        	        	{
+        	        		bJoinFailed= false;
+        	        		ShowAlertDialog("[회원가입]", response.toString(), "확인");
+        	        	}
         	        }    // 결과
         	    });
+        
+        if(!bJoinFailed)
+        {
+			String strNumber= null;
+			String strIMEI= null;
+			
+			TelephonyManager TM = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
+			if (TM.getSimState() == TelephonyManager.SIM_STATE_ABSENT)
+			{
+				strNumber= "USIM정보가 없음";
+			} 
+			else {
+				strNumber= TM.getLine1Number();
+				strIMEI= TM.getDeviceId();
+			}
+	        
+	        Entity entity = new Entity("samples");         // 저장할 컬랙션 명을 사용하여 Entity 생성
+	        entity.setProperty("userID", strUserID);    // Entity 항목 지정 ( Propery name , Value )
+	        entity.setProperty("phoneNum", strNumber);    // Entity 항목 지정 ( Propery name , Value )
+	        //entity.setProperty("phoneNum", strIMEI);    // Entity 항목 지정 ( Propery name , Value )
+	
+	        Baasio.getInstance().createEntityAsync(entity, new ApiResponseCallback()
+	        {
+	                @Override
+	                public void onException(Exception e) { }            // Exception 발생
+	
+	                @Override
+	                public void onResponse(ApiResponse response) { }    // 결과
+	        });     // Entity 생성 요청
+        }
+//        AuthUtils.login(
+//        	    this,                    // context
+//        	    "raimsoft",                 // username
+//        	    "testtest",                 // password
+//        	    new ApiResponseCallback()
+//        	    {
+//        	        @Override
+//        	        public void onException(Exception e) { }            // Exception 발생
+//
+//        	        @Override
+//        	        public void onResponse(ApiResponse response)
+//        	        {
+//        	        	if(response==null)
+//        	        		ShowAlertDialog("[로그인]", "로그인 실패", "확인");
+//        	        	else
+//        	        		ShowAlertDialog("[로그인 성공]", response.toString(), "확인");
+//        	        }    // 결과
+//        	    });
 
         getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
