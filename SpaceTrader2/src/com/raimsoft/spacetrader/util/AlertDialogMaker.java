@@ -22,14 +22,18 @@ public class AlertDialogMaker extends Activity
 	        .setIcon(android.R.drawable.ic_dialog_alert)
 	        .setTitle("로그인")
 	        .setView(textEntryView)
-	        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-	            public void onClick(DialogInterface dialog, int whichButton) {
+	        .setPositiveButton("확인", new DialogInterface.OnClickListener()
+	        {
+	            public void onClick(DialogInterface dialog, int whichButton)
+	            {
 
 	                /* User clicked OK so do some stuff */
 	            }
 	        })
-	        .setNegativeButton("닫기", new DialogInterface.OnClickListener() {
-	            public void onClick(DialogInterface dialog, int whichButton) {
+	        .setNegativeButton("닫기", new DialogInterface.OnClickListener()
+	        {
+	            public void onClick(DialogInterface dialog, int whichButton)
+	            {
 
 	                /* User clicked cancel so do some stuff */
 	            }

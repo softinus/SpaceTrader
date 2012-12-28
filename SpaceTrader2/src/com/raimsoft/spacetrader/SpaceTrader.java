@@ -1,19 +1,24 @@
 package com.raimsoft.spacetrader;
 
 import org.usergrid.android.client.callbacks.ApiResponseCallback;
-import org.usergrid.java.client.entities.Entity;
 import org.usergrid.java.client.response.ApiResponse;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.telephony.TelephonyManager;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import bayaba.engine.lib.GameInfo;
@@ -29,7 +34,14 @@ public class SpaceTrader extends Activity implements SensorEventListener
 	
 	private SensorManager sManager;
 	private boolean bJoinFailed= true;
-	private String strUserID="test2";
+	private String strUserID="test4";
+	
+	
+	
+	
+	
+	
+	
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -41,12 +53,24 @@ public class SpaceTrader extends Activity implements SensorEventListener
         		"june",
         		"spacetrader");
         
+		String strNumber= null;
+		String strIMEI= null;
+		
+		TelephonyManager TM = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
+		if (TM.getSimState() == TelephonyManager.SIM_STATE_ABSENT)
+		{
+			strNumber= "USIM정보가 없음";
+		} 
+		else {
+			strNumber= TM.getLine1Number();
+			strIMEI= TM.getDeviceId();
+		}
 
         
         AuthUtils.signup(
         	    this,                        // context
         	    strUserID,                     // username  (애플리케이션 내의 유일한 값)
-        	    "choi jun hyeok",              // full name
+        	    strNumber,              // full name
         	    "test@test.com",             // e-mail    (애플리케이션 내의 유일한 값)
         	    "testtest",                     // password
         	    new ApiResponseCallback() {
@@ -66,35 +90,35 @@ public class SpaceTrader extends Activity implements SensorEventListener
         	        }    // 결과
         	    });
         
-        if(!bJoinFailed)
-        {
-			String strNumber= null;
-			String strIMEI= null;
-			
-			TelephonyManager TM = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
-			if (TM.getSimState() == TelephonyManager.SIM_STATE_ABSENT)
-			{
-				strNumber= "USIM정보가 없음";
-			} 
-			else {
-				strNumber= TM.getLine1Number();
-				strIMEI= TM.getDeviceId();
-			}
-	        
-	        Entity entity = new Entity("samples");         // 저장할 컬랙션 명을 사용하여 Entity 생성
-	        entity.setProperty("userID", strUserID);    // Entity 항목 지정 ( Propery name , Value )
-	        entity.setProperty("phoneNum", strNumber);    // Entity 항목 지정 ( Propery name , Value )
-	        //entity.setProperty("phoneNum", strIMEI);    // Entity 항목 지정 ( Propery name , Value )
-	
-	        Baasio.getInstance().createEntityAsync(entity, new ApiResponseCallback()
-	        {
-	                @Override
-	                public void onException(Exception e) { }            // Exception 발생
-	
-	                @Override
-	                public void onResponse(ApiResponse response) { }    // 결과
-	        });     // Entity 생성 요청
-        }
+//        if(!bJoinFailed)
+//        {
+//			String strNumber= null;
+//			String strIMEI= null;
+//			
+//			TelephonyManager TM = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
+//			if (TM.getSimState() == TelephonyManager.SIM_STATE_ABSENT)
+//			{
+//				strNumber= "USIM정보가 없음";
+//			} 
+//			else {
+//				strNumber= TM.getLine1Number();
+//				strIMEI= TM.getDeviceId();
+//			}
+//	        
+//	        Entity entity = new Entity("samples");         // 저장할 컬랙션 명을 사용하여 Entity 생성
+//	        entity.setProperty("userID", strUserID);    // Entity 항목 지정 ( Propery name , Value )
+//	        entity.setProperty("phoneNum", strNumber);    // Entity 항목 지정 ( Propery name , Value )
+//	        //entity.setProperty("phoneNum", strIMEI);    // Entity 항목 지정 ( Propery name , Value )
+//	
+//	        Baasio.getInstance().createEntityAsync(entity, new ApiResponseCallback()
+//	        {
+//	                @Override
+//	                public void onException(Exception e) { }            // Exception 발생
+//	
+//	                @Override
+//	                public void onResponse(ApiResponse response) { }    // 결과
+//	        });     // Entity 생성 요청
+//        }
 //        AuthUtils.login(
 //        	    this,                    // context
 //        	    "raimsoft",                 // username
@@ -132,6 +156,41 @@ public class SpaceTrader extends Activity implements SensorEventListener
         
         setContentView( GLView );
     }
+    
+    
+    
+    
+    
+    
+    
+    public Handler LoadingHandler = new Handler()
+	{
+//		OnMeepleInteraction callback= new OnMeepleInteraction()
+//		{	
+//			@Override
+//			public void OnRespound(boolean bAccept)	// 상대방을 수락하거나 거절하면 일로 넘어온다.
+//			{
+//				//LoadingMeeplesInfo();				
+//			}
+//		};
+		
+		public void handleMessage(Message msg)
+		{			
+			if(msg.what==0)
+			{
+				onCreateDialog(0, null);
+			}
+		}
+	};
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     @Override
@@ -202,5 +261,35 @@ public class SpaceTrader extends Activity implements SensorEventListener
 		.setCancelable(false)
 		.create()
 		.show();
+	}
+	
+	
+	
+	@Override
+	protected Dialog onCreateDialog(int id, Bundle args)
+	{
+		LayoutInflater factory = LayoutInflater.from(this);
+	    final View textEntryView = factory.inflate(R.layout.login_dialog, null);
+	    return new AlertDialog.Builder(SpaceTrader.this)
+	        .setIcon(android.R.drawable.ic_dialog_alert)
+	        .setTitle("로그인")
+	        .setView(textEntryView)
+	        .setPositiveButton("확인", new DialogInterface.OnClickListener()
+	        {
+	            public void onClick(DialogInterface dialog, int whichButton)
+	            {
+
+	                /* User clicked OK so do some stuff */
+	            }
+	        })
+	        .setNegativeButton("닫기", new DialogInterface.OnClickListener()
+	        {
+	            public void onClick(DialogInterface dialog, int whichButton)
+	            {
+
+	                /* User clicked cancel so do some stuff */
+	            }
+	        })
+	        .create();
 	}
 }
