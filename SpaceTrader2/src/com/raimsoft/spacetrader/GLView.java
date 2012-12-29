@@ -1,5 +1,7 @@
 package com.raimsoft.spacetrader;
 
+import com.raimsoft.spacetrader.data.GlobalInput;
+
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.Log;

@@ -4,7 +4,7 @@ import android.content.Context;
 import bayaba.engine.lib.Font;
 import bayaba.engine.lib.GameInfo;
 
-import com.raimsoft.spacetrader.GlobalInput;
+import com.raimsoft.spacetrader.data.GlobalInput;
 
 public class SGalaxyMap extends SBase
 {

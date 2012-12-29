@@ -12,8 +12,8 @@ import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
 
-import com.raimsoft.spacetrader.GlobalInput;
 import com.raimsoft.spacetrader.R;
+import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.obj.Planet;
 import com.raimsoft.spacetrader.util.SoundManager;
 

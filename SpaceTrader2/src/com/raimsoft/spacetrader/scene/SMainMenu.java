@@ -7,6 +7,8 @@ import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.Sprite;
 
 import com.raimsoft.spacetrader.R;
+import com.raimsoft.spacetrader.SpaceTrader;
+import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.GameButton;
 
 public class SMainMenu extends SBase
@@ -27,6 +29,7 @@ public class SMainMenu extends SBase
 	
 	private MediaPlayer Music;
 	
+	private UserInfo s_uInfo;
 	
 	private Font font = new Font();
 
@@ -35,6 +38,8 @@ public class SMainMenu extends SBase
 	public void LoadData()
 	{
 		super.LoadData();
+		
+		s_uInfo= UserInfo.GetInstance();
 		
 		Music = MediaPlayer.create(mContext, R.raw.main_theme);
 		Music.setLooping(true);
@@ -71,8 +76,10 @@ public class SMainMenu extends SBase
 				
 		if( btnPlay.CheckOver() )
 		{
-			
-			this.SetScene(EnumScene.E_GAME_STORY);
+			if(s_uInfo.GetLogin())
+				this.SetScene(EnumScene.E_GAME_STORY);
+			else
+				((SpaceTrader)mContext).LoadingHandler.sendEmptyMessage(0);
 		}
 		
 		if( btnHelp.CheckOver() )

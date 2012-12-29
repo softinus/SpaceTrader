@@ -35,9 +35,9 @@ public final class R {
         public static final int story4=0x7f020015;
     }
     public static final class id {
-        public static final int password_edit=0x7f060003;
+        public static final int edt_password=0x7f060003;
+        public static final int edt_username=0x7f060001;
         public static final int password_view=0x7f060002;
-        public static final int username_edit=0x7f060001;
         public static final int username_view=0x7f060000;
     }
     public static final class layout {
