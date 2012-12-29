@@ -12,14 +12,15 @@ import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
 
 import com.immersion.uhl.Launcher;
-import com.raimsoft.spacetrader.GlobalInput;
 import com.raimsoft.spacetrader.R;
-import com.raimsoft.spacetrader.obj.BaseFleet;
+import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.obj.Meteor;
 import com.raimsoft.spacetrader.obj.Missile;
 import com.raimsoft.spacetrader.obj.ProgressMeter;
 import com.raimsoft.spacetrader.obj.Radar;
 import com.raimsoft.spacetrader.obj.Star;
+import com.raimsoft.spacetrader.obj.fleets.BaseFleet;
+import com.raimsoft.spacetrader.obj.fleets.TraningShip1;
 
 public class SGameWrap extends SBase
 {
@@ -36,7 +37,7 @@ public class SGameWrap extends SBase
 	private boolean bReleased= false;
 	private int nMeteorCount= 0;
 	
-	private BaseFleet objShip;					// 나의 함선
+	private TraningShip1 objShip;					// 나의 함선
 	private Missile	objMissile;					// 미사일
 	private Radar objRader;						// 레이더
 	private ProgressMeter objProgress;			// 프로그레스바
@@ -79,7 +80,7 @@ public class SGameWrap extends SBase
 		objRader= new Radar(gl, gInfo, mContext);
 		objProgress= new ProgressMeter(gl, gInfo, mContext);
 	
-		objShip= new BaseFleet(gl, mContext);
+		objShip= new TraningShip1(gl, mContext);
 		objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY+60, 0, 0 );
 		objShip.scalex= 0.5f;
 		objShip.scaley= 0.5f;

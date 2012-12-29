@@ -2,8 +2,8 @@ package com.raimsoft.spacetrader.obj;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.raimsoft.spacetrader.GlobalInput;
 import com.raimsoft.spacetrader.R;
+import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.util.SoundManager;
 
 import android.content.Context;

@@ -5,7 +5,7 @@ import bayaba.engine.lib.Font;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
 
-import com.raimsoft.spacetrader.GlobalInput;
+import com.raimsoft.spacetrader.data.GlobalInput;
 
 public class SStartStory extends SBase
 {
