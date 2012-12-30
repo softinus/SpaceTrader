@@ -2,6 +2,8 @@ package com.raimsoft.spacetrader.obj.fleets;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import bayaba.engine.lib.GameInfo;
+
 import com.immersion.uhl.Launcher;
 
 import android.content.Context;
@@ -17,7 +19,7 @@ public class TraningShip1 extends BaseFleet
 		
 		fVelocity= 13.0f;
 		fHandeling= 2.0f;
-		nHP= 1000;
+		nHP= 3500;
 	}
 
 	
@@ -41,6 +43,16 @@ public class TraningShip1 extends BaseFleet
 	{
 		this.fHandeling = fHandeling;
 	}
+
+
+	@Override
+	public void DrawSprite(GameInfo info)
+	{
+		
+	}
+
+
+
 
 
 	/**

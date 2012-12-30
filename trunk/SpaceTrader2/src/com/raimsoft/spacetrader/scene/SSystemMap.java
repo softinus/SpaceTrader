@@ -38,7 +38,7 @@ public class SSystemMap  extends SBase
 	
 	private float fStartX= -1.1f, fCurrX= -1.1f, fScrollDes, fOldX=-0.0f, fGapX= 0.0f;
 	private boolean bDirectionR= true;
-	
+	private int nBeforeType= -1; // planet type before
 	
 	private ArrayList<String> arrPlanetName= new ArrayList<String>();
 
@@ -92,19 +92,22 @@ public class SSystemMap  extends SBase
 		objPanel.scroll= false; 
 		
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");		
-		for(Planet PN : arrPlanet)
+		for(Planet PN : arrPlanet)	// 
 		{
 			PN.type= rand.nextInt(PLANET_TYPES);
-			
-			if(PN.nIndex!=0)	// 이전 행성과 다른 타입으로 설정하기
+
+			if(nBeforeType==-1)	// first loop
 			{
-				while(PN.type == arrPlanet.get(PN.nIndex-1).type)
-				{
-					PN.type= rand.nextInt(PLANET_TYPES);
-				}
+				nBeforeType= PN.type; 
 			}
+			else	// 이전 행성과 다른 타입으로 설정하기
+			{
+				while(PN.type == nBeforeType)
+					PN.type= rand.nextInt(PLANET_TYPES);
+				nBeforeType= PN.type;
+			}			
 				
-			float x= rand.nextInt(300) + 350*PN.nIndex;
+			float x= 100+rand.nextInt(200) + 300*PN.nIndex;
 			float y= 100+rand.nextInt(500);
 			Log.d("Planet ["+PN.nIndex+"]"," => X : "+x+"  //  Y : "+y+"  //  type : "+PN.type);
 			PN.SetObject(sprPlanets, 0, 0, x, y, PN.type, 0);
@@ -180,12 +183,14 @@ public class SSystemMap  extends SBase
 		if(gInfo.ScrollX < arrPlanet.get(0).x)	// 왼쪽 끝으로 스크롤이 나가는 것을 방지
 		{
 			fGapX= 0.0f;
+			fScrollDes= 0.0f;
 			gInfo.ScrollX = arrPlanet.get(0).x;
 			return;
 		}
 		if(gInfo.ScrollX > arrPlanet.get(arrPlanet.size()-1).x-240)	// 오른쪽 끝으로 스크롤 방지
 		{
 			fGapX= 0.0f;
+			fScrollDes= 0.0f;
 			gInfo.ScrollX = arrPlanet.get(arrPlanet.size()-1).x-240;
 			return;
 		}
@@ -221,11 +226,9 @@ public class SSystemMap  extends SBase
 				bDirectionR= true;
 			else if(fGapX < 0.0f)
 				bDirectionR= false;
-			
-			
-			if(fGapX!=0.0f)	// 이전 터치하고 차이가 있으면
+		
+			if((fGapX!=0.0f))	// 이전 터치하고 차이가 있으면
 				gInfo.ScrollX += fScrollDes*-1;
-			
 
 			break;
 		case	MotionEvent.ACTION_UP :

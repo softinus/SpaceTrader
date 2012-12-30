@@ -11,7 +11,6 @@ import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
 
-import com.immersion.uhl.Launcher;
 import com.raimsoft.spacetrader.R;
 import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.obj.Meteor;
@@ -19,8 +18,8 @@ import com.raimsoft.spacetrader.obj.Missile;
 import com.raimsoft.spacetrader.obj.ProgressMeter;
 import com.raimsoft.spacetrader.obj.Radar;
 import com.raimsoft.spacetrader.obj.Star;
-import com.raimsoft.spacetrader.obj.fleets.BaseFleet;
 import com.raimsoft.spacetrader.obj.fleets.TraningShip1;
+import com.raimsoft.spacetrader.obj.fleets.TraningShip2;
 
 public class SGameWrap extends SBase
 {
@@ -37,7 +36,7 @@ public class SGameWrap extends SBase
 	private boolean bReleased= false;
 	private int nMeteorCount= 0;
 	
-	private TraningShip1 objShip;					// 나의 함선
+	private TraningShip2 objShip;					// 나의 함선
 	private Missile	objMissile;					// 미사일
 	private Radar objRader;						// 레이더
 	private ProgressMeter objProgress;			// 프로그레스바
@@ -70,7 +69,7 @@ public class SGameWrap extends SBase
 		Music.start();
 		
 		
-		sprShip.LoadSprite( gl, mContext, R.drawable.resource_2, "ship_1.spr" );
+		sprShip.LoadSprite( gl, mContext, R.drawable.resource_2, "ship_2.spr" );
 		sprStar.LoadSprite( gl, mContext, R.drawable.resource_2, "star_1.spr" );
 		sprMetoer.LoadSprite( gl, mContext, R.drawable.resource_2, "meteor.spr" );
 		sprMissile.LoadSprite(gl, mContext, R.drawable.resource_2, "missile_1.spr");
@@ -80,7 +79,7 @@ public class SGameWrap extends SBase
 		objRader= new Radar(gl, gInfo, mContext);
 		objProgress= new ProgressMeter(gl, gInfo, mContext);
 	
-		objShip= new TraningShip1(gl, mContext);
+		objShip= new TraningShip2(gl, mContext);
 		objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY+60, 0, 0 );
 		objShip.scalex= 0.5f;
 		objShip.scaley= 0.5f;
