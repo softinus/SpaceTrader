@@ -32,6 +32,7 @@ import bayaba.engine.lib.GameInfo;
 
 import com.kth.baasio.Baasio;
 import com.kth.baasio.auth.AuthUtils;
+import com.raimsoft.spacetrader.data.EnumShip;
 import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.util.SPUtil;
@@ -270,7 +271,11 @@ public class SpaceTrader extends Activity implements SensorEventListener
 	            	        		{
 	            	        			ShowAlertDialog("[로그인 성공]", "우주무역 시스템...\n장사꾼 "+EDT_ID.getText().toString()+"의 정보를 가져왔습니다.\n게임 시작해주세요!", "확인");
 	            	        			uInfo.SetLogin(true);
-	            	        			u
+	            	        			uInfo.SetGold(0);
+	            	        			uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_1);
+	            	        			uInfo.SetWorldMapX(-1);
+	            	        			uInfo.SetWorldMapY(-1);
+	            	        			uInfo.SetSystemMapPlanet(-1);
 	            	        			//SPUtil.putBoolean(getApplicationContext(), "login", true);
 	            	        		}
 	            	        		else
