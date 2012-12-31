@@ -275,7 +275,7 @@ public class SpaceTrader extends Activity implements SensorEventListener
 	            	        			uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_1);
 	            	        			uInfo.SetWorldMapX(-1);
 	            	        			uInfo.SetWorldMapY(-1);
-	            	        			uInfo.SetSystemMapPlanet(-1);
+	            	        			uInfo.SetSystemMapPlanet(1);
 	            	        			//SPUtil.putBoolean(getApplicationContext(), "login", true);
 	            	        		}
 	            	        		else

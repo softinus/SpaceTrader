@@ -10,7 +10,7 @@ public class UserInfo
 	private int nGold= -1;
 	private int nWorldMapX= -1;
 	private int nWorldMapY= -1;
-	private int nSystemMapPlanet= -1;
+	private int nSystemMapPlanet= 1;
 	
 	
 	public static final UserInfo GetInstance()
