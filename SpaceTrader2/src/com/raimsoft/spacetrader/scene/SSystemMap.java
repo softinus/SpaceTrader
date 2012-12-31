@@ -14,20 +14,29 @@ import bayaba.engine.lib.Sprite;
 
 import com.raimsoft.spacetrader.R;
 import com.raimsoft.spacetrader.data.GlobalInput;
+import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.Planet;
+import com.raimsoft.spacetrader.util.RandomNameMaker;
 import com.raimsoft.spacetrader.util.SoundManager;
 
 public class SSystemMap  extends SBase
 {
+	private UserInfo uInfo;
+	private RandomNameMaker RNM;
+	
 	Sprite sprBackgroundA= new Sprite();
 	Sprite sprPlanets= new Sprite();
 	Sprite sprPanel= new Sprite();
+	Sprite sprPosMark= new Sprite();
 	
 	private SoundManager Sound;
 	
 	private int nSelectionIndex= 0; 	// 선택된 행성 인덱스
 	private ArrayList<Planet> arrPlanet= new ArrayList<Planet>();
-	private GameObject objSelection= new GameObject();
+	
+	private GameObject objPositionMarker= new GameObject();	// 현재 위치 보여주는 마커
+	private ArrayList<GameObject> arrMoveAbleMarker= new ArrayList<GameObject>();	// 이동 가능한 위치 보여주는 마커.	
+	private GameObject objSelection= new GameObject();	// 선택된 행성 보여주는 마커
 	private GameObject objPanel= new GameObject();
 	private Font txtInfo= new Font();
 	
@@ -35,7 +44,10 @@ public class SSystemMap  extends SBase
 	
 	private int PLANET_NUMS= 10;
 	private int PLANET_TYPES= 4;
+	private int MARKER_Y= 100;
 	
+	private int nHalfScreenX;
+	private int nMyPos;
 	private float fStartX= -1.1f, fCurrX= -1.1f, fScrollDes, fOldX=-0.0f, fGapX= 0.0f;
 	private boolean bDirectionR= true;
 	private int nBeforeType= -1; // planet type before
@@ -46,26 +58,17 @@ public class SSystemMap  extends SBase
 	{
 		super(mContext, gInfo);
 		
-		arrPlanetName.add("맛있는 무개념 행성");
-		arrPlanetName.add("꼬물거리는 바베큐 행성");
-		arrPlanetName.add("맛있는 비타민 행성");
-		arrPlanetName.add("오만한 AABB 행성");
-		arrPlanetName.add("헬로우 월드 행성");
-		arrPlanetName.add("재밋는 이야기 행성");
-		arrPlanetName.add("엄청나게 희귀한 행성");
-		arrPlanetName.add("더러운 프링글스 행성");
-		arrPlanetName.add("행복한 스마트폰 행성");
-		arrPlanetName.add("쿼드코어 PC 행성");
-		arrPlanetName.add("헵시바 바나바 행성");
-		arrPlanetName.add("행복하고 슬픈 행성");
-		arrPlanetName.add("배고프고 배부른 행성");
-		arrPlanetName.add("착한 풍뎅이 행성");
-		arrPlanetName.add("나쁜 프로그래밍 행성");
+		uInfo= UserInfo.GetInstance();
+		RNM= new RandomNameMaker();
+		arrPlanetName= RNM.GetNames(10);
 		
 		Collections.shuffle(arrPlanetName);
 		
 		for(int i=0; i<PLANET_NUMS; ++i)
 			arrPlanet.add( new Planet(i, arrPlanetName.get(i)) );
+		
+		for(int i=0; i<4; ++i)
+			arrMoveAbleMarker.add(new GameObject());
 		
 		Sound= new SoundManager(mContext);
 		
@@ -80,17 +83,18 @@ public class SSystemMap  extends SBase
 	{
 		super.LoadData();
 		
+		nHalfScreenX= (int) (gInfo.ScreenX/2);
+		nMyPos= nSelectionIndex= uInfo.GetSystemMapPlanet();
 		
 		Sound.Create();
-		Sound.Load(0, R.raw.button1);
-		
-		gInfo.ScrollX=30;
+		Sound.Load(0, R.raw.button1);		
 		
 		sprPanel.LoadSprite(gl, mContext, R.drawable.map_panel, "map_panel.spr");
-		objPanel.SetObject(sprPanel, 0, 0, 0, gInfo.ScreenY, 0, 0);
-		objPanel.trans= 0.5f;
+		objPanel.SetObject(sprPanel, 0, 0, 0, gInfo.ScreenY+20, 0, 0);
+		//objPanel.trans= 0.5f;
 		objPanel.scroll= false; 
 		
+		sprPosMark.LoadSprite(gl, mContext, R.drawable.planets, "position_marker.spr");
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");		
 		for(Planet PN : arrPlanet)	// 
 		{
@@ -108,7 +112,7 @@ public class SSystemMap  extends SBase
 			}			
 				
 			float x= 100+rand.nextInt(200) + 300*PN.nIndex;
-			float y= 100+rand.nextInt(500);
+			float y= 200+rand.nextInt(500);
 			Log.d("Planet ["+PN.nIndex+"]"," => X : "+x+"  //  Y : "+y+"  //  type : "+PN.type);
 			PN.SetObject(sprPlanets, 0, 0, x, y, PN.type, 0);
 			float fRandomScale= 0.5f+rand.nextFloat()/2;
@@ -119,9 +123,45 @@ public class SSystemMap  extends SBase
 //		gInfo.TileData.LoadTile(gl, mContext, R.drawable.planets, 32, 32);
 //		gInfo.TileData.LoadMap(mContext, "plantes.map");
 		
+		
+		Planet currPlanet= arrPlanet.get( nMyPos );
+		objPositionMarker.SetObject(sprPosMark, 0, 0, currPlanet.x, currPlanet.y-(currPlanet.scaley*MARKER_Y), 0, 0);
+
+		if(nMyPos==0)
+		{
+			arrMoveAbleMarker.get(0).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos+1).x, arrPlanet.get(nMyPos+1).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+			arrMoveAbleMarker.get(1).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos+2).x, arrPlanet.get(nMyPos+2).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+		}
+		else if(nMyPos==1)
+		{
+			arrMoveAbleMarker.get(0).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos-1).x, arrPlanet.get(nMyPos-1).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+			arrMoveAbleMarker.get(1).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos+1).x, arrPlanet.get(nMyPos+1).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+			arrMoveAbleMarker.get(2).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos+2).x, arrPlanet.get(nMyPos+2).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+		}
+		else if(nMyPos==PLANET_NUMS)
+		{
+			arrMoveAbleMarker.get(0).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos-1).x, arrPlanet.get(nMyPos-1).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+			arrMoveAbleMarker.get(1).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos-2).x, arrPlanet.get(nMyPos-2).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+		}
+		else if(nMyPos==PLANET_NUMS-1)
+		{
+			arrMoveAbleMarker.get(0).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos-2).x, arrPlanet.get(nMyPos-2).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+			arrMoveAbleMarker.get(1).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos-1).x, arrPlanet.get(nMyPos-1).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+			arrMoveAbleMarker.get(2).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos+1).x, arrPlanet.get(nMyPos+1).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+		}
+		else
+		{
+			arrMoveAbleMarker.get(0).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos-2).x, arrPlanet.get(nMyPos-2).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+			arrMoveAbleMarker.get(1).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos-1).x, arrPlanet.get(nMyPos-1).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+			arrMoveAbleMarker.get(2).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos+1).x, arrPlanet.get(nMyPos+1).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+			arrMoveAbleMarker.get(3).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos+2).x, arrPlanet.get(nMyPos+2).y-(currPlanet.scaley*MARKER_Y), 1, 0);
+		}
+		
 		objSelection.SetObject(sprPlanets, 0, 0, 0, 0, 5, 0);
 		objSelection.show= false;
 		sprBackgroundA.LoadSprite(gl, mContext, R.drawable.background_a, "background_a.spr");
+		
+		gInfo.ScrollX= arrPlanet.get( nMyPos ).x-(nHalfScreenX); 	// 처음 스크롤 위치
 	}
 
 	/* (non-Javadoc)
@@ -131,8 +171,10 @@ public class SSystemMap  extends SBase
 	public void Render()
 	{
 		super.Render();
+		
+		objSelection.angle+=3;	// 선택 포지션.
 		sprBackgroundA.PutImage(gInfo, 0, 0, 0);
-		gInfo.TileData.DrawMap( 0, gInfo );		
+		//gInfo.TileData.DrawMap( 0, gInfo );		
 		
 		for(Planet PN : arrPlanet)
 		{			
@@ -143,19 +185,32 @@ public class SSystemMap  extends SBase
 			gInfo.DrawLine(gl, (int)(curr.x-gInfo.ScrollX), (int)curr.y, (int)(next.x-gInfo.ScrollX), (int)next.y, 200, 255, 200, 1.0f, 1.0f);
 		}
 		
+		int nSelGap= Math.abs(nSelectionIndex-nMyPos);
+		if(nSelGap <= 2)	// 현재 위치와 선택 위치가 2개 차이 이하면 선을 그려줌
+		{
+			gInfo.DrawLine(gl, (int)(arrPlanet.get(nMyPos).x-gInfo.ScrollX), (int)arrPlanet.get(nMyPos).y, (int)(arrPlanet.get(nSelectionIndex).x-gInfo.ScrollX), (int)arrPlanet.get(nSelectionIndex).y, 230, 255, 0, 50, 6.5f);
+		}
 		
-		for(Planet PN : arrPlanet)
+		for(Planet PN : arrPlanet)	// 행성 그리기
 		{
 			//if(PN.x <= gInfo.ScrollX)	// 절두체 계산 해보자
 			PN.DrawSprite(gInfo);
 		}
-				
-		objSelection.angle+=3;
-		objSelection.DrawSprite(gInfo);
+		
+		objSelection.DrawSprite(gInfo);		
+		objPositionMarker.DrawSprite(gInfo);
+		
+		for(GameObject Marker : arrMoveAbleMarker)
+		{	
+			if(Marker.pattern!=null)
+				Marker.DrawSprite(gInfo);
+		}
+		
+		// 패널 그리기				
 		objPanel.DrawSprite(gInfo);
 		
-		txtInfo.BeginFont();
-		
+		// 패널 폰트 그리기
+		txtInfo.BeginFont();		
 			if(objPanel.show)	// 패널이 보일 때만 정보가 보인다.
 			{
 				txtInfo.DrawFont(gl, 20, gInfo.ScreenY-100, 23.0f, "행성-"+nSelectionIndex );
@@ -172,26 +227,29 @@ public class SSystemMap  extends SBase
 			txtInfo.DrawFont(gl, 0, 60, 12f, "fOldX : "+Float.toString(fOldX));
 			txtInfo.DrawFont(gl, 0, 80, 12f, "fGapX : "+Float.toString(fGapX));
 			txtInfo.DrawFont(gl, 0, 100, 12f, "fScrollDes : "+Float.toString(fScrollDes));
-			txtInfo.DrawFont(gl, 0, 120, 12f, "ScrollX : "+Float.toString(gInfo.ScrollX));
-		
+			txtInfo.DrawFont(gl, 0, 120, 12f, "ScrollX : "+Float.toString(gInfo.ScrollX));		
 		txtInfo.EndFont();
 		
 	}
 	
+	
+	// 시스템맵에서 드래그앤드롭 스크롤 구현
 	void Scroll()
 	{
-		if(gInfo.ScrollX < arrPlanet.get(0).x)	// 왼쪽 끝으로 스크롤이 나가는 것을 방지
+		if(gInfo.ScrollX < arrPlanet.get(0).x-nHalfScreenX)	// 왼쪽 끝으로 스크롤이 나가는 것을 방지
 		{
 			fGapX= 0.0f;
 			fScrollDes= 0.0f;
-			gInfo.ScrollX = arrPlanet.get(0).x;
+			fOldX= 0.0f;
+			gInfo.ScrollX = arrPlanet.get(0).x-nHalfScreenX;
 			return;
 		}
-		if(gInfo.ScrollX > arrPlanet.get(arrPlanet.size()-1).x-240)	// 오른쪽 끝으로 스크롤 방지
+		if(gInfo.ScrollX > arrPlanet.get(arrPlanet.size()-1).x-nHalfScreenX)	// 오른쪽 끝으로 스크롤 방지
 		{
 			fGapX= 0.0f;
 			fScrollDes= 0.0f;
-			gInfo.ScrollX = arrPlanet.get(arrPlanet.size()-1).x-240;
+			fOldX= 0.0f;
+			gInfo.ScrollX = arrPlanet.get(arrPlanet.size()-1).x-nHalfScreenX;
 			return;
 		}
 //		
@@ -228,7 +286,9 @@ public class SSystemMap  extends SBase
 				bDirectionR= false;
 		
 			if((fGapX!=0.0f))	// 이전 터치하고 차이가 있으면
-				gInfo.ScrollX += fScrollDes*-1;
+				if(!(gInfo.ScrollX+fScrollDes*-1 < arrPlanet.get(0).x-nHalfScreenX))	// 왼쪽 방지	
+					if(!(gInfo.ScrollX+fScrollDes*-1 > arrPlanet.get(arrPlanet.size()-1).x-nHalfScreenX))	// 오른쪽 방지
+						gInfo.ScrollX += fScrollDes*-1;
 
 			break;
 		case	MotionEvent.ACTION_UP :
@@ -244,7 +304,7 @@ public class SSystemMap  extends SBase
 				gInfo.ScrollX += fGapX/5.5f;
 			}
 			break;
-		}
+ 		}
 
 	}
 
