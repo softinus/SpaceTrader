@@ -22,7 +22,10 @@ public class SStation extends SBase
 	
 	private Sprite bg_station= new Sprite();
 	private Sprite sprStationButton= new Sprite();
-	private Sprite sprStationUI= new Sprite();
+	private Sprite sprStationUI_INFO= new Sprite();
+	private Sprite sprStationUI_NEWS= new Sprite();
+	private Sprite sprStationUI_TRADE= new Sprite();
+	private Sprite sprStationUI_MANAGE= new Sprite();
 	
 	private GameButton btnInfo= new GameButton();
 	private GameButton btnNews= new GameButton();
@@ -44,9 +47,12 @@ public class SStation extends SBase
 		Music.setLooping(true);
 		Music.start();
 		
-		bg_station.LoadSprite(gl, mContext, R.drawable.station, "bg_station.spr");
-		sprStationButton.LoadSprite(gl, mContext, R.drawable.station, "station_buttons.spr");
-		sprStationUI.LoadSprite(gl, mContext, R.drawable.station, "station_ui.spr");
+		bg_station.LoadSprite(gl, mContext, R.drawable.station_bg, "station_ui_bg.spr");
+		sprStationButton.LoadSprite(gl, mContext, R.drawable.buttons_2, "station_buttons.spr");
+		sprStationUI_INFO.LoadSprite(gl, mContext, R.drawable.station_ui_info, "station_ui_info.spr");
+		sprStationUI_NEWS.LoadSprite(gl, mContext, R.drawable.station_ui_news, "station_ui_news.spr");
+		sprStationUI_TRADE.LoadSprite(gl, mContext, R.drawable.station_ui_trade, "station_ui_trade.spr");
+		sprStationUI_MANAGE.LoadSprite(gl, mContext, R.drawable.station_ui_manage, "station_ui_manage.spr");
 		
 		btnInfo.SetButton(mContext, sprStationButton, 240, 300, 0);
 		btnInfo.SetTextCenter(32f, "스테이션 정보");
@@ -86,16 +92,16 @@ public class SStation extends SBase
 			btnExit.DrawButtonWithText(gInfo, gl, font);
 			break;
 		case 1:
-			sprStationUI.PutAni(gInfo, nX, nY, 0, 0);
+			sprStationUI_INFO.PutAni(gInfo, nX, nY, 0, 0);
 			break;
 		case 2:
-			sprStationUI.PutAni(gInfo, nX, nY, 1, 0);
+			sprStationUI_NEWS.PutAni(gInfo, nX, nY, 0, 0);
 			break;
 		case 3:
-			sprStationUI.PutAni(gInfo, nX, nY, 2, 0);
+			sprStationUI_TRADE.PutAni(gInfo, nX, nY, 0, 0);
 			break;
 		case 4:
-			sprStationUI.PutAni(gInfo, nX, nY, 3, 0);
+			sprStationUI_MANAGE.PutAni(gInfo, nX, nY, 0, 0);
 			break;
 
 		default:
@@ -114,11 +120,11 @@ public class SStation extends SBase
 		if(nMenu!=0)	// 메뉴선택중 아니면
 			return;
 		
-		btnInfo.ButtonUpdate();
-		btnNews.ButtonUpdate();
-		btnTrade.ButtonUpdate();
-		btnManage.ButtonUpdate();
-		btnExit.ButtonUpdate();
+		btnInfo.ButtonUpdate(0);
+		btnNews.ButtonUpdate(0);
+		btnTrade.ButtonUpdate(0);
+		btnManage.ButtonUpdate(0);
+		btnExit.ButtonUpdate(0);
 		
 		if(btnInfo.CheckOver())
 		{

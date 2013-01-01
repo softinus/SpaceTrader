@@ -67,24 +67,24 @@ public class SMainMenu extends SBase
 		super.Update();
 		
 		
-		btnPlay.ButtonUpdate();
-		btnHelp.ButtonUpdate();
-		btnRank.ButtonUpdate();
-		btnOption.ButtonUpdate();
-		btnExit.ButtonUpdate();
+		btnPlay.ButtonUpdate(0);
+		btnHelp.ButtonUpdate(0);
+		btnRank.ButtonUpdate(0);
+		btnOption.ButtonUpdate(0);
+		btnExit.ButtonUpdate(0);
 
 				
 		if( btnPlay.CheckOver() )
 		{
 			if(s_uInfo.GetLogin())
-				this.SetScene(EnumScene.E_GAME_STORY);
+				this.SetScene(EnumScene.E_GAME_SYSTEMMAP);
 			else
 				((SpaceTrader)mContext).LoadingHandler.sendEmptyMessage(0);
 		}
 		
 		if( btnHelp.CheckOver() )
 		{
-			this.SetScene(EnumScene.E_GAME_SYSTEMMAP);
+			this.SetScene(EnumScene.E_GAME_STORY);
 		}
 		
 		if( btnRank.CheckOver() )
