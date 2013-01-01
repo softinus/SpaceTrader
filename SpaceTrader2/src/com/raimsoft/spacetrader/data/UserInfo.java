@@ -11,8 +11,19 @@ public class UserInfo
 	private int nWorldMapX= -1;
 	private int nWorldMapY= -1;
 	private int nSystemMapPlanet= 1;
+	private int nSystemMapPlanet_going= -1;
 	
 	
+	public int getnSystemMapPlanet_going()
+	{
+		return nSystemMapPlanet_going;
+	}
+
+	public void setnSystemMapPlanet_going(int nSystemMapPlanet_going)
+	{
+		this.nSystemMapPlanet_going = nSystemMapPlanet_going;
+	}
+
 	public static final UserInfo GetInstance()
 	{
 		return instance;

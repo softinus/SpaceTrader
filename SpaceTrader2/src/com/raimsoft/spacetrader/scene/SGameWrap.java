@@ -13,6 +13,7 @@ import bayaba.engine.lib.Sprite;
 
 import com.raimsoft.spacetrader.R;
 import com.raimsoft.spacetrader.data.GlobalInput;
+import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.Meteor;
 import com.raimsoft.spacetrader.obj.Missile;
 import com.raimsoft.spacetrader.obj.ProgressMeter;
@@ -25,6 +26,9 @@ public class SGameWrap extends SBase
 {
 	private static int MAX_PARTICLE = 14;
 	private Random MyRand = new Random();
+	
+	private UserInfo uInfo;
+	private int nWhereIgoing;
 	
 	private Sprite sprStar = new Sprite();
 	private Sprite sprShip= new Sprite();
@@ -57,12 +61,16 @@ public class SGameWrap extends SBase
 		
 		//UHL= new Launcher(_context);
 		this.eMode= EnumScene.E_GAME_WRAP;
+		
+		uInfo= UserInfo.GetInstance();
 	}
 	
 	@Override
 	public void LoadData()
 	{
-		super.LoadData(); 
+		super.LoadData();
+		
+		nWhereIgoing= uInfo.getnSystemMapPlanet_going();	// 내가 어디로 가고있나염
 		
 		Music = MediaPlayer.create(mContext, R.raw.space_music);
 		Music.setLooping(true);
@@ -273,7 +281,10 @@ public class SGameWrap extends SBase
 			if(-1500 <= objShip.y)	// 끝
 				objShip.y -= 12f;
 			else
+			{
+				uInfo.SetSystemMapPlanet(nWhereIgoing);	// 도착한 곳!
 				SetScene(EnumScene.E_GAME_DOCKING);
+			}
 			
 			return;			
 		}

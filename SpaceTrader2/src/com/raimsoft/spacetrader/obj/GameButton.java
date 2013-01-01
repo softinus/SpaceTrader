@@ -70,9 +70,9 @@ public class GameButton extends GameObject
 		return true;		
 	}
 	
-	public void ButtonUpdate()
+	public void ButtonUpdate(float fScrollXFactor)
 	{
-		int nX= (int) GlobalInput.fTouchX;
+		int nX= (int) (GlobalInput.fTouchX + fScrollXFactor);
 		int nY= (int) GlobalInput.fTouchY;
 		boolean bTouch= GlobalInput.bTouch;
 		

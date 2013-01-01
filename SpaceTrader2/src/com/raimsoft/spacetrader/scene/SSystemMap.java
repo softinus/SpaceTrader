@@ -15,6 +15,7 @@ import bayaba.engine.lib.Sprite;
 import com.raimsoft.spacetrader.R;
 import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.data.UserInfo;
+import com.raimsoft.spacetrader.obj.GameButton;
 import com.raimsoft.spacetrader.obj.Planet;
 import com.raimsoft.spacetrader.util.RandomNameMaker;
 import com.raimsoft.spacetrader.util.SoundManager;
@@ -28,12 +29,14 @@ public class SSystemMap  extends SBase
 	Sprite sprPlanets= new Sprite();
 	Sprite sprPanel= new Sprite();
 	Sprite sprPosMark= new Sprite();
+	Sprite sprButtonMove= new Sprite();
 	
 	private SoundManager Sound;
 	
 	private int nSelectionIndex= 0; 	// 선택된 행성 인덱스
 	private ArrayList<Planet> arrPlanet= new ArrayList<Planet>();
 	
+	private GameButton btnMove= new GameButton();
 	private GameObject objPositionMarker= new GameObject();	// 현재 위치 보여주는 마커
 	private ArrayList<GameObject> arrMoveAbleMarker= new ArrayList<GameObject>();	// 이동 가능한 위치 보여주는 마커.	
 	private GameObject objSelection= new GameObject();	// 선택된 행성 보여주는 마커
@@ -88,6 +91,10 @@ public class SSystemMap  extends SBase
 		
 		Sound.Create();
 		Sound.Load(0, R.raw.button1);		
+		
+		sprButtonMove.LoadSprite(gl, mContext, R.drawable.buttons_2, "systemmap_btn_move.spr");
+		btnMove.SetButton(mContext, sprButtonMove, 0, 0, 0);
+		btnMove.show= false;
 		
 		sprPanel.LoadSprite(gl, mContext, R.drawable.map_panel, "map_panel.spr");
 		objPanel.SetObject(sprPanel, 0, 0, 0, gInfo.ScreenY+20, 0, 0);
@@ -230,6 +237,8 @@ public class SSystemMap  extends SBase
 			txtInfo.DrawFont(gl, 0, 120, 12f, "ScrollX : "+Float.toString(gInfo.ScrollX));		
 		txtInfo.EndFont();
 		
+		btnMove.DrawSprite(gInfo);	// 이동 버튼
+		
 	}
 	
 	
@@ -316,7 +325,14 @@ public class SSystemMap  extends SBase
 	{
 		super.Update();
 		
-		Scroll();
+		btnMove.ButtonUpdate(gInfo.ScrollX);
+		
+		Scroll();		
+		if(btnMove.CheckOver())
+		{
+			uInfo.setnSystemMapPlanet_going(nSelectionIndex);
+			SetScene(EnumScene.E_GAME_WRAP);
+		}
 		
 		// Selection Tool
 		if(GlobalInput.bTouch)
@@ -326,7 +342,7 @@ public class SSystemMap  extends SBase
 			
 			for(Planet PN : arrPlanet)
 			{
-				if(PN.CheckPos(nX, nY))
+				if(PN.CheckPos(nX, nY))	// 선택한 행성 체크
 				{
 					if(objSelection.x != PN.x && objSelection.y != PN.y)
 						Sound.Play(0);
@@ -338,6 +354,18 @@ public class SSystemMap  extends SBase
 					objSelection.y= PN.y;
 					objSelection.scalex= PN.scalex+0.35f;
 					objSelection.scaley= PN.scaley+0.35f;
+					int nSelGap= Math.abs(nSelectionIndex-nMyPos);
+					if( (nMyPos!=nSelectionIndex) && (nSelGap<=2) )	// 이동 가능 행성만 버튼 띄워줌
+					{
+						btnMove.x= PN.x;
+						btnMove.y= PN.y;
+						btnMove.show= true;
+					}
+					else
+					{
+						btnMove.show= false;
+					}
+					
 					break;
 				}
 				else

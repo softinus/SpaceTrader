@@ -1,7 +1,5 @@
 package com.raimsoft.spacetrader.obj.fleets;
 
-import java.util.Random;
-
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
@@ -31,7 +29,7 @@ public class BaseFleet extends GameObject
 	
 	private boolean bCrash= false;		// 충돌 여부
 	public boolean bDestroyed= false;	// 파괴당한 여부
-	public boolean bControlable= false;	// 조종 가능 여부
+	public boolean bControlable= true;	// 조종 가능 여부
 	public boolean bSheild= true;		// 보호막 여부
 	
 	protected float fVelocity= 13.0f;
