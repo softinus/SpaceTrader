@@ -129,9 +129,9 @@ public class SSystemMap  extends SBase
 		
 //		gInfo.TileData.LoadTile(gl, mContext, R.drawable.planets, 32, 32);
 //		gInfo.TileData.LoadMap(mContext, "plantes.map");
-		
-		
+		uInfo.SetPlanets(arrPlanet);
 		Planet currPlanet= arrPlanet.get( nMyPos );
+		
 		objPositionMarker.SetObject(sprPosMark, 0, 0, currPlanet.x, currPlanet.y-(currPlanet.scaley*MARKER_Y), 0, 0);
 
 		if(nMyPos==0)
@@ -145,12 +145,12 @@ public class SSystemMap  extends SBase
 			arrMoveAbleMarker.get(1).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos+1).x, arrPlanet.get(nMyPos+1).y-(currPlanet.scaley*MARKER_Y), 1, 0);
 			arrMoveAbleMarker.get(2).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos+2).x, arrPlanet.get(nMyPos+2).y-(currPlanet.scaley*MARKER_Y), 1, 0);
 		}
-		else if(nMyPos==PLANET_NUMS)
+		else if(nMyPos==PLANET_NUMS-1)
 		{
 			arrMoveAbleMarker.get(0).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos-1).x, arrPlanet.get(nMyPos-1).y-(currPlanet.scaley*MARKER_Y), 1, 0);
 			arrMoveAbleMarker.get(1).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos-2).x, arrPlanet.get(nMyPos-2).y-(currPlanet.scaley*MARKER_Y), 1, 0);
 		}
-		else if(nMyPos==PLANET_NUMS-1)
+		else if(nMyPos==PLANET_NUMS-2)
 		{
 			arrMoveAbleMarker.get(0).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos-2).x, arrPlanet.get(nMyPos-2).y-(currPlanet.scaley*MARKER_Y), 1, 0);
 			arrMoveAbleMarker.get(1).SetObject(sprPosMark, 0, 0, arrPlanet.get(nMyPos-1).x, arrPlanet.get(nMyPos-1).y-(currPlanet.scaley*MARKER_Y), 1, 0);
@@ -330,7 +330,7 @@ public class SSystemMap  extends SBase
 		Scroll();		
 		if(btnMove.CheckOver())
 		{
-			uInfo.setnSystemMapPlanet_going(nSelectionIndex);
+			uInfo.setSystemMapPlanet_going(nSelectionIndex);
 			SetScene(EnumScene.E_GAME_WRAP);
 		}
 		

@@ -1,5 +1,9 @@
 package com.raimsoft.spacetrader.data;
 
+import java.util.ArrayList;
+
+import com.raimsoft.spacetrader.obj.Planet;
+
 
 public class UserInfo
 {
@@ -7,11 +11,20 @@ public class UserInfo
 	
 	private boolean bLogined= false;				// 로그인 정보
 	private EnumShip eShip= EnumShip.E_NULL_INFO;	// 함선 정보
+	private String strShipName="UnNamed";
+	private int nShipAtt= 0;
+	private int nShipHull= 0;
+	private float fVelocity= 13.0f;
+	private float fHandling= 2.0f;
+	
+	private int nCurrHull= 0;
 	private int nGold= -1;
 	private int nWorldMapX= -1;
 	private int nWorldMapY= -1;
 	private int nSystemMapPlanet= 1;
 	private int nSystemMapPlanet_going= -1;
+	
+	private ArrayList<Planet> arrPlanet;
 	
 	
 	public int getnSystemMapPlanet_going()
@@ -19,7 +32,7 @@ public class UserInfo
 		return nSystemMapPlanet_going;
 	}
 
-	public void setnSystemMapPlanet_going(int nSystemMapPlanet_going)
+	public void setSystemMapPlanet_going(int nSystemMapPlanet_going)
 	{
 		this.nSystemMapPlanet_going = nSystemMapPlanet_going;
 	}
@@ -33,10 +46,43 @@ public class UserInfo
 	{
 		return eShip;
 	}
+	
+	public String GetPlanetName()
+	{
+		return arrPlanet.get(nSystemMapPlanet).strName;
+	}
+	public int GetPlanetType()
+	{
+		return arrPlanet.get(nSystemMapPlanet).type;
+	}
+	public Planet GetCurrentPlanet()
+	{
+		return arrPlanet.get(nSystemMapPlanet);
+	}
+	public void SetPlanets(ArrayList<Planet> _arrP)
+	{
+		arrPlanet= _arrP;
+	}
 
 	public void SetShipType(EnumShip eShip)
 	{
 		this.eShip = eShip;
+		if(eShip== EnumShip.E_TRAINING_SHIP_1);
+		{
+			SetShipName("T-1");
+			SetShipAtt(220);
+			SetShipHull(3500);
+			SetHandling(2.0f);
+			SetVelocity(13.0f);
+		}
+		if(eShip== EnumShip.E_TRAINING_SHIP_2);
+		{
+			SetShipName("T-2");
+			SetShipAtt(280);
+			SetShipHull(3200);
+			SetHandling(2.3f);
+			SetVelocity(14.0f);
+		}
 	}
 
 	public boolean GetLogin()
@@ -84,9 +130,59 @@ public class UserInfo
 		return nSystemMapPlanet;
 	}
 
-	public void SetSystemMapPlanet(int nSystemMapPlanet) {
+	public void SetSystemMapPlanet(int nSystemMapPlanet)
+	{
 		this.nSystemMapPlanet = nSystemMapPlanet;
+	}
+
+	public String GetShipName() {
+		return strShipName;
+	}
+
+	public void SetShipName(String strShipName) {
+		this.strShipName = strShipName;
+	}
+
+	public int GetShipAtt() {
+		return nShipAtt;
+	}
+
+	public void SetShipAtt(int nShipAtt) {
+		this.nShipAtt = nShipAtt;
+	}
+
+	public int GetShipHull() {
+		return nShipHull;
+	}
+
+	public void SetShipHull(int nShipHull) {
+		this.nShipHull = nShipHull;
+	}
+
+	public float GetVelocity() {
+		return fVelocity;
+	}
+
+	public void SetVelocity(float fVelocity) {
+		this.fVelocity = fVelocity;
+	}
+
+	public float GetHandling() {
+		return fHandling;
+	}
+
+	public void SetHandling(float fHandling) {
+		this.fHandling = fHandling;
+	}
+
+	public int GetCurrHull() {
+		return nCurrHull;
+	}
+
+	public void SetCurrHull(int nCurrHull) {
+		this.nCurrHull = nCurrHull;
 	}
 	
 	
 }
+

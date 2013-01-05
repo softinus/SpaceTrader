@@ -112,7 +112,52 @@ public class SpaceTrader extends Activity implements SensorEventListener
 			if(msg.what==0)
 			{
 				LoadingDL.hide();
-				showDialog(R.layout.login_dialog);
+				
+				final String strID= SPUtil.getString(getApplicationContext(), "login_id");
+				final String strPW= SPUtil.getString(getApplicationContext(), "login_pw"); 
+				if( (strID!=null) && (strPW!=null) )	// 저장된 ID가 있으면 로그인한다.
+				{
+					LoadingHandler.sendEmptyMessage(1);
+	            	AuthUtils.login(
+		            	    getApplicationContext(),                    // context
+		            	    strID,                 // username
+		            	    strPW,                 // password
+		            	    new ApiResponseCallback()
+		            	    {
+		            	        @Override
+		            	        public void onException(Exception e) { }            // Exception 발생
+		    
+		            	        @Override
+		            	        public void onResponse(ApiResponse response)
+		            	        {
+		            	        	if(response==null)
+		            	        		ShowAlertDialog("[로그인]", "로그인 실패", "확인");
+		            	        	else
+		            	        	{
+		            	        		LoadingHandler.sendEmptyMessage(999);
+		            	        		
+		            	        		if(TextUtils.isEmpty(response.getError()))	            	        			
+		            	        		{
+		            	        			ShowAlertDialog("[로그인 성공]", "우주무역 시스템...\n장사꾼 "+strID+"의 정보를 가져왔습니다.\n게임 시작해주세요!", "확인");
+		            	        			uInfo.SetLogin(true);
+		            	        			uInfo.SetGold(0);
+		            	        			uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_2);
+		            	        			uInfo.SetWorldMapX(-1);
+		            	        			uInfo.SetWorldMapY(-1);
+		            	        			uInfo.SetSystemMapPlanet(1);
+		            	        			//SPUtil.putBoolean(getApplicationContext(), "login", true);
+		            	        		}
+		            	        		else
+		            	        			ShowAlertDialog("[로그인 실패]", response.getErrorDescription(), "확인");
+		            	        	}
+		            	        		
+		            	        }    // 결과
+		            	    });
+				}
+				else
+				{
+					showDialog(R.layout.login_dialog);
+				}
 			}
 			if(msg.what==1)
 			{
@@ -218,7 +263,7 @@ public class SpaceTrader extends Activity implements SensorEventListener
     	{
 	    	if(acct.name.contains("@"))
 	    	{
-	    		EDT_ID.setText(accts[0].name);
+	    		EDT_ID.setText(acct.name);
 	    		break;
 	    	}
     	}
@@ -269,10 +314,13 @@ public class SpaceTrader extends Activity implements SensorEventListener
 	            	        		
 	            	        		if(TextUtils.isEmpty(response.getError()))	            	        			
 	            	        		{
+	            	        			SPUtil.putString(getApplicationContext(), "login_id", EDT_ID.getText().toString());
+	            	        			SPUtil.putString(getApplicationContext(), "login_pw", EDT_PW.getText().toString());
+	            	        			
 	            	        			ShowAlertDialog("[로그인 성공]", "우주무역 시스템...\n장사꾼 "+EDT_ID.getText().toString()+"의 정보를 가져왔습니다.\n게임 시작해주세요!", "확인");
 	            	        			uInfo.SetLogin(true);
 	            	        			uInfo.SetGold(0);
-	            	        			uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_1);
+	            	        			uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_2);
 	            	        			uInfo.SetWorldMapX(-1);
 	            	        			uInfo.SetWorldMapY(-1);
 	            	        			uInfo.SetSystemMapPlanet(1);

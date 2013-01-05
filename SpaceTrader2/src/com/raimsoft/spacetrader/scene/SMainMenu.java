@@ -84,7 +84,7 @@ public class SMainMenu extends SBase
 		
 		if( btnHelp.CheckOver() )
 		{
-			this.SetScene(EnumScene.E_GAME_STORY);
+			//this.SetScene(EnumScene.E_GAME_STORY);
 		}
 		
 		if( btnRank.CheckOver() )
