@@ -23,7 +23,8 @@ public class Missile extends GameObject
 	private Sprite	sprGlow;
 	//private boolean bCrash= false;
 	private boolean bFired= false;
-	private float fVelocity= 5.5f;
+	private float fVelocity= 1.0f;
+	//private float fFactorY= 1.0f;
 	private float fDamage= 280.0f;
 	
 	private SoundManager Sound;
@@ -79,12 +80,12 @@ public class Missile extends GameObject
 		}
 		else
 		{
+			fVelocity= 1.0f;
 			if(_bCollision)
 				Sound.Play(1);
 			
 			Sound.Stop(0);
 			//Log.d("Missile::", "Missile offline");
-			//this.x= -200;	// 임시로 안보이게 밖으로 보냄
 			for ( int i = 0; i < MAX_PARTICLE; i++ )
 			{
 				Particle1[i].dead= true;
@@ -127,6 +128,7 @@ public class Missile extends GameObject
 		if(bFired)
 		{
 			//Log.d("Missile::", "X: "+this.x+ " Y: "+this.y);
+			fVelocity= fVelocity * 1.03f;
 			this.y -= fVelocity;
 			
 			

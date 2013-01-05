@@ -9,6 +9,7 @@ import bayaba.engine.lib.Sprite;
 
 import com.immersion.uhl.Launcher;
 import com.raimsoft.spacetrader.R;
+import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.util.SoundManager;
 
 public class BaseFleet extends GameObject
@@ -18,26 +19,28 @@ public class BaseFleet extends GameObject
 	//private GameObject Particle0[] = new GameObject[MAX_PARTICLE];
 
 	
-	private Sprite	sprSpark, sprHP, sprShield;// sprDestroy
-	private GameObject objSpark, objDestroy, objShield;
-	
+	protected Sprite	sprSpark, sprHP, sprShield;// sprDestroy
+	protected GameObject objSpark, objDestroy, objShield;
+	protected UserInfo uInfo;
 	
 	public 	float fEventSpeed= 8.5f;
 	public  int nEventCount= 0;	// 연출0번 --(함선가속)--> 연출1번 --(함선감속)--> 연출2번 --> (시작)
 	
 
 	
-	private boolean bCrash= false;		// 충돌 여부
+	protected boolean bCrash= false;		// 충돌 여부
 	public boolean bDestroyed= false;	// 파괴당한 여부
-	public boolean bControlable= true;	// 조종 가능 여부
+	public boolean bControlable= false;	// 조종 가능 여부
 	public boolean bSheild= true;		// 보호막 여부
 	
 	protected float fVelocity= 13.0f;
 	protected float fHandeling= 2.0f;
-	protected int nHP= 5000;
+	public int nHP= 5000;
 	
 	protected Launcher UHL;
 	protected SoundManager Sound;
+	
+	protected String strShipName;
 	
 //	/**
 //	 * @return the nHP
@@ -60,6 +63,8 @@ public class BaseFleet extends GameObject
 	public BaseFleet(GL10 _gl, Context _context)
 	{
 		super();
+		
+		uInfo= UserInfo.GetInstance();
 		
 		UHL= new Launcher(_context);
 		
@@ -207,23 +212,6 @@ public class BaseFleet extends GameObject
 			return;
 		}
 		sprHP.PutValue(info, 25, 35, 0, nHP);
-//		objFire1.AddFrameLoop(1.0f);
-//		objFire1.DrawSprite(info);
-//		objFire2.AddFrameLoop(1.0f);
-//		objFire2.DrawSprite(info);
-//		objFire3.AddFrameLoop(1.0f);
-//		objFire3.DrawSprite(info);
-//		for ( int i = 0; i < MAX_PARTICLE; i++ )
-//		{
-//			if ( Particle0[i].dead == false )
-//			{
-//				Particle0[i].Zoom( info, 0.03f, 0.03f );				
-//				Particle0[i].trans -= 0.05f;
-//				if ( Particle0[i].trans <= 0 ) Particle0[i].dead = true;				
-//				Particle0[i].MovebyAngle( info, Particle0[i].angle, Particle0[i].speed );
-//			}
-//		}
-
 
 		super.DrawSprite(info);		
 		
@@ -247,6 +235,24 @@ public class BaseFleet extends GameObject
 		//sprDestroy.Release();
 		sprHP.Release();
 		sprSpark.Release();
+	}
+
+
+	public float GetVelocity()
+	{
+		return 0f;
+	}
+
+
+	public void SetVelocity(float f)
+	{
+		
+	}
+
+
+	public float getHandeling()
+	{
+		return 0;
 	}
 	
 	

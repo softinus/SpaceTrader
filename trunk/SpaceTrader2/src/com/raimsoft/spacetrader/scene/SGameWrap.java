@@ -12,6 +12,7 @@ import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
 
 import com.raimsoft.spacetrader.R;
+import com.raimsoft.spacetrader.data.EnumShip;
 import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.Meteor;
@@ -19,6 +20,7 @@ import com.raimsoft.spacetrader.obj.Missile;
 import com.raimsoft.spacetrader.obj.ProgressMeter;
 import com.raimsoft.spacetrader.obj.Radar;
 import com.raimsoft.spacetrader.obj.Star;
+import com.raimsoft.spacetrader.obj.fleets.BaseFleet;
 import com.raimsoft.spacetrader.obj.fleets.TraningShip1;
 import com.raimsoft.spacetrader.obj.fleets.TraningShip2;
 
@@ -28,7 +30,7 @@ public class SGameWrap extends SBase
 	private Random MyRand = new Random();
 	
 	private UserInfo uInfo;
-	private int nWhereIgoing;
+	private int nWhereIgoing;	// 내가 어디로 가고있나요? (워프)
 	
 	private Sprite sprStar = new Sprite();
 	private Sprite sprShip= new Sprite();
@@ -40,7 +42,7 @@ public class SGameWrap extends SBase
 	private boolean bReleased= false;
 	private int nMeteorCount= 0;
 	
-	private TraningShip2 objShip;					// 나의 함선
+	private BaseFleet objShip;					// 나의 함선
 	private Missile	objMissile;					// 미사일
 	private Radar objRader;						// 레이더
 	private ProgressMeter objProgress;			// 프로그레스바
@@ -72,12 +74,24 @@ public class SGameWrap extends SBase
 		
 		nWhereIgoing= uInfo.getnSystemMapPlanet_going();	// 내가 어디로 가고있나염
 		
-		Music = MediaPlayer.create(mContext, R.raw.space_music);
+		Music = MediaPlayer.create(mContext, R.raw.game);
 		Music.setLooping(true);
 		Music.start();
 		
+		if(uInfo.GetShipType() == EnumShip.E_TRAINING_SHIP_1)
+		{
+			sprShip.LoadSprite(gl, mContext, R.drawable.resource_2, "ship_1.spr");
+			objShip= new TraningShip1(gl, mContext);
+		}
+		else if(uInfo.GetShipType() == EnumShip.E_TRAINING_SHIP_2)
+		{
+			sprShip.LoadSprite(gl, mContext, R.drawable.resource_2, "ship_2.spr");
+			objShip= new TraningShip2(gl, mContext);
+		}
+		objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY+60, 0, 0 );
+		objShip.scalex= 0.5f;
+		objShip.scaley= 0.5f;
 		
-		sprShip.LoadSprite( gl, mContext, R.drawable.resource_2, "ship_2.spr" );
 		sprStar.LoadSprite( gl, mContext, R.drawable.resource_2, "star_1.spr" );
 		sprMetoer.LoadSprite( gl, mContext, R.drawable.resource_2, "meteor.spr" );
 		sprMissile.LoadSprite(gl, mContext, R.drawable.resource_2, "missile_1.spr");
@@ -87,11 +101,6 @@ public class SGameWrap extends SBase
 		objRader= new Radar(gl, gInfo, mContext);
 		objProgress= new ProgressMeter(gl, gInfo, mContext);
 	
-		objShip= new TraningShip2(gl, mContext);
-		objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY+60, 0, 0 );
-		objShip.scalex= 0.5f;
-		objShip.scaley= 0.5f;
-
 		objMissile= new Missile(gl, mContext);
 		objMissile.SetObject(sprMissile, 0, 0, objShip.x, objShip.y, 0, 0);
 		objMissile.scalex= 0.5f;
@@ -283,6 +292,7 @@ public class SGameWrap extends SBase
 			else
 			{
 				uInfo.SetSystemMapPlanet(nWhereIgoing);	// 도착한 곳!
+				uInfo.SetCurrHull(objShip.nHP);	// 도착했을 때 Hull 저장.				
 				SetScene(EnumScene.E_GAME_DOCKING);
 			}
 			
@@ -300,6 +310,8 @@ public class SGameWrap extends SBase
 				continue;
 			
 			if(!objShip.bControlable)	// 조종 불가능시에는 맞지 않음
+				continue;
+			if(objShip.bSheild)	// 쉴드 상태에서는 맞지 않음
 				continue;
 			
 			if( objShip.CheckPos( (int)MTO.x , (int)MTO.y ) && !objProgress.bArrived )	// 메테오와 함선 충돌체크
@@ -353,6 +365,7 @@ public class SGameWrap extends SBase
 		else if((objShip.nEventCount==1) && (gInfo.ScreenY-200 <= objShip.y))	// 200까지 도달하면
 		{
 			objShip.nEventCount= 2;		// 다음 액션
+			objShip.bControlable= true;
 		}
 		
 		if( (objShip.nEventCount==2) && (gInfo.ScreenY-100 > objShip.y) )	// 세번째 액션
@@ -368,7 +381,6 @@ public class SGameWrap extends SBase
 		if((objShip.nEventCount==3))	// 다 내려왓음
 		{
 			objShip.bSheild= false;
-			objShip.bControlable= true;
 		}
 	}
 	

@@ -4,20 +4,18 @@ import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import com.raimsoft.spacetrader.R;
-
+import android.content.Context;
+import android.provider.Contacts.Intents.UI;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
 
-import android.content.Context;
+import com.raimsoft.spacetrader.R;
 
 public class TraningShip2 extends BaseFleet
 {
 	private static int MAX_PARTICLE = 20;
 	private Random MyRand = new Random();
-	
-
 
 	Sprite sprGlow;
 	private GameObject Particle1[] = new GameObject[MAX_PARTICLE];
@@ -28,9 +26,10 @@ public class TraningShip2 extends BaseFleet
 	{
 		super(_gl, _context);
 		
-		fVelocity= 13.0f;
-		fHandeling= 2.0f;
-		nHP= 3500;
+		fVelocity= uInfo.GetVelocity();
+		fHandeling= uInfo.GetHandling();
+		nHP= uInfo.GetShipHull();
+		strShipName= uInfo.GetShipName();
 		
 		sprGlow= new Sprite();
 		sprGlow.LoadSprite( _gl, _context, R.drawable.glow, "glow.spr" );
@@ -83,9 +82,7 @@ public class TraningShip2 extends BaseFleet
 	
 	@Override
 	public void DrawSprite(GameInfo info)
-	{
-		super.DrawSprite(info);
-		
+	{		
 		SetGlowParticle();
 		
 		
@@ -135,6 +132,7 @@ public class TraningShip2 extends BaseFleet
 	/**
 	 * @return the fHandeling
 	 */
+	@Override
 	public float getHandeling()
 	{
 		return fHandeling;
@@ -154,6 +152,7 @@ public class TraningShip2 extends BaseFleet
 	/**
 	 * @return the fVelocity
 	 */
+	@Override
 	public float GetVelocity()
 	{
 		return fVelocity;
@@ -171,6 +170,7 @@ public class TraningShip2 extends BaseFleet
 	/**
 	 * @param fVelocity the fVelocity to set
 	 */
+	@Override
 	public void SetVelocity(float fVelocity)
 	{
 		this.fVelocity = fVelocity;
