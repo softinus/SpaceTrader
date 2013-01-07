@@ -53,7 +53,7 @@ public class UserInfo
 	}
 	public int GetPlanetType()
 	{
-		return arrPlanet.get(nSystemMapPlanet).type;
+		return arrPlanet.get(nSystemMapPlanet).nPlanetType;
 	}
 	public Planet GetCurrentPlanet()
 	{
@@ -63,25 +63,32 @@ public class UserInfo
 	{
 		arrPlanet= _arrP;
 	}
+//	public void SetPlanets(Planet _P)
+//	{
+//		_P.type;
+//	}
 
 	public void SetShipType(EnumShip eShip)
 	{
 		this.eShip = eShip;
-		if(eShip== EnumShip.E_TRAINING_SHIP_1);
+		
+		switch (eShip.ordinal())
 		{
+		case 1:
 			SetShipName("T-1");
 			SetShipAtt(220);
 			SetShipHull(3500);
 			SetHandling(2.0f);
 			SetVelocity(13.0f);
-		}
-		if(eShip== EnumShip.E_TRAINING_SHIP_2);
-		{
+			break;
+
+		case 2:
 			SetShipName("T-2");
 			SetShipAtt(280);
 			SetShipHull(3200);
 			SetHandling(2.3f);
 			SetVelocity(14.0f);
+			break;
 		}
 	}
 

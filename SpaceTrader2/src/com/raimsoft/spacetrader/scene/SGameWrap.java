@@ -26,7 +26,7 @@ import com.raimsoft.spacetrader.obj.fleets.TraningShip2;
 
 public class SGameWrap extends SBase
 {
-	private static int MAX_PARTICLE = 14;
+	private static int MAX_PARTICLE = 8;
 	private Random MyRand = new Random();
 	
 	private UserInfo uInfo;
@@ -260,6 +260,20 @@ public class SGameWrap extends SBase
 				MTO.SetCrash(true, (int)MTO.x, (int)MTO.y);
 			}
 		}
+		
+		for(Meteor MTO : qMetoer)
+		{
+			for(GameObject BOOM : Particle_BOOM)
+			{
+				if( gInfo.CrashCheck(BOOM, MTO, 0, 0) && (MTO.show==true) && (BOOM.dead==false)  && (MTO.bMoveByAngle==false) )			// 파편과 메테오 충돌했을 때 파편의 방향대로 메테오 나감.
+				{
+					MTO.bMoveByAngle=true;
+					MTO.fAngle= BOOM.angle;
+					MTO.fDistance= BOOM.trans*5.0f;
+					BOOM.dead= true;
+				}
+			}
+		}
 	}
 	
 	
@@ -408,12 +422,8 @@ public class SGameWrap extends SBase
 	private void UpdateMetoer()
 	{		
 		for(Meteor MTO : qMetoer)
-		{
-			//if(MTO.dead)
-				//return;
-			
-			MTO.angle += MTO.lfAngle;
-			MTO.y += objShip.GetVelocity()/2;
+		{			
+			MTO.MoveUpdate(gInfo, objShip.GetVelocity());	// 메테오 이동
 		}
 				
 		if( qMetoer.peek() != null )
