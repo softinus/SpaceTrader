@@ -6,6 +6,7 @@ public class Planet extends GameObject
 {
 	public int nIndex;
 	public String strName="";
+	public int nPlanetType;
 
 	/**
 	 * @param nIndex

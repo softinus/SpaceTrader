@@ -7,6 +7,9 @@ import bayaba.engine.lib.GameObject;
 
 public class Meteor extends GameObject
 {	
+	public boolean bMoveByAngle;		// 파편과 부딪혔는지 여부
+	public float fDistance;				// 파편과 부딪한 세기
+	public float fAngle;				// 파편과 부딪혔을 때 움직이는 각도
 	/**
 	 * @param lfAngle
 	 */
@@ -37,6 +40,19 @@ public class Meteor extends GameObject
 		}
 	}
 	
+	/**
+	 * 메테오 이동을 결정함
+	 * @param _info
+	 * @param _fShipVelocity
+	 */
+	public void MoveUpdate(GameInfo _info, float _fShipVelocity)
+	{
+		angle += lfAngle;
+		y += _fShipVelocity/2;
+		
+		if(bMoveByAngle)
+			this.MovebyAngle(_info, fAngle, fDistance);
+	}
 	
 	
 	public void DrawSprite(GL10 gl, GameInfo info)

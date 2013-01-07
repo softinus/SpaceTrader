@@ -105,23 +105,23 @@ public class SSystemMap  extends SBase
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");		
 		for(Planet PN : arrPlanet)	// 
 		{
-			PN.type= rand.nextInt(PLANET_TYPES);
+			PN.nPlanetType= rand.nextInt(PLANET_TYPES);
 
 			if(nBeforeType==-1)	// first loop
 			{
-				nBeforeType= PN.type; 
+				nBeforeType= PN.nPlanetType; 
 			}
 			else	// 이전 행성과 다른 타입으로 설정하기
 			{
-				while(PN.type == nBeforeType)
-					PN.type= rand.nextInt(PLANET_TYPES);
-				nBeforeType= PN.type;
+				while(PN.nPlanetType == nBeforeType)
+					PN.nPlanetType= rand.nextInt(PLANET_TYPES);
+				nBeforeType= PN.nPlanetType;
 			}			
 				
 			float x= 100+rand.nextInt(200) + 300*PN.nIndex;
 			float y= 200+rand.nextInt(500);
-			Log.d("Planet ["+PN.nIndex+"]"," => X : "+x+"  //  Y : "+y+"  //  type : "+PN.type);
-			PN.SetObject(sprPlanets, 0, 0, x, y, PN.type, 0);
+			Log.d("Planet ["+PN.nIndex+"]"," => X : "+x+"  //  Y : "+y+"  //  type : "+PN.nPlanetType);
+			PN.SetObject(sprPlanets, 0, 0, x, y, PN.nPlanetType, 0);
 			float fRandomScale= 0.5f+rand.nextFloat()/2;
 			PN.scalex= fRandomScale;
 			PN.scaley= fRandomScale;
@@ -166,7 +166,8 @@ public class SSystemMap  extends SBase
 		
 		objSelection.SetObject(sprPlanets, 0, 0, 0, 0, 5, 0);
 		objSelection.show= false;
-		sprBackgroundA.LoadSprite(gl, mContext, R.drawable.background_a, "background_a.spr");
+		//sprBackgroundA.LoadSprite(gl, mContext, R.drawable.background_a, "background_a.spr");
+		sprBackgroundA.LoadSprite(gl, mContext, R.drawable.systemmap_bg, "systemmap_bg.spr");
 		
 		gInfo.ScrollX= arrPlanet.get( nMyPos ).x-(nHalfScreenX); 	// 처음 스크롤 위치
 	}
@@ -310,7 +311,7 @@ public class SSystemMap  extends SBase
 			if(Math.abs(fGapX) > 0.1f)	// 갭이 남아있으면
 			{
 				fGapX = fGapX * 0.97f;
-				gInfo.ScrollX += fGapX/5.5f;
+				gInfo.ScrollX += fGapX/5.0f;
 			}
 			break;
  		}

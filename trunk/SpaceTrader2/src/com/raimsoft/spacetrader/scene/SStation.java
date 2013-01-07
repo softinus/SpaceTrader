@@ -70,7 +70,7 @@ public class SStation extends SBase
 		/// 스테이션 정보
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");
 		objPlanet= uInfo.GetCurrentPlanet();
-		objPlanet.SetObject(sprPlanets, objPlanet.type, 0, 120, 192, objPlanet.type, 0);//objPlanet.show= true; objPlanet.x= 200; objPlanet.y= 200; objPlanet.scalex= 0.75f; objPlanet.scaley= 0.75f;
+		objPlanet.SetObject(sprPlanets, uInfo.GetPlanetType(), 0, 120, 192,  uInfo.GetPlanetType(), 0);//objPlanet.show= true; objPlanet.x= 200; objPlanet.y= 200; objPlanet.scalex= 0.75f; objPlanet.scaley= 0.75f;
 		objPlanet.scalex= 0.75f;	objPlanet.scaley= 0.75f;
 		
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");
@@ -150,14 +150,14 @@ public class SStation extends SBase
 		case 1:	// 스테이션 정보
 			sprStationUI_INFO.PutAni(gInfo, nX, nY, 0, 0);
 			font.DrawFont(gl, 240, 125, 18f, uInfo.GetPlanetName());
-			font.DrawFont(gl, 275, 185, 28f, Integer.toString(uInfo.GetSystemMapPlanet()) );
+			font.DrawFont(gl, 285, 180, 24f, "(423,224):"+uInfo.GetSystemMapPlanet() );
 			//font.DrawFont(gl, 380, 400, 28f, uInfo.GetPlanetName());
 			
 			objPlanet.DrawSprite(gInfo);
 			
 			
 			break;
-		case 2:	//월드 뉴스
+		case 2:	//월드 뉴스	
 			sprStationUI_NEWS.PutAni(gInfo, nX, nY, 0, 0);
 			break;
 		case 3:	//상품 거래

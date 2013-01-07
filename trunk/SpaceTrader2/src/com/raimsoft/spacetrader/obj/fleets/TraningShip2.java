@@ -5,7 +5,6 @@ import java.util.Random;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
-import android.provider.Contacts.Intents.UI;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
