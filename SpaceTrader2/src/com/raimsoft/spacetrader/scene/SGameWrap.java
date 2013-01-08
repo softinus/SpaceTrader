@@ -37,7 +37,7 @@ public class SGameWrap extends SBase
 	private Sprite sprMetoer= new Sprite();
 	private Sprite sprMissile= new Sprite();
 	private Sprite sprStation= new Sprite();
-	private Sprite sprGlow= new Sprite();
+	private Sprite sprCrashEffect= new Sprite();
 	
 	private boolean bReleased= false;
 	private int nMeteorCount= 0;
@@ -96,7 +96,7 @@ public class SGameWrap extends SBase
 		sprMetoer.LoadSprite( gl, mContext, R.drawable.resource_2, "meteor.spr" );
 		sprMissile.LoadSprite(gl, mContext, R.drawable.resource_2, "missile_1.spr");
 		sprStation.LoadSprite(gl, mContext, R.drawable.station_dummy1, "station_1.spr");
-		sprGlow.LoadSprite(gl, mContext, R.drawable.glow, "glow.spr");
+		sprCrashEffect.LoadSprite(gl, mContext, R.drawable.meteor, "meteor_crash.spr");
 		
 		objRader= new Radar(gl, gInfo, mContext);
 		objProgress= new ProgressMeter(gl, gInfo, mContext);
@@ -170,14 +170,14 @@ public class SGameWrap extends SBase
 		this.UpdateMetoer();
 		this.UpdateShip();
 		this.UpdateMissile();
-		this.UpdateGlow();
+		this.UpdateParticleEffect();
 		
 		objRader.UpdateObjects();
 		objProgress.UpdateObjects();
 		objMissile.UpdateObjects(gInfo);
 	}
 	
-	private void UpdateGlow()
+	private void UpdateParticleEffect()
 	{		
 		for ( int i = 0; i < MAX_PARTICLE; i++ )
 		{
@@ -185,10 +185,10 @@ public class SGameWrap extends SBase
 			{
 				Particle_BOOM[i].Zoom( gInfo, 0.02f, 0.02f );
 				
-				Particle_BOOM[i].trans -= 0.05f;
+				Particle_BOOM[i].trans -= 0.03f;
 				if ( Particle_BOOM[i].trans <= 0 ) Particle_BOOM[i].dead = true;			
 				
-				Particle_BOOM[i].MovebyAngle( gInfo, Particle_BOOM[i].angle, 7.0f );
+				Particle_BOOM[i].MovebyAngle( gInfo, Particle_BOOM[i].angle, 3.5f);
 			}
 		}
 	}
@@ -199,10 +199,10 @@ public class SGameWrap extends SBase
 		{
 			if ( Particle_BOOM[i].dead == true )
 			{
-				Particle_BOOM[i].SetObject( sprGlow, 0, 0, x, y, 0, 8 );
+				Particle_BOOM[i].SetObject( sprCrashEffect, 0, 0, x, y, 0, MyRand.nextInt(8) );
 				Particle_BOOM[i].dead = false;
 				Particle_BOOM[i].angle = (float)MyRand.nextInt( 360 );
-				Particle_BOOM[i].effect = 1;
+				//Particle_BOOM[i].effect = 1;
 			}
 		}
 
