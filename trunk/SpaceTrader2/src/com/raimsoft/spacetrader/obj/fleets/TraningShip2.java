@@ -29,6 +29,8 @@ public class TraningShip2 extends BaseFleet
 		fHandeling= uInfo.GetHandling();
 		nHP= uInfo.GetShipHull();
 		strShipName= uInfo.GetShipName();
+		pMissileStart.x= 15;
+		pMissileStart.y= 0;
 		
 		sprGlow= new Sprite();
 		sprGlow.LoadSprite( _gl, _context, R.drawable.glow, "glow.spr" );

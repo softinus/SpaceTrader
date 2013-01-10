@@ -89,8 +89,8 @@ public class SGameWrap extends SBase
 			objShip= new TraningShip2(gl, mContext);
 		}
 		objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY+60, 0, 0 );
-		objShip.scalex= 0.5f;
-		objShip.scaley= 0.5f;
+		objShip.scalex= 0.6f;
+		objShip.scaley= 0.6f;
 		
 		sprStar.LoadSprite( gl, mContext, R.drawable.resource_2, "star_1.spr" );
 		sprMetoer.LoadSprite( gl, mContext, R.drawable.resource_2, "meteor.spr" );
@@ -103,8 +103,6 @@ public class SGameWrap extends SBase
 	
 		objMissile= new Missile(gl, mContext);
 		objMissile.SetObject(sprMissile, 0, 0, objShip.x, objShip.y, 0, 0);
-		objMissile.scalex= 0.5f;
-		objMissile.scaley= 0.5f;
 		
 		objStation= new GameObject();
 		objStation.SetObject(sprStation, 0, 0, 100, -320, 0, 0);
@@ -238,7 +236,9 @@ public class SGameWrap extends SBase
 	{
 		if(!objMissile.isFired())	// 발사안했으면
 		{
-			objMissile.SetObject(sprMissile, 0, 0, objShip.x, objShip.y, 0, 0);
+			objMissile.SetObject(sprMissile, 0, 0, objShip.x+objShip.pMissileStart.x, objShip.y+objShip.pMissileStart.y, 0, 0);
+			objMissile.scalex= 0.5f;
+			objMissile.scaley= 0.5f;
 			objMissile.SetFire(true, false);
 		}
 	}
@@ -482,4 +482,5 @@ public class SGameWrap extends SBase
 	}
 
 }
+
 
