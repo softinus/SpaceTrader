@@ -3,6 +3,7 @@ package com.raimsoft.spacetrader.obj.fleets;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
+import android.graphics.Point;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
@@ -36,6 +37,7 @@ public class BaseFleet extends GameObject
 	protected float fVelocity= 13.0f;
 	protected float fHandeling= 2.0f;
 	public int nHP= 5000;
+	public Point pMissileStart;	// 미사일 나가는 위치
 	
 	protected Launcher UHL;
 	protected SoundManager Sound;
@@ -75,7 +77,7 @@ public class BaseFleet extends GameObject
 		Sound.Load(2, R.raw.spaceship_spark);
 		Sound.Load(3, R.raw.systems_online);
 		
-		
+		pMissileStart= new Point();
 		sprSpark= new Sprite();
 //		sprDestroy= new Sprite();
 		sprHP= new Sprite();

@@ -17,6 +17,7 @@ import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.GameButton;
 import com.raimsoft.spacetrader.obj.Planet;
+import com.raimsoft.spacetrader.obj.RainbowMessageBox;
 import com.raimsoft.spacetrader.util.RandomNameMaker;
 import com.raimsoft.spacetrader.util.SoundManager;
 
@@ -30,6 +31,7 @@ public class SSystemMap  extends SBase
 	Sprite sprPanel= new Sprite();
 	Sprite sprPosMark= new Sprite();
 	Sprite sprButtonMove= new Sprite();
+	Sprite sprMessage= new Sprite();
 	
 	private SoundManager Sound;
 	
@@ -41,6 +43,8 @@ public class SSystemMap  extends SBase
 	private ArrayList<GameObject> arrMoveAbleMarker= new ArrayList<GameObject>();	// 이동 가능한 위치 보여주는 마커.	
 	private GameObject objSelection= new GameObject();	// 선택된 행성 보여주는 마커
 	private GameObject objPanel= new GameObject();
+	private RainbowMessageBox msgBox;
+	
 	private Font txtInfo= new Font();
 	
 	private Random rand = new Random();
@@ -86,6 +90,9 @@ public class SSystemMap  extends SBase
 	{
 		super.LoadData();
 		
+		sprMessage.LoadSprite(gl, mContext, R.drawable.buttons_2, "rainbow_messagebox.spr");
+		msgBox= new RainbowMessageBox(gl, mContext, 1);
+		msgBox.SetObject(sprMessage, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY/2, 0, 0);
 		nHalfScreenX= (int) (gInfo.ScreenX/2);
 		nMyPos= nSelectionIndex= uInfo.GetSystemMapPlanet();
 		
@@ -239,6 +246,7 @@ public class SSystemMap  extends SBase
 		txtInfo.EndFont();
 		
 		btnMove.DrawSprite(gInfo);	// 이동 버튼
+		msgBox.DrawSprite(gInfo);	// 메세지 박스
 		
 	}
 	
@@ -325,14 +333,25 @@ public class SSystemMap  extends SBase
 	public void Update()
 	{
 		super.Update();
+
+		msgBox.UpdateObjects();
+		int nRes= msgBox.CheckOverButtons();
+		if(nRes==0)
+		{
+			uInfo.setSystemMapPlanet_going(nSelectionIndex);
+			SetScene(EnumScene.E_GAME_WRAP);
+		}
+		else if(nRes==1)
+		{
+			msgBox.SetShow(false);
+		}
 		
 		btnMove.ButtonUpdate(gInfo.ScrollX);
 		
 		Scroll();		
 		if(btnMove.CheckOver())
 		{
-			uInfo.setSystemMapPlanet_going(nSelectionIndex);
-			SetScene(EnumScene.E_GAME_WRAP);
+			msgBox.SetShow(true);
 		}
 		
 		// Selection Tool
