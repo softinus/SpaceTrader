@@ -94,6 +94,8 @@ public class SSystemMap  extends SBase
 		msgBox= new RainbowMessageBox(gl, mContext);
 		msgBox.SetMessageBox(1, sprMessage, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY/2, 0, 0);
 		msgBox.scroll= false;
+		msgBox.SetButtonTextScr(24f, "출발", "뒤로");
+		
 		nHalfScreenX= (int) (gInfo.ScreenX/2);
 		nMyPos= nSelectionIndex= uInfo.GetSystemMapPlanet();
 		
@@ -335,9 +337,6 @@ public class SSystemMap  extends SBase
 	{
 		super.Update();
 		
-		if(msgBox.GetShow())	// 메세지박스 떠있으면 전부 무시
-			return;
-
 		msgBox.UpdateObjects(gInfo.ScrollX);
 		int nRes= msgBox.CheckOverButtons();
 		if(nRes==0)
@@ -349,12 +348,18 @@ public class SSystemMap  extends SBase
 		{
 			msgBox.SetShow(false);
 		}
+		if(msgBox.GetShow())	// 메세지박스 떠있으면 전부 무시
+			return;
+
+		
+		
 		
 		btnMove.ButtonUpdate(gInfo.ScrollX);
 		
 		Scroll();		
 		if(btnMove.CheckOver())
 		{
+			msgBox.SetBoxPosition((int)gInfo.ScrollX);
 			msgBox.SetShow(true);
 		}
 		

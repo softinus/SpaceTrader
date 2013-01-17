@@ -54,10 +54,18 @@ public class GameButton extends GameObject
 	
 	public void DrawButtonWithText(GameInfo info, GL10 _gl, Font font)
 	{
-		super.DrawSprite(info);
+		super.DrawSprite(info); 
 		
 		//font.DrawFont(_gl, nTextX, nTextY, fTextSize, strContent);
 		font.DrawColorFont(_gl, info, nTextX, nTextY, fR, fG, fB, fTextSize, strContent);
+	}
+	
+	public void DrawButtonWithText2(GameInfo info, GL10 _gl, Font font, int _nXFactor, int _nYFactor)
+	{
+		super.DrawSprite(info); 
+		
+		//font.DrawFont(_gl, nTextX, nTextY, fTextSize, strContent);
+		font.DrawColorFont(_gl, info, this.x+nTextX+_nXFactor, this.y+nTextY+_nYFactor, fR, fG, fB, fTextSize, strContent);
 	}
 
 	public boolean CheckOver()
@@ -78,7 +86,7 @@ public class GameButton extends GameObject
 		
 		if( CheckPos(nX, nY) && bTouch )
 		{
-			nClickX= nX;
+			nClickX= nX; 
 			nClickY= nY;
 			nButtonState= ButtonType.STATE_DOWN_BUTTON;
 			this.frame= nMouseOverFrame;

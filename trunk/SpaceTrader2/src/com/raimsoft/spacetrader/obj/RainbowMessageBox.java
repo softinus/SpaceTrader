@@ -19,6 +19,7 @@ public class RainbowMessageBox extends GameObject
 	Context mContext;
 	GL10 mGL;
 	Font mFont= new Font();
+	int nScroll= 0;		// 스크롤값
 	
 	/**
 	 * 레인보우UI스타일의 메세지 박스 사용
@@ -39,9 +40,10 @@ public class RainbowMessageBox extends GameObject
 		btnPositive.scroll= false;
 		btnNegative.scroll= false;
 		
-		sprButton.LoadSprite(_gl, _context, R.drawable.buttons_2, "rainbow_messagebox_button.spr");
+		//sprButton.LoadSprite(_gl, _context, R.drawable.buttons_2, "rainbow_messagebox_button.spr");
+		sprButton.LoadSprite(_gl, mContext, R.drawable.buttons_2, "rainbow_messagebox2.spr");
 		
-	}
+	} 
 	
 	/**
 	 * 
@@ -64,9 +66,24 @@ public class RainbowMessageBox extends GameObject
 		}
 		else if (_nBoxType==1)	// 2 Button
 		{
-			btnPositive.SetButton(mContext, sprButton, 240-100, 400-100, 0); 
-			btnNegative.SetButton(mContext, sprButton, 240+100, 400-100, 0);
+			btnPositive.SetButton(mContext, sprButton, 0, 0, 0); 
+			btnNegative.SetButton(mContext, sprButton, 0, 0, 0);
 		}
+	}
+	
+	/**
+	 * 메세지 박스 위치 조정
+	 * @param _nScroll : 스크롤이 있다면 스크롤값
+	 */
+	public void SetBoxPosition(int _nScroll)
+	{
+		nScroll= _nScroll;
+				
+		btnPositive.x= nScroll+240-90;
+		btnPositive.y= 470;
+		
+		btnNegative.x= nScroll+240+90;
+		btnNegative.y= 470;
 	}
 
 	/**
@@ -131,10 +148,8 @@ public class RainbowMessageBox extends GameObject
 			mFont.BeginFont();
 			
 			super.DrawSprite(info);
-			btnPositive.DrawButtonWithText(info, mGL, mFont);
-			btnNegative.DrawButtonWithText(info, mGL, mFont);
-			//btnPositive.DrawSprite(info);
-			//btnNegative.DrawSprite(info);
+			btnPositive.DrawButtonWithText2(info, mGL, mFont, -nScroll-5, -5);
+			btnNegative.DrawButtonWithText2(info, mGL, mFont, -nScroll-5, -5);
 			
 			mFont.EndFont();
 		}
