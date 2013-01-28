@@ -26,6 +26,7 @@ public class BaseFleet extends GameObject
 	
 	public 	float fEventSpeed= 8.5f;
 	public  int nEventCount= 0;	// 연출0번 --(함선가속)--> 연출1번 --(함선감속)--> 연출2번 --> (시작)
+	public 	boolean bEventSound= false;	// 연출 효과음 출력여부
 	
 
 	
@@ -76,6 +77,8 @@ public class BaseFleet extends GameObject
 		Sound.Load(1, R.raw.spaceship_engine);
 		Sound.Load(2, R.raw.spaceship_spark);
 		Sound.Load(3, R.raw.systems_online);
+		Sound.Load(4, R.raw.systems_offline);
+		Sound.Load(5, R.raw.hyperspace_1);
 		
 		pMissileStart= new Point();
 		sprSpark= new Sprite();
@@ -230,6 +233,16 @@ public class BaseFleet extends GameObject
 			objShield.DrawSprite(info);
 		}
 	}
+	
+	public void HyperspaceSound()
+	{
+		if(!bEventSound)
+		{
+			Sound.Play(5);
+			bEventSound= true;
+		}
+	}
+	
 	
 	// 메모리해제
 	public void Release()

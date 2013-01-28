@@ -74,7 +74,7 @@ public class SGameWrap extends SBase
 		
 		nWhereIgoing= uInfo.getnSystemMapPlanet_going();	// 내가 어디로 가고있나염
 		
-		Music = MediaPlayer.create(mContext, R.raw.game);
+		Music = MediaPlayer.create(mContext, R.raw.warp);
 		Music.setLooping(true);
 		Music.start();
 		
@@ -237,8 +237,8 @@ public class SGameWrap extends SBase
 		if(!objMissile.isFired())	// 발사안했으면
 		{
 			objMissile.SetObject(sprMissile, 0, 0, objShip.x+objShip.pMissileStart.x, objShip.y+objShip.pMissileStart.y, 0, 0);
-			objMissile.scalex= 0.5f;
-			objMissile.scaley= 0.5f;
+			objMissile.scalex= 0.65f;
+			objMissile.scaley= 0.65f;
 			objMissile.SetFire(true, false);
 		}
 	}
@@ -253,7 +253,7 @@ public class SGameWrap extends SBase
 			if(!objMissile.isFired() || MTO.dead)	// 발사중 아니면 || 메테오 터진거면 충돌체크안함. 
 				continue;
 			
-			if( gInfo.CrashCheck(MTO, objMissile, -5, -5) )	// 메테오와 미사일 충돌체크
+			if( gInfo.CrashCheck(MTO, objMissile, -3, -3) )	// 메테오와 미사일 충돌체크
 			{
 				this.MakeGlow(MTO.x, MTO.y);
 				objMissile.SetFire(false, true);
@@ -302,7 +302,10 @@ public class SGameWrap extends SBase
 		if(objProgress.bArrived)
 		{			
 			if(-1500 <= objShip.y)	// 끝
+			{
 				objShip.y -= 12f;
+				objShip.HyperspaceSound();
+			}
 			else
 			{
 				uInfo.SetSystemMapPlanet(nWhereIgoing);	// 도착한 곳!

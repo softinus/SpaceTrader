@@ -63,7 +63,7 @@ public class SStation extends SBase
 		
 		uInfo= UserInfo.GetInstance();
 		
-		Music = MediaPlayer.create(mContext, R.raw.station_1);
+		Music = MediaPlayer.create(mContext, R.raw.station2);
 		Music.setLooping(true);
 		Music.start();
 		

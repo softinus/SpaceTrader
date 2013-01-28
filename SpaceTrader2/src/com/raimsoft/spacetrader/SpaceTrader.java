@@ -141,7 +141,7 @@ public class SpaceTrader extends Activity implements SensorEventListener
 		            	        			ShowAlertDialog("[로그인 성공]", "우주무역 시스템...\n장사꾼 "+strID+"의 정보를 가져왔습니다.\n게임 시작해주세요!", "확인");
 		            	        			uInfo.SetLogin(true);
 		            	        			uInfo.SetGold(0);
-		            	        			uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_1);
+		            	        			uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_2);
 		            	        			uInfo.SetWorldMapX(-1);
 		            	        			uInfo.SetWorldMapY(-1);
 		            	        			uInfo.SetSystemMapPlanet(1);
