@@ -23,7 +23,7 @@ public class Missile extends GameObject
 	private Sprite	sprGlow;
 	//private boolean bCrash= false;
 	private boolean bFired= false;
-	private float fVelocity= 1.0f;
+	private float fVelocity= 2.0f;
 	//private float fFactorY= 1.0f;
 	private float fDamage= 280.0f;
 	
@@ -43,7 +43,7 @@ public class Missile extends GameObject
 		Sound= new SoundManager(_context);
 		Sound.Create();
 		Sound.Load(0, R.raw.missile_2);
-		Sound.Load(1, R.raw.explode);
+		Sound.Load(1, R.raw.bomb_3);
 		
 		
 	}
@@ -80,7 +80,7 @@ public class Missile extends GameObject
 		}
 		else
 		{
-			fVelocity= 1.0f;
+			fVelocity= 2.0f;
 			if(_bCollision)
 				Sound.Play(1);
 			
@@ -128,7 +128,7 @@ public class Missile extends GameObject
 		if(bFired)
 		{
 			//Log.d("Missile::", "X: "+this.x+ " Y: "+this.y);
-			fVelocity= fVelocity * 1.03f;
+			fVelocity= fVelocity * 1.0308f;
 			this.y -= fVelocity;
 			
 			

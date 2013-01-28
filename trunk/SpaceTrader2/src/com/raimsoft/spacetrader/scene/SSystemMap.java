@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Random;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.MotionEvent;
 import bayaba.engine.lib.Font;
@@ -59,6 +60,8 @@ public class SSystemMap  extends SBase
 	private boolean bDirectionR= true;
 	private int nBeforeType= -1; // planet type before
 	
+	private MediaPlayer Music;
+	
 	private ArrayList<String> arrPlanetName= new ArrayList<String>();
 
 	public SSystemMap(Context mContext, GameInfo gInfo)
@@ -89,6 +92,11 @@ public class SSystemMap  extends SBase
 	public void LoadData()
 	{
 		super.LoadData();
+		
+		
+		Music = MediaPlayer.create(mContext, R.raw.systemmap_music);
+		Music.setLooping(true);
+		Music.start();
 		
 		sprMessage.LoadSprite(gl, mContext, R.drawable.buttons_2, "rainbow_messagebox.spr");
 		msgBox= new RainbowMessageBox(gl, mContext);
