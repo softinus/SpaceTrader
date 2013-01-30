@@ -1,7 +1,6 @@
 package com.raimsoft.spacetrader;
 
 import org.usergrid.android.client.callbacks.ApiResponseCallback;
-import org.usergrid.java.client.entities.User;
 import org.usergrid.java.client.response.ApiResponse;
 
 import android.accounts.Account;
@@ -30,8 +29,11 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import bayaba.engine.lib.GameInfo;
 
-import com.kth.baasio.Baasio;
-import com.kth.baasio.auth.AuthUtils;
+import com.kth.baasio.Baas;
+import com.kth.baasio.callback.BaasioSignInCallback;
+import com.kth.baasio.callback.BaasioSignUpCallback;
+import com.kth.baasio.entity.user.BaasioUser;
+import com.kth.baasio.exception.BaasioException;
 import com.raimsoft.spacetrader.data.EnumShip;
 import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.data.UserInfo;
@@ -63,7 +65,7 @@ public class SpaceTrader extends Activity implements SensorEventListener
         
         LoadingDL = new ProgressDialog(this);
         
-        Baasio.getInstance().init(this,
+        Baas.io().init(this,
         		"https://api.baas.io",
         		"june",
         		"spacetrader");
@@ -91,11 +93,6 @@ public class SpaceTrader extends Activity implements SensorEventListener
     }
     
     
-    
-    
-    
-    
-    
     public Handler LoadingHandler = new Handler()
 	{
 //		OnMeepleInteraction callback= new OnMeepleInteraction()
@@ -118,25 +115,35 @@ public class SpaceTrader extends Activity implements SensorEventListener
 				if( (strID!=null) && (strPW!=null) )	// 저장된 ID가 있으면 로그인한다.
 				{
 					LoadingHandler.sendEmptyMessage(1);
-	            	AuthUtils.login(
-		            	    getApplicationContext(),                    // context
-		            	    strID,                 // username
-		            	    strPW,                 // password
-		            	    new ApiResponseCallback()
-		            	    {
-		            	        @Override
-		            	        public void onException(Exception e) { }            // Exception 발생
-		    
-		            	        @Override
-		            	        public void onResponse(ApiResponse response)
-		            	        {
-		            	        	if(response==null)
+					
+					BaasioUser.signInInBackground(
+							getApplicationContext()
+					        , strID
+					        , strPW
+					        , new BaasioSignInCallback() {
+
+					            @Override
+					            public void onException(BaasioException e) {
+					                if (e.getStatusCode() != null)
+					                {
+					                    if (e.getErrorCode() == 201)
+					                    {
+					                        return;
+					                    }
+					                }
+					                //기타 오류
+					            }
+
+					            @Override
+					            public void onResponse(BaasioUser response)
+					            {
+					            	if(response==null)
 		            	        		ShowAlertDialog("[로그인]", "로그인 실패", "확인");
 		            	        	else
 		            	        	{
 		            	        		LoadingHandler.sendEmptyMessage(999);
 		            	        		
-		            	        		if(TextUtils.isEmpty(response.getError()))	            	        			
+		            	        		if(!TextUtils.isEmpty(response.getEmail()))	            	        			
 		            	        		{
 		            	        			ShowAlertDialog("[로그인 성공]", "우주무역 시스템...\n장사꾼 "+strID+"의 정보를 가져왔습니다.\n게임 시작해주세요!", "확인");
 		            	        			uInfo.SetLogin(true);
@@ -148,11 +155,11 @@ public class SpaceTrader extends Activity implements SensorEventListener
 		            	        			//SPUtil.putBoolean(getApplicationContext(), "login", true);
 		            	        		}
 		            	        		else
-		            	        			ShowAlertDialog("[로그인 실패]", response.getErrorDescription(), "확인");
+		            	        			ShowAlertDialog("[로그인 실패]", response.toString(), "확인");
 		            	        	}
-		            	        		
-		            	        }    // 결과
-		            	    });
+					            }
+					        });
+					
 				}
 				else
 				{
@@ -202,6 +209,7 @@ public class SpaceTrader extends Activity implements SensorEventListener
     @Override
     protected void onDestroy()
     {
+    	Baas.io().uninit(this);	// baas.io 종료
         super.onDestroy();
     };
 
@@ -294,44 +302,51 @@ public class SpaceTrader extends Activity implements SensorEventListener
 	            	{	            	
 	            		LoadingHandler.sendEmptyMessage(1);
 	            		
-		            	AuthUtils.login(
-	            	    getApplicationContext(),                    // context
-	            	    EDT_ID.getText().toString(),                 // username
-	            	    EDT_PW.getText().toString(),                 // password
-	            	    new ApiResponseCallback()
-	            	    {
-	            	        @Override
-	            	        public void onException(Exception e) { }            // Exception 발생
-	    
-	            	        @Override
-	            	        public void onResponse(ApiResponse response)
-	            	        {
-	            	        	if(response==null)
-	            	        		ShowAlertDialog("[로그인]", "로그인 실패", "확인");
-	            	        	else
-	            	        	{
-	            	        		LoadingHandler.sendEmptyMessage(999);
-	            	        		
-	            	        		if(TextUtils.isEmpty(response.getError()))	            	        			
-	            	        		{
-	            	        			SPUtil.putString(getApplicationContext(), "login_id", EDT_ID.getText().toString());
-	            	        			SPUtil.putString(getApplicationContext(), "login_pw", EDT_PW.getText().toString());
-	            	        			
-	            	        			ShowAlertDialog("[로그인 성공]", "우주무역 시스템...\n장사꾼 "+EDT_ID.getText().toString()+"의 정보를 가져왔습니다.\n게임 시작해주세요!", "확인");
-	            	        			uInfo.SetLogin(true);
-	            	        			uInfo.SetGold(0);
-	            	        			uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_2);
-	            	        			uInfo.SetWorldMapX(-1);
-	            	        			uInfo.SetWorldMapY(-1);
-	            	        			uInfo.SetSystemMapPlanet(1);
-	            	        			//SPUtil.putBoolean(getApplicationContext(), "login", true);
-	            	        		}
-	            	        		else
-	            	        			ShowAlertDialog("[로그인 실패]", response.getErrorDescription(), "확인");
-	            	        	}
-	            	        		
-	            	        }    // 결과
-	            	    });
+	            		
+	            		BaasioUser.signInInBackground(
+	            				getApplicationContext()
+	            		        , EDT_ID.getText().toString()
+	            		        , EDT_PW.getText().toString()
+	            		        , new BaasioSignInCallback() {
+
+	            		            @Override
+	            		            public void onException(BaasioException e)
+	            		            {
+	            		                if (e.getStatusCode() != null)
+	            		                {
+	            		                    if (e.getErrorCode() == 201)
+	            		                    {
+	            		                    	ShowAlertDialog("[로그인 실패]", "ID 또는 PW를 확인해주세요.", "확인");
+	            		                        return;
+	            		                    }
+	            		                }
+
+	            		                //기타 오류
+	            		            }
+
+	            		            @Override
+	            		            public void onResponse(BaasioUser response)
+	            		            {
+	            		            	if(response==null)
+	    	            	        		ShowAlertDialog("[로그인]", "로그인 실패", "확인");
+	    	            	        	else
+	    	            	        	{
+	    	            	        		LoadingHandler.sendEmptyMessage(999);
+
+	    	            	        			SPUtil.putString(getApplicationContext(), "login_id", EDT_ID.getText().toString());
+	    	            	        			SPUtil.putString(getApplicationContext(), "login_pw", EDT_PW.getText().toString());
+	    	            	        			
+	    	            	        			ShowAlertDialog("[로그인 성공]", "우주무역 시스템...\n장사꾼 "+EDT_ID.getText().toString()+"의 정보를 가져왔습니다.\n게임 시작해주세요!", "확인");
+	    	            	        			uInfo.SetLogin(true);
+	    	            	        			uInfo.SetGold(0);
+	    	            	        			uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_2);
+	    	            	        			uInfo.SetWorldMapX(-1);
+	    	            	        			uInfo.SetWorldMapY(-1);
+	    	            	        			uInfo.SetSystemMapPlanet(1);
+	    	            	        			//SPUtil.putBoolean(getApplicationContext(), "login", true);
+	    	            	        	}
+	            		            }
+	            		        });
 	            	}
 	            	
 	            	
@@ -374,34 +389,34 @@ public class SpaceTrader extends Activity implements SensorEventListener
 		        		}
 		        		
 		        		
-		                        
-		                
-		                AuthUtils.signup(
-                	    getApplicationContext(),                        // context
-                	    EDT_ID.getText().toString(),                    // username  (애플리케이션 내의 유일한 값)
-                	    strNumber,              						// full name
-                	    EDT_ID.getText().toString(),             			// e-mail    (애플리케이션 내의 유일한 값)
-                	    EDT_PW.getText().toString(),                    // password
-                	    new ApiResponseCallback() {
-                	        @Override
-                	        public void onException(Exception e) { }            // Exception 발생
-        
-                	        @Override
-                	        public void onResponse(ApiResponse response)
-                	        {
-                	        	if(response==null)
-                	        		ShowAlertDialog("[회원가입]", "회원가입 실패", "확인");
-                	        	else
-                	        	{
-                	        		LoadingHandler.sendEmptyMessage(999);
-                	        		
-	            	        		if(TextUtils.isEmpty(response.getError()))
-	            	        			ShowAlertDialog("[회원가입 성공]", EDT_ID.getText().toString()+"님 우주무역에 합류!\n다시 한번 로그인해주세요~", "확인");
-	            	        		else
-	            	        			ShowAlertDialog("[회원가입 실패]", response.getErrorDescription(), "확인");
-                	        	}
-                	        }    // 결과
-                	    });
+		        		BaasioUser.signUpInBackground(
+		        				EDT_ID.getText().toString()	          	//ID(username)
+		        		        , strNumber          					//이름
+		        		        , EDT_ID.getText().toString()			//이메일
+		        		        , EDT_PW.getText().toString()       	//비밀번호
+		        		        , new BaasioSignUpCallback()
+		        				{
+
+		        		            @Override
+		        		            public void onException(BaasioException e) {
+		        		                if (e.getErrorCode() == 913) {
+		        		                    //이미 가입된 사용자
+		        		                    return;
+		        		                }
+
+		        		                //기타 오류
+		        		            }
+
+		        		            @Override
+		        		            public void onResponse(BaasioUser response)
+		        		            {
+		        		            	LoadingHandler.sendEmptyMessage(999);
+		        		                if (response != null)
+		        		                {
+		        		                	ShowAlertDialog("[회원가입 성공]", EDT_ID.getText().toString()+"님 우주무역에 합류!\n다시 한번 로그인해주세요~", "확인");
+		        		                }
+		        		            }
+		        		        });		                
 	            	}
 	            }
 	        })
