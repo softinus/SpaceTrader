@@ -15,6 +15,7 @@ import com.raimsoft.spacetrader.R;
 import com.raimsoft.spacetrader.data.EnumShip;
 import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.data.UserInfo;
+import com.raimsoft.spacetrader.obj.CrashParticlesManager;
 import com.raimsoft.spacetrader.obj.Meteor;
 import com.raimsoft.spacetrader.obj.Missile;
 import com.raimsoft.spacetrader.obj.ProgressMeter;
@@ -25,10 +26,7 @@ import com.raimsoft.spacetrader.obj.fleets.TraningShip1;
 import com.raimsoft.spacetrader.obj.fleets.TraningShip2;
 
 public class SGameWrap extends SBase
-{
-	private static int MAX_PARTICLE = 8;
-	private Random MyRand = new Random();
-	
+{	
 	private UserInfo uInfo;
 	private int nWhereIgoing;	// 내가 어디로 가고있나요? (워프)
 	
@@ -37,7 +35,7 @@ public class SGameWrap extends SBase
 	private Sprite sprMetoer= new Sprite();
 	private Sprite sprMissile= new Sprite();
 	private Sprite sprStation= new Sprite();
-	private Sprite sprCrashEffect= new Sprite();
+
 	
 	private boolean bReleased= false;
 	private int nMeteorCount= 0;
@@ -48,7 +46,8 @@ public class SGameWrap extends SBase
 	private ProgressMeter objProgress;			// 프로그레스바
 	private GameObject	objStation;				// 스테이션
 	
-	private GameObject Particle_BOOM[] = new GameObject[MAX_PARTICLE];
+	
+	private CrashParticlesManager crashMgr;		// 파티클 매니저
 	
 	private Queue<Star> qStar= new LinkedList<Star>();
 	private Queue<Meteor> qMetoer= new LinkedList<Meteor>();
@@ -96,7 +95,8 @@ public class SGameWrap extends SBase
 		sprMetoer.LoadSprite( gl, mContext, R.drawable.resource_2, "meteor.spr" );
 		sprMissile.LoadSprite(gl, mContext, R.drawable.resource_2, "missile_1.spr");
 		sprStation.LoadSprite(gl, mContext, R.drawable.station_dummy1, "station_1.spr");
-		sprCrashEffect.LoadSprite(gl, mContext, R.drawable.meteor, "meteor_crash.spr");
+		//sprCrashEffect.LoadSprite(gl, mContext, R.drawable.meteor, "meteor_crash.spr");
+		crashMgr= new CrashParticlesManager(gl, mContext, gInfo);
 		
 		objRader= new Radar(gl, gInfo, mContext);
 		objProgress= new ProgressMeter(gl, gInfo, mContext);
@@ -109,7 +109,7 @@ public class SGameWrap extends SBase
 //		objStation.scalex= 0.85f;
 //		objStation.scaley= 0.85f;
 		
-		for ( int i = 0; i < MAX_PARTICLE; i++ ) Particle_BOOM[i] = new GameObject();
+		
 		
 		
 		
@@ -146,8 +146,8 @@ public class SGameWrap extends SBase
 		objMissile.DrawSprite(gInfo);
 		objShip.DrawSprite(gInfo);
 		
-		for ( int i = 0; i < MAX_PARTICLE; i++ )	// 파괴 이펙트
-			if ( Particle_BOOM[i].dead == false ) Particle_BOOM[i].DrawSprite( gInfo );
+		crashMgr.RenderEffect();
+		
 		
 		objRader.DrawObjects(gInfo);
 		objProgress.DrawObjects(gInfo);
@@ -168,43 +168,15 @@ public class SGameWrap extends SBase
 		this.UpdateMetoer();
 		this.UpdateShip();
 		this.UpdateMissile();
-		this.UpdateParticleEffect();
+		crashMgr.UpdateParticleEffects();
 		
 		objRader.UpdateObjects();
 		objProgress.UpdateObjects();
 		objMissile.UpdateObjects(gInfo);
 	}
 	
-	private void UpdateParticleEffect()
-	{		
-		for ( int i = 0; i < MAX_PARTICLE; i++ )
-		{
-			if ( Particle_BOOM[i].dead == false )
-			{
-				Particle_BOOM[i].Zoom( gInfo, 0.02f, 0.02f );
-				
-				Particle_BOOM[i].trans -= 0.03f;
-				if ( Particle_BOOM[i].trans <= 0 ) Particle_BOOM[i].dead = true;			
-				
-				Particle_BOOM[i].MovebyAngle( gInfo, Particle_BOOM[i].angle, 3.5f);
-			}
-		}
-	}
 	
-	private void MakeGlow(float x, float y)
-	{		
-		for ( int i = 0; i < MAX_PARTICLE; i++ )
-		{
-			if ( Particle_BOOM[i].dead == true )
-			{
-				Particle_BOOM[i].SetObject( sprCrashEffect, 0, 0, x, y, 0, MyRand.nextInt(8) );
-				Particle_BOOM[i].dead = false;
-				Particle_BOOM[i].angle = (float)MyRand.nextInt( 360 );
-				//Particle_BOOM[i].effect = 1;
-			}
-		}
-
-	}
+	
 	
 	// 별 만듦
 	private void MakeStar()
@@ -228,6 +200,7 @@ public class SGameWrap extends SBase
 		{
 			++nCount;
 			MTO.SetObject( sprMetoer, 0, 0, rand.nextInt((int)gInfo.ScreenX), -1*nCount*500, rand.nextInt(3), 0 );
+			//MTO.SetObject( sprMetoer, 0, 0, 225, -1*nCount*500, rand.nextInt(3), 0 );
 		}
 	}
 	
@@ -255,7 +228,7 @@ public class SGameWrap extends SBase
 			
 			if( gInfo.CrashCheck(MTO, objMissile, -3, -3) )	// 메테오와 미사일 충돌체크
 			{
-				this.MakeGlow(MTO.x, MTO.y);
+				crashMgr.MakeEffect(MTO.x, MTO.y);
 				objMissile.SetFire(false, true);
 				MTO.SetCrash(true, (int)MTO.x, (int)MTO.y);
 			}
@@ -263,14 +236,18 @@ public class SGameWrap extends SBase
 		
 		for(Meteor MTO : qMetoer)
 		{
-			for(GameObject BOOM : Particle_BOOM)
+			GameObject[] arrParticleGroup= crashMgr.GetFristParticleGroup();
+			if(arrParticleGroup==null) break;	// 파티클 아무것도 없으면 검사안함.
+			for(GameObject BOOM : arrParticleGroup)
 			{
-				if( gInfo.CrashCheck(BOOM, MTO, 0, 0) && (MTO.show==true) && (BOOM.dead==false)  && (MTO.bMoveByAngle==false) )			// 파편과 메테오 충돌했을 때 파편의 방향대로 메테오 나감.
+				if( gInfo.CrashCheck(BOOM, MTO, 0, 0) && (MTO.dead==false) && (BOOM.dead==false)  )			// 파편과 메테오 충돌했을 때 파편의 방향대로 메테오 나감.
 				{
-					MTO.bMoveByAngle=true;
-					MTO.fAngle= BOOM.angle;
-					MTO.fDistance= BOOM.trans*5.0f;
-					BOOM.dead= true;
+//					MTO.bMoveByAngle=true;
+//					MTO.fAngle= BOOM.angle;
+//					MTO.fDistance= BOOM.trans*5.0f;
+//					BOOM.dead= true;
+					MTO.SetCrash(true, (int)MTO.x, (int)MTO.y); 
+					crashMgr.MakeEffect(MTO.x, MTO.y);
 				}
 			}
 		}
@@ -441,6 +418,7 @@ public class SGameWrap extends SBase
 				{
 					Meteor mto= new Meteor( rand.nextInt(9)-4 );
 					mto.SetObject( sprMetoer, 0, 0, rand.nextInt((int)gInfo.ScreenX), -1* rand.nextInt(2500)-150, rand.nextInt(3), 0 );
+					//mto.SetObject( sprMetoer, 0, 0, 225, -1* rand.nextInt(2500)-150, rand.nextInt(3), 0 );
 					Log.d("Create Meteor", "------> offer ------> Y : "+mto.y);
 					qMetoer.offer(mto);
 				}

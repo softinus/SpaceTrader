@@ -78,7 +78,7 @@ public class BaseFleet extends GameObject
 		Sound.Load(2, R.raw.spaceship_spark);
 		Sound.Load(3, R.raw.systems_online);
 		Sound.Load(4, R.raw.systems_offline);
-		Sound.Load(5, R.raw.hyperspace_1);
+		Sound.Load(5, R.raw.hyperspace_2);
 		
 		pMissileStart= new Point();
 		sprSpark= new Sprite();

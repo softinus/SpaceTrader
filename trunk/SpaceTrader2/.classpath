@@ -4,7 +4,8 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="libs/baasiocommon.jar"/>
+	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="libs/baasioandroid.jar"/>
 	<classpathentry kind="lib" path="libs/bayabalib_pro20121113.jar"/>
 	<classpathentry kind="lib" path="libs/gcm.jar"/>
 	<classpathentry kind="lib" path="libs/jackson-core-asl-1.9.1.jar"/>
@@ -13,8 +14,5 @@
 	<classpathentry kind="lib" path="libs/spring-android-core-1.0.0.RELEASE.jar"/>
 	<classpathentry kind="lib" path="libs/spring-android-rest-template-1.0.0.RELEASE.jar"/>
 	<classpathentry kind="lib" path="libs/UHL.jar"/>
-	<classpathentry kind="lib" path="libs/usergrid-android-client-baasio-0.0.3.jar"/>
-	<classpathentry kind="lib" path="libs/usergrid-java-baasio-0.0.3.jar"/>
-	<classpathentry kind="lib" path="libs/baasioandroid.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
