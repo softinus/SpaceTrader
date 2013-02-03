@@ -42,7 +42,7 @@ public class Missile extends GameObject
 		
 		Sound= new SoundManager(_context);
 		Sound.Create();
-		Sound.Load(0, R.raw.missile_2);
+		Sound.Load(0, R.raw.missile_1);
 		Sound.Load(1, R.raw.bomb_3);
 		
 		
