@@ -29,12 +29,9 @@ public final class R {
         public static final int resource_2=0x7f02000f;
         public static final int station_bg=0x7f020010;
         public static final int station_dummy1=0x7f020011;
-        public static final int station_ui_info=0x7f020012;
-        public static final int station_ui_manage=0x7f020013;
-        public static final int station_ui_news=0x7f020014;
-        public static final int station_ui_trade=0x7f020015;
-        public static final int systemmap_bg=0x7f020016;
-        public static final int worldmap_bg=0x7f020017;
+        public static final int station_ui_2=0x7f020012;
+        public static final int systemmap_bg=0x7f020013;
+        public static final int worldmap_bg=0x7f020014;
     }
     public static final class id {
         public static final int edt_password=0x7f060003;
