@@ -29,10 +29,11 @@ public class SStation extends SBase
 	
 	private Sprite bg_station= new Sprite();
 	private Sprite sprStationButton= new Sprite();
-	private Sprite sprStationUI_INFO= new Sprite();
-	private Sprite sprStationUI_NEWS= new Sprite();
-	private Sprite sprStationUI_TRADE= new Sprite();
-	private Sprite sprStationUI_MANAGE= new Sprite();
+	private Sprite sprHexagon= new Sprite();
+	private Sprite sprStationUI_PANEL= new Sprite();
+//	private Sprite sprStationUI_NEWS= new Sprite();
+//	private Sprite sprStationUI_TRADE= new Sprite();
+//	private Sprite sprStationUI_MANAGE= new Sprite();
 	private Sprite sprPlanets= new Sprite();
 	private Sprite sprShip1= new Sprite();
 	private Sprite sprProgress= new Sprite();
@@ -50,6 +51,7 @@ public class SStation extends SBase
 	private ButtonObject prgHull= new ButtonObject();
 	private ButtonObject prgFuel= new ButtonObject();
 	private ButtonObject prgShield= new ButtonObject();
+	private GameObject objHexagon= new GameObject();
 	
 	private MediaPlayer Music;
 	
@@ -70,8 +72,8 @@ public class SStation extends SBase
 		/// 스테이션 정보
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");
 		objPlanet= uInfo.GetCurrentPlanet();
-		objPlanet.SetObject(sprPlanets, uInfo.GetPlanetType(), 0, 120, 192,  uInfo.GetPlanetType(), 0);//objPlanet.show= true; objPlanet.x= 200; objPlanet.y= 200; objPlanet.scalex= 0.75f; objPlanet.scaley= 0.75f;
-		objPlanet.scalex= 0.75f;	objPlanet.scaley= 0.75f;
+		objPlanet.SetObject(sprPlanets, uInfo.GetPlanetType(), 0, 135, 230,  uInfo.GetPlanetType(), 0);//objPlanet.show= true; objPlanet.x= 200; objPlanet.y= 200; objPlanet.scalex= 0.75f; objPlanet.scaley= 0.75f;
+		objPlanet.scalex= 0.50f;	objPlanet.scaley= 0.50f;
 		
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");
 		///==
@@ -90,6 +92,7 @@ public class SStation extends SBase
 		prgHull.SetButton(sprProgress, ButtonType.TYPE_PROGRESS, 0, 240, 520, 1);
 		prgFuel.SetButton(sprProgress, ButtonType.TYPE_PROGRESS, 0, 240, 590, 2);
 		prgShield.SetButton(sprProgress, ButtonType.TYPE_PROGRESS, 0, 240, 660, 3);
+		
 		prgHull.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.GetCurrHull()+" / "+uInfo.GetShipHull());
 		prgHull.energy= ((float)uInfo.GetCurrHull() / (float)uInfo.GetShipHull()) * 100.0f;
 		prgFuel.energy= 100;
@@ -104,10 +107,7 @@ public class SStation extends SBase
 		/// 스테이션 메뉴
 		bg_station.LoadSprite(gl, mContext, R.drawable.station_bg, "station_ui_bg.spr");
 		sprStationButton.LoadSprite(gl, mContext, R.drawable.buttons_2, "station_buttons.spr");
-		sprStationUI_INFO.LoadSprite(gl, mContext, R.drawable.station_ui_info, "station_ui_info.spr");
-		sprStationUI_NEWS.LoadSprite(gl, mContext, R.drawable.station_ui_news, "station_ui_news.spr");
-		sprStationUI_TRADE.LoadSprite(gl, mContext, R.drawable.station_ui_trade, "station_ui_trade.spr");
-		sprStationUI_MANAGE.LoadSprite(gl, mContext, R.drawable.station_ui_manage, "station_ui_manage.spr");		
+		sprStationUI_PANEL.LoadSprite(gl, mContext, R.drawable.station_ui_2, "station_ui_2.spr");
 		
 		btnInfo.SetButton(mContext, sprStationButton, 240, 300, 0);
 		btnInfo.SetTextCenter(32f, "스테이션 정보");
@@ -122,9 +122,12 @@ public class SStation extends SBase
 		btnManage.SetTextCenter(32f, "함선 관리");
 		
 		btnExit.SetButton(mContext, sprStationButton, 240, 700, 0);
-		btnExit.SetTextCenter(32f, "스테이션 나가기");
+		btnExit.SetTextCenter(32f, "스테이션 나가기");	
 		///==
 		
+		sprHexagon.LoadSprite(gl, mContext, R.drawable.buttons_2, "station_hexagon.spr");
+		objHexagon.SetObject(sprHexagon, 0, 0, 135, 230, 0, 0);
+		//objHexagon.scalex= 1.10f; objHexagon.scaley= 1.10f;
 		
 	}
 	@Override
@@ -148,30 +151,40 @@ public class SStation extends SBase
 			btnExit.DrawButtonWithText(gInfo, gl, font);
 			break;
 		case 1:	// 스테이션 정보
-			sprStationUI_INFO.PutAni(gInfo, nX, nY, 0, 0);
-			font.DrawFont(gl, 240, 125, 18f, uInfo.GetPlanetName());
-			font.DrawFont(gl, 285, 180, 24f, "(423,224):"+uInfo.GetSystemMapPlanet() );
+			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0);
+			sprStationUI_PANEL.PutAni(gInfo, 40, 100, 1, 0);
+			sprStationUI_PANEL.PutAni(gInfo, 250, 100, 2, 0);
+			sprStationUI_PANEL.PutAni(gInfo, 40, 400, 3, 0);
+			objHexagon.DrawSprite(gInfo);
+			font.DrawFont(gl, 255, 165, 16f, uInfo.GetPlanetName());
+			font.DrawFont(gl, 255, 195, 24f, "(423,224):"+uInfo.GetSystemMapPlanet() );
 			//font.DrawFont(gl, 380, 400, 28f, uInfo.GetPlanetName());
 			
 			objPlanet.DrawSprite(gInfo);
 			
-			
 			break;
 		case 2:	//월드 뉴스	
-			sprStationUI_NEWS.PutAni(gInfo, nX, nY, 0, 0);
+			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0);
+			sprStationUI_PANEL.PutAni(gInfo, 40, 100, 4, 0);
+			sprStationUI_PANEL.PutAni(gInfo, 40, 320, 5, 0);
 			break;
 		case 3:	//상품 거래
-			sprStationUI_TRADE.PutAni(gInfo, nX, nY, 0, 0);
+			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0);
+			sprStationUI_PANEL.PutAni(gInfo, 40, 100, 6, 0);
+			sprStationUI_PANEL.PutAni(gInfo, 40, 320, 7, 0);
 			break;
 		case 4:	//함선 관리
-			sprStationUI_MANAGE.PutAni(gInfo, nX, nY, 0, 0);
-			font.DrawFont(gl, 95, 100, 24f, "현재 함선");			
-			font.DrawFont(gl, 290, 135, 20f, "함선명 : "+uInfo.GetShipName());
-			font.DrawFont(gl, 290, 160, 20f, "공격력 : "+uInfo.GetShipAtt());
-			font.DrawFont(gl, 290, 185, 20f, "내구도 : "+uInfo.GetShipHull());
-			font.DrawFont(gl, 290, 210, 20f, "핸들링 : "+uInfo.GetHandling());
-			font.DrawFont(gl, 290, 235, 20f, "스피드 : "+uInfo.GetVelocity());
-			font.DrawFont(gl, 200, 435, 24f, "함선 정비");
+			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0);
+			sprStationUI_PANEL.PutAni(gInfo, 40, 100, 8, 0);
+			sprStationUI_PANEL.PutAni(gInfo, 250, 100, 9, 0);
+			sprStationUI_PANEL.PutAni(gInfo, 40, 320, 10, 0);
+			//font.DrawFont(gl, 95, 100, 24f, "현재 함선");			
+			font.DrawFont(gl, 290, 145, 20f, "함선명 : "+uInfo.GetShipName());
+			font.DrawFont(gl, 290, 170, 20f, "공격력 : "+uInfo.GetShipAtt());
+			font.DrawFont(gl, 290, 195, 20f, "내구도 : "+uInfo.GetShipHull());
+			font.DrawFont(gl, 290, 220, 20f, "핸들링 : "+uInfo.GetHandling());
+			font.DrawFont(gl, 290, 245, 20f, "스피드 : "+uInfo.GetVelocity());
+			//font.DrawFont(gl, 200, 435, 24f, "함선 정비");
 			prgBG1.DrawSprite(gl, gInfo, font);
 			prgBG2.DrawSprite(gl, gInfo, font);
 			prgBG3.DrawSprite(gl, gInfo, font);
