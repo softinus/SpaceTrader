@@ -23,6 +23,11 @@ public class SStation extends SBase
 	{
 		super(mContext, gInfo);
 		
+		for(int i=0; i<btnItems.length; ++i)
+		{
+			btnItems[i]= new GameButton();
+		}
+		
 	}
 	
 	private UserInfo uInfo;
@@ -37,6 +42,8 @@ public class SStation extends SBase
 	private Sprite sprPlanets= new Sprite();
 	private Sprite sprShip1= new Sprite();
 	private Sprite sprProgress= new Sprite();
+	private Sprite sprItem= new Sprite();
+	private Sprite sprPower= new Sprite();
 	
 	private GameButton btnInfo= new GameButton();
 	private GameButton btnNews= new GameButton();
@@ -45,6 +52,10 @@ public class SStation extends SBase
 	private GameButton btnExit= new GameButton();
 	private GameObject objPlanet= new GameObject();
 	private GameObject objShip= new GameObject();
+
+	private GameButton[] btnItems= new GameButton[30];
+	private GameButton btnPower= new GameButton();
+	
 	private ButtonObject prgBG1= new ButtonObject();
 	private ButtonObject prgBG2= new ButtonObject();
 	private ButtonObject prgBG3= new ButtonObject();
@@ -129,6 +140,22 @@ public class SStation extends SBase
 		objHexagon.SetObject(sprHexagon, 0, 0, 135, 230, 0, 0);
 		//objHexagon.scalex= 1.10f; objHexagon.scaley= 1.10f;
 		
+		sprItem.LoadSprite(gl, mContext, R.drawable.buttons_2, "btn_item.spr");
+		for(int i=0; i<10; ++i)
+		{
+			int nRow= (int)(i/5);
+			int nCol= i%5;
+			btnItems[i].SetButton(mContext, sprItem, 85+nCol*80, 190+nRow*80, 0);
+		}
+		for(int i=10; i<30; ++i)
+		{
+			int nRow= (int)(i/5);
+			int nCol= i%5;
+			btnItems[i].SetButton(mContext, sprItem, 85+nCol*80, 255+nRow*80, 0);
+		}
+		sprPower.LoadSprite(gl, mContext, R.drawable.buttons_2, "btn_power.spr");
+		btnPower.SetButton(mContext, sprPower, 415, 50, 0);
+		
 	}
 	@Override
 	public void Render()
@@ -161,17 +188,25 @@ public class SStation extends SBase
 			//font.DrawFont(gl, 380, 400, 28f, uInfo.GetPlanetName());
 			
 			objPlanet.DrawSprite(gInfo);
+			btnPower.DrawSprite(gInfo);
 			
 			break;
 		case 2:	//월드 뉴스	
 			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 100, 4, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 320, 5, 0);
+			btnPower.DrawSprite(gInfo);
 			break;
 		case 3:	//상품 거래
 			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 100, 6, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 320, 7, 0);
+			btnPower.DrawSprite(gInfo);
+			for(GameButton BTN : btnItems)
+			{
+				if(BTN.pattern!=null)
+					BTN.DrawSprite(gInfo);
+			}
 			break;
 		case 4:	//함선 관리
 			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0);
@@ -192,6 +227,7 @@ public class SStation extends SBase
 			prgFuel.DrawSprite(gl, gInfo, font);
 			prgShield.DrawSprite(gl, gInfo, font);
 			objShip.DrawSprite(gInfo);
+			btnPower.DrawSprite(gInfo);
 			break;
 
 		default:
@@ -207,14 +243,28 @@ public class SStation extends SBase
 	{
 		super.Update();
 		
+		if(nMenu==3)
+		{
+			for(GameButton BTN : btnItems)
+				BTN.ButtonUpdate(0);	
+		}
+		
+		if(nMenu!=0)
+			btnPower.ButtonUpdate(0);
+		
+		if(btnPower.CheckOver())
+			nMenu= 0;
+		
+		
 		if(nMenu!=0)	// 메뉴선택중 아니면
 			return;
 		
 		btnInfo.ButtonUpdate(0);
 		btnNews.ButtonUpdate(0);
-		btnTrade.ButtonUpdate(0);
+		btnTrade.ButtonUpdate(0); 
 		btnManage.ButtonUpdate(0);
 		btnExit.ButtonUpdate(0);
+		
 		
 		if(btnInfo.CheckOver())
 		{
