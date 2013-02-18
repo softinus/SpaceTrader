@@ -1,5 +1,7 @@
 package com.raimsoft.spacetrader.obj;
 
+import java.util.StringTokenizer;
+
 import javax.microedition.khronos.opengles.GL10;
 
 import com.raimsoft.spacetrader.R;
@@ -12,14 +14,21 @@ import bayaba.engine.lib.Sprite;
 
 public class RainbowMessageBox extends GameObject
 {
-	Sprite sprButton;
-	GameButton btnPositive;
-	GameButton btnNegative;
-	boolean bShowMsg= false;
-	Context mContext;
-	GL10 mGL;
-	Font mFont= new Font();
-	int nScroll= 0;		// 스크롤값
+	private boolean bShowMsg= false;
+	
+	private Sprite sprButton;
+	private GameButton btnPositive;
+	private GameButton btnNegative;
+	
+	private Context mContext;
+	private GL10 mGL;
+	private Font mFont= new Font();
+	
+	private int nScroll= 0;		// 스크롤값
+	private int nBoyType= 0;
+	private String strContent="";
+	private float fContentTextSize= 26f;
+	private float fButtonTextSize= 20f;
 	
 	/**
 	 * 레인보우UI스타일의 메세지 박스 사용
@@ -60,11 +69,13 @@ public class RainbowMessageBox extends GameObject
 	{
 		super.SetObject(s_pat, s_type, s_layer, s_x, s_y, s_motion, s_frame);
 		
-		if(_nBoxType==0)	// OK only
+		nBoyType= _nBoxType;
+		
+		if(nBoyType==0)	// OK only
 		{
-			btnPositive.SetButton(mContext, sprButton, 240, 400-100, 0);
+			btnPositive.SetButton(mContext, sprButton, 0, 0, 0);
 		}
-		else if (_nBoxType==1)	// 2 Button
+		else if (nBoyType==1)	// 2 Button
 		{
 			btnPositive.SetButton(mContext, sprButton, 0, 0, 0); 
 			btnNegative.SetButton(mContext, sprButton, 0, 0, 0);
@@ -78,12 +89,21 @@ public class RainbowMessageBox extends GameObject
 	public void SetBoxPosition(int _nScroll)
 	{
 		nScroll= _nScroll;
-				
-		btnPositive.x= nScroll+240-90;
-		btnPositive.y= 470;
 		
-		btnNegative.x= nScroll+240+90;
-		btnNegative.y= 470;
+		if(nBoyType==0)	// OK only
+		{
+			btnPositive.x= nScroll+240-40;
+			btnPositive.y= 470;
+		}
+		else if (nBoyType==1)	// 2 Button
+		{
+			btnPositive.x= nScroll+240-90;
+			btnPositive.y= 470;
+			
+			btnNegative.x= nScroll+240+90;
+			btnNegative.y= 470;			
+		}
+				
 	}
 
 	/**
@@ -92,10 +112,14 @@ public class RainbowMessageBox extends GameObject
 	 * @param _str1 : 첫번째 버튼 이름
 	 * @param _str2 : 두번쨰 버튼 이름 (형식이 다르면 그냥 무시된다.
 	 */	
-	public void SetButtonTextScr(float _fSize, String _str1, String _str2)
-	{
+	public void SetButtonTextScr(float _fSize, String _strContent, String _str1, String _str2)
+	{	
+		fContentTextSize= _fSize;
+		
 		btnPositive.SetTextCenter(_fSize, _str1);
 		btnNegative.SetTextCenter(_fSize, _str2);
+		
+		strContent= _strContent;
 	}
 	
 	/**
@@ -148,8 +172,30 @@ public class RainbowMessageBox extends GameObject
 			mFont.BeginFont();
 			
 			super.DrawSprite(info);
+			
+			StringTokenizer strToken= new StringTokenizer(strContent,"\n");
+			int nCount= 0;
+			while(strToken.hasMoreElements())
+			{
+				String str= strToken.nextToken();
+				mFont.DrawColorFont(mGL, this.x-150, this.y-95+(nCount*fContentTextSize), 0.75f, 0.75f, 0.75f, fContentTextSize, str);
+				++nCount;
+			}
+			
 			btnPositive.DrawButtonWithText2(info, mGL, mFont, -nScroll-5, -5);
 			btnNegative.DrawButtonWithText2(info, mGL, mFont, -nScroll-5, -5);
+			
+			
+			
+//			int nTextPer1Line= (int) (this.GetXsize() / fContentTextSize);	nTextPer1Line -= 2;
+//			int nLineCount= strContent.length() / nTextPer1Line;
+//			
+//			for(int i=0; i<nLineCount; ++i)
+//			{
+//				String str;
+//				str= strContent.substring(nTextPer1Line*i, nTextPer1Line*(i+1)).toString();
+//				mFont.DrawColorFont(mGL, this.x-150, this.y-95+(i*fContentTextSize), 0.75f, 0.75f, 0.75f, fContentTextSize, str);
+//			}
 			
 			mFont.EndFont();
 		}
