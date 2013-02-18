@@ -72,7 +72,7 @@ public class SSystemMap  extends SBase
 		RNM= new RandomNameMaker();
 		arrPlanetName= RNM.GetNames(10);
 		
-		Collections.shuffle(arrPlanetName);
+		//Collections.shuffle(arrPlanetName);
 		
 		for(int i=0; i<PLANET_NUMS; ++i)
 			arrPlanet.add( new Planet(i, arrPlanetName.get(i)) );
