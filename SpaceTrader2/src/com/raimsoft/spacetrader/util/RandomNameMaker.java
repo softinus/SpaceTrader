@@ -8,11 +8,15 @@ public class RandomNameMaker
 {
 	int a=0, b=0, c=0;
 	ArrayList<String> arrWord1, arrWord2, arrWord3, arrName;
-	Random rand= new Random();
+	//Random rand= new Random();
+	
+	GenConst GC;
 
 	public RandomNameMaker()
 	{
 		super();
+		
+		GC= new GenConst();
 		
 		arrWord1= new ArrayList<String>();
 		arrWord2= new ArrayList<String>();
@@ -73,9 +77,9 @@ public class RandomNameMaker
 		arrWord3.add("카우보이");
 		arrWord3.add("기관차");
 		
-		Collections.shuffle(arrWord1);
-		Collections.shuffle(arrWord2);
-		Collections.shuffle(arrWord3);
+//		Collections.shuffle(arrWord1);
+//		Collections.shuffle(arrWord2);
+//		Collections.shuffle(arrWord3);
 		
 
 		
@@ -89,29 +93,38 @@ public class RandomNameMaker
 		return arrName;
 	}
 	
-	private String ShuffleNames()
+	private String MixNames()
 	{
-		a= rand.nextInt(arrWord1.size());
-		b= rand.nextInt(arrWord2.size());
-		c= rand.nextInt(arrWord3.size()); 
+		a= (int) (GC.GetConstF()*arrWord1.size());
+		b= (int) (GC.GetConstF()*arrWord2.size());
+		c= (int) (GC.GetConstF()*arrWord3.size());
 		
 		return ( arrWord1.get(a) +" "+ arrWord2.get(b) +" "+ arrWord3.get(c)+ " 행성" );
 	}
 	
+//	private String MixNames2()
+//	{
+//		a= (int) (GC.GetConstF()*arrWord1.size());
+//		b= (int) (GC.GetConstF()*arrWord2.size());
+//		c= (int) (GC.GetConstF()*arrWord3.size());
+//		
+//		return ( arrWord1.get(a) +" "+ arrWord2.get(b) +" "+ arrWord3.get(c)+ " 행성" );
+//	}
+	
 	private void MakingName(int nCount)
 	{
 		if(arrName.size()==0)
-			arrName.add(ShuffleNames());
+			arrName.add(MixNames());
 			
 		while(arrName.size() <= nCount)	// 이름 개수가 지정 카운트만큼 넘어야 통과
 		{			
 			for(String name : arrName)
 			{			
-				String str= ShuffleNames();
+				String str= MixNames();
 				
 				while(str==name)
 				{
-					str= ShuffleNames();
+					str= MixNames();
 				}
 				arrName.add(str);
 				break;
