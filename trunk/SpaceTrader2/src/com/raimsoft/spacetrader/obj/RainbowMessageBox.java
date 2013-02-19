@@ -110,7 +110,7 @@ public class RainbowMessageBox extends GameObject
 	 * 메세지박스의 버튼 라벨 삽입
 	 * @param _fSize : 폰트 크기
 	 * @param _str1 : 첫번째 버튼 이름
-	 * @param _str2 : 두번쨰 버튼 이름 (형식이 다르면 그냥 무시된다.
+	 * @param _str2 : 두번째 버튼 이름 (형식이 다르면 그냥 무시된다.)
 	 */	
 	public void SetButtonTextScr(float _fSize, String _strContent, String _str1, String _str2)
 	{	
