@@ -15,6 +15,8 @@ import com.raimsoft.spacetrader.R;
 import com.raimsoft.spacetrader.data.EnumShip;
 import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.GameButton;
+import com.raimsoft.spacetrader.util.GenConst;
+import com.raimsoft.spacetrader.util.PlanetNameMaker;
 
 public class SStation extends SBase
 {
@@ -30,7 +32,12 @@ public class SStation extends SBase
 		
 	}
 	
+	private int PLANET_TYPES= 4;
+	private int nCurrPlanetType= -1;
+	
+	private PlanetNameMaker PNM;	
 	private UserInfo uInfo;
+	private GenConst GC;
 	
 	private Sprite bg_station= new Sprite();
 	private Sprite sprStationButton= new Sprite();
@@ -67,7 +74,8 @@ public class SStation extends SBase
 	private MediaPlayer Music;
 	
 	private Font font = new Font();
-	private int nMenu= 0;
+	private int nMenu= 0;	
+	
 	
 	@Override
 	public void LoadData()
@@ -82,8 +90,10 @@ public class SStation extends SBase
 		
 		/// 스테이션 정보
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");
-		objPlanet= uInfo.GetCurrentPlanet();
-		objPlanet.SetObject(sprPlanets, uInfo.GetPlanetType(), 0, 135, 230,  uInfo.GetPlanetType(), 0);//objPlanet.show= true; objPlanet.x= 200; objPlanet.y= 200; objPlanet.scalex= 0.75f; objPlanet.scaley= 0.75f;
+		//objPlanet= uInfo.GetCurrentPlanet();
+		
+		nCurrPlanetType= (int) GC.GetConstF(uInfo.GetSystemMapPlanet(), PLANET_TYPES);
+		objPlanet.SetObject(sprPlanets, nCurrPlanetType, 0, 135, 230,  nCurrPlanetType, 0);//objPlanet.show= true; objPlanet.x= 200; objPlanet.y= 200; objPlanet.scalex= 0.75f; objPlanet.scaley= 0.75f;
 		objPlanet.scalex= 0.50f;	objPlanet.scaley= 0.50f;
 		
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");
@@ -183,7 +193,7 @@ public class SStation extends SBase
 			sprStationUI_PANEL.PutAni(gInfo, 250, 100, 2, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 400, 3, 0);
 			objHexagon.DrawSprite(gInfo);
-			font.DrawFont(gl, 255, 165, 16f, uInfo.GetPlanetName());
+			font.DrawFont(gl, 255, 165, 16f, PNM.GetCurrPlanetName(nCurrPlanetType));
 			font.DrawFont(gl, 255, 195, 24f, "(423,224):"+uInfo.GetSystemMapPlanet() );
 			//font.DrawFont(gl, 380, 400, 28f, uInfo.GetPlanetName());
 			
