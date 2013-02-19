@@ -1,8 +1,6 @@
 package com.raimsoft.spacetrader.scene;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -106,6 +104,7 @@ public class SSystemMap  extends SBase
 		msgBox= new RainbowMessageBox(gl, mContext);
 		msgBox.SetMessageBox(1, sprMessage, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY/2, 0, 0);
 		msgBox.scroll= false;
+		//msgBox.SetButtonTextScr(24f, "출발", "뒤로");
 		
 		nHalfScreenX= (int) (gInfo.ScreenX/2);
 		nMyPos= nSelectionIndex= uInfo.GetSystemMapPlanet();
@@ -372,7 +371,7 @@ public class SSystemMap  extends SBase
 		Scroll();		
 		if(btnMove.CheckOver())
 		{
-			msgBox.SetButtonTextScr(24f, "["+arrPlanet.get(nSelectionIndex).strName+"]\n거리 : 123819023812km\n이 행성으로 이동하시겠습니까?", "출발", "뒤로");
+			msgBox.SetButtonTextScr(22f, "["+arrPlanet.get(nSelectionIndex).strName+"]\n거리 : 123819023812km\n이 행성으로 이동하시겠습니까?", "출발", "뒤로");
 			msgBox.SetBoxPosition((int)gInfo.ScrollX);
 			msgBox.SetShow(true);
 		}
