@@ -116,8 +116,8 @@ public class RainbowMessageBox extends GameObject
 	{	
 		fContentTextSize= _fSize;
 		
-		btnPositive.SetTextCenter(_fSize, _str1);
-		btnNegative.SetTextCenter(_fSize, _str2);
+		btnPositive.SetTextCenter2(_fSize, _str1);
+		btnNegative.SetTextCenter2(_fSize, _str2);
 		
 		strContent= _strContent;
 	}
