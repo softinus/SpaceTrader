@@ -1,8 +1,5 @@
 package com.raimsoft.spacetrader.data;
 
-import java.util.ArrayList;
-
-import com.raimsoft.spacetrader.obj.Planet;
 
 
 public class UserInfo
@@ -23,16 +20,27 @@ public class UserInfo
 	private int nWorldMapY= -1;					// 월드 Y
 	private int nSystemMapPlanet= 1;			// 현재 위치 
 	private int nSystemMapPlanet_going= -1;		// 갈 위치
+	private int nDestinationDistance= -1;		// 목적지까지 거리
 	
 	//private ArrayList<Planet> arrPlanet;
 	
 	
-	public int getnSystemMapPlanet_going()
+	public int GetDestinationDistance()
+	{
+		return nDestinationDistance;
+	}
+
+	public void SetDestinationDistance(int nDestinationDistance)
+	{
+		this.nDestinationDistance = nDestinationDistance;
+	}
+
+	public int GetSystemMapPlanet_going()
 	{
 		return nSystemMapPlanet_going;
 	}
 
-	public void setSystemMapPlanet_going(int nSystemMapPlanet_going)
+	public void SetSystemMapPlanet_going(int nSystemMapPlanet_going)
 	{
 		this.nSystemMapPlanet_going = nSystemMapPlanet_going;
 	}

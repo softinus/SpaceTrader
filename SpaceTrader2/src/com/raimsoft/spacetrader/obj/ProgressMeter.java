@@ -16,7 +16,8 @@ public class ProgressMeter
 	GameObject objProgress= new GameObject();
 	GameObject objFlag= new GameObject();
 	
-	public float fDistanceKM= 2200000.0f;	//움직이는거리
+	private float fDistanceKM= 2200000.0f;	// (보정값) 움직임에 쓰이는 거리
+	private float fRealDistanceKM= 0.0f;	// 실제 거리
 	public float fCurr= 0.0f;
 	private float fDistance= 0.0f;
 	public boolean bArrived= false;
@@ -35,6 +36,21 @@ public class ProgressMeter
 		objFlag.trans= 0.5f;
 	}
 	
+	
+	
+
+	public void SetDistance(float fDistance)
+	{
+		fRealDistanceKM= fDistance;
+		
+		float fFactor1= 1500000f;
+		float fFactor2= fRealDistanceKM * 2.5f;
+		
+		fDistance= fFactor1 + fFactor2;
+	}
+
+
+
 	public void UpdateObjects()
 	{
 		if(bArrived)	// 도착하면 끝

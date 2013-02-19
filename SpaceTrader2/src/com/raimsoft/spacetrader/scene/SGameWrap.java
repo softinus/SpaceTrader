@@ -29,6 +29,7 @@ public class SGameWrap extends SBase
 {	
 	private UserInfo uInfo;
 	private int nWhereIgoing;	// 내가 어디로 가고있나요? (워프)
+	//private int nDestinationDistanceg;	// 목적지까지의 거리
 	
 	private Sprite sprStar = new Sprite();
 	private Sprite sprShip= new Sprite();
@@ -71,7 +72,7 @@ public class SGameWrap extends SBase
 	{
 		super.LoadData();
 		
-		nWhereIgoing= uInfo.getnSystemMapPlanet_going();	// 내가 어디로 가고있나염
+		nWhereIgoing= uInfo.GetSystemMapPlanet_going();	// 내가 어디로 가고있나염
 		
 		Music = MediaPlayer.create(mContext, R.raw.warp);
 		Music.setLooping(true);
@@ -100,6 +101,7 @@ public class SGameWrap extends SBase
 		
 		objRader= new Radar(gl, gInfo, mContext);
 		objProgress= new ProgressMeter(gl, gInfo, mContext);
+		objProgress.SetDistance( uInfo.GetDestinationDistance() );	// 거리 설정해줌.
 	
 		objMissile= new Missile(gl, mContext);
 		objMissile.SetObject(sprMissile, 0, 0, objShip.x, objShip.y, 0, 0);

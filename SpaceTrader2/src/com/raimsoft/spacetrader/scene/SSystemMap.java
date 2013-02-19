@@ -353,7 +353,7 @@ public class SSystemMap  extends SBase
 		int nRes= msgBox.CheckOverButtons();
 		if(nRes==0)
 		{
-			uInfo.setSystemMapPlanet_going(nSelectionIndex);
+			uInfo.SetSystemMapPlanet_going(nSelectionIndex);
 			SetScene(EnumScene.E_GAME_WRAP);
 		}
 		else if(nRes==1)
@@ -371,7 +371,14 @@ public class SSystemMap  extends SBase
 		Scroll();		
 		if(btnMove.CheckOver())
 		{
-			msgBox.SetButtonTextScr(22f, "["+arrPlanet.get(nSelectionIndex).strName+"]\n거리 : 123819023812km\n이 행성으로 이동하시겠습니까?", "출발", "뒤로");
+			float fX1= (int) arrPlanet.get(nSelectionIndex).x;
+			float fY1= (int) arrPlanet.get(nSelectionIndex).y;
+			float fX2= (int) arrPlanet.get(nMyPos).x;
+			float fY2= (int) arrPlanet.get(nMyPos).y;
+			int nDistance=  (int) ( Math.sqrt((Math.pow((fX2-fX1), 2) + Math.pow((fY2-fY1), 2) )) * 1000 );	// 두 포인트 거리 구한다.
+			uInfo.SetDestinationDistance(nDistance);	// 유저 정보에 목적지까지의 거리 세팅
+			
+			msgBox.SetButtonTextScr(22f, "["+arrPlanet.get(nSelectionIndex).strName+"]\n거리 : "+nDistance+"km\n이 행성으로 이동하시겠습니까?", "출발", "뒤로");
 			msgBox.SetBoxPosition((int)gInfo.ScrollX);
 			msgBox.SetShow(true);
 		}
