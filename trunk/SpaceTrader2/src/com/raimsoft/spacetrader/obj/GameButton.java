@@ -46,8 +46,8 @@ public class GameButton extends GameObject
 	public void SetTextCenter(float _size, String _str)
 	{
 		strContent= _str;
-		nTextX= (int) ( this.GetXsize()/2 - (_str.length() * (int)_size*0.45f) );
-		nTextY= (int) ( this.GetYsize()/2 - (int)_size*0.38f );
+		nTextX= (int) ( 0 - (_str.length() * (int)_size*0.45f) );
+		nTextY= (int) ( 0 - (int)_size*0.38f );
 		fTextSize= _size;
 	}
 	
