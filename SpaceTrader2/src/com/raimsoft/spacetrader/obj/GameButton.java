@@ -43,7 +43,26 @@ public class GameButton extends GameObject
 		nTextY= _y;
 		fTextSize= _size;
 	}
+	
+	/**
+	 * 일반 버튼에서 사용
+	 * @param _size
+	 * @param _str
+	 */
 	public void SetTextCenter(float _size, String _str)
+	{
+		strContent= _str;
+		nTextX= (int) (this.x + ( this.GetXsize()/2 - (_str.length() * (int)_size*0.45f) ));
+		nTextY= (int) (this.y + ( this.GetYsize()/2 - (int)_size*0.38f ));
+		fTextSize= _size;
+	}
+	
+	/**
+	 * 메세지 박스에서 사용
+	 * @param _size
+	 * @param _str
+	 */
+	public void SetTextCenter2(float _size, String _str)
 	{
 		strContent= _str;
 		nTextX= (int) ( 0 - (_str.length() * (int)_size*0.45f) );

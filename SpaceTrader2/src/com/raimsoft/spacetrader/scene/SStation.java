@@ -83,6 +83,8 @@ public class SStation extends SBase
 		super.LoadData();
 		
 		uInfo= UserInfo.GetInstance();
+		GC= new GenConst();
+		PNM= new PlanetNameMaker();
 		
 		Music = MediaPlayer.create(mContext, R.raw.station2);
 		Music.setLooping(true);
@@ -193,7 +195,7 @@ public class SStation extends SBase
 			sprStationUI_PANEL.PutAni(gInfo, 250, 100, 2, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 400, 3, 0);
 			objHexagon.DrawSprite(gInfo);
-			font.DrawFont(gl, 255, 165, 16f, PNM.GetCurrPlanetName(nCurrPlanetType));
+			font.DrawFont(gl, 255, 165, 16f, PNM.GetCurrPlanetName(uInfo.GetSystemMapPlanet()));
 			font.DrawFont(gl, 255, 195, 24f, "(423,224):"+uInfo.GetSystemMapPlanet() );
 			//font.DrawFont(gl, 380, 400, 28f, uInfo.GetPlanetName());
 			

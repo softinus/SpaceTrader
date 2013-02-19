@@ -44,7 +44,7 @@ public class ProgressMeter
 		fRealDistanceKM= fDistance;
 		
 		float fFactor1= 1500000f;
-		float fFactor2= fRealDistanceKM * 2.5f;
+		float fFactor2= fRealDistanceKM * 3.5f;
 		
 		fDistance= fFactor1 + fFactor2;
 	}
