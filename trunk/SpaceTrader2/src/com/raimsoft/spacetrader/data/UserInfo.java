@@ -17,14 +17,14 @@ public class UserInfo
 	private float fVelocity= 13.0f;
 	private float fHandling= 2.0f;
 	
-	private int nCurrHull= 0;
-	private int nGold= -1;
-	private int nWorldMapX= -1;
-	private int nWorldMapY= -1;
-	private int nSystemMapPlanet= 1;
-	private int nSystemMapPlanet_going= -1;
+	private int nCurrHull= 0;					// hull
+	private int nGold= -1;						// cyber money
+	private int nWorldMapX= -1;					// 월드 X
+	private int nWorldMapY= -1;					// 월드 Y
+	private int nSystemMapPlanet= 1;			// 현재 위치 
+	private int nSystemMapPlanet_going= -1;		// 갈 위치
 	
-	private ArrayList<Planet> arrPlanet;
+	//private ArrayList<Planet> arrPlanet;
 	
 	
 	public int getnSystemMapPlanet_going()
@@ -47,22 +47,22 @@ public class UserInfo
 		return eShip;
 	}
 	
-	public String GetPlanetName()
-	{
-		return arrPlanet.get(nSystemMapPlanet).strName;
-	}
-	public int GetPlanetType()
-	{
-		return arrPlanet.get(nSystemMapPlanet).nPlanetType;
-	}
-	public Planet GetCurrentPlanet()
-	{
-		return arrPlanet.get(nSystemMapPlanet);
-	}
-	public void SetPlanets(ArrayList<Planet> _arrP)
-	{
-		arrPlanet= _arrP;
-	}
+//	public String GetPlanetName()
+//	{
+//		return arrPlanet.get(nSystemMapPlanet).strName;
+//	}
+//	public int GetPlanetType()
+//	{
+//		return arrPlanet.get(nSystemMapPlanet).nPlanetType;
+//	}
+//	public Planet GetCurrentPlanet()
+//	{
+//		return arrPlanet.get(nSystemMapPlanet);
+//	}
+//	public void SetPlanets(ArrayList<Planet> _arrP)
+//	{
+//		arrPlanet= _arrP;
+//	}
 //	public void SetPlanets(Planet _P)
 //	{
 //		_P.type;

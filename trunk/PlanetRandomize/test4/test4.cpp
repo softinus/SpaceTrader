@@ -33,6 +33,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			++nLogCalcCount;
 		}
 
+		fRes *= 200;
+
 		if((nMultiCalcCount==0) && (nLogCalcCount==0))
 		{
 			printf("[%d,%d:%d] %.3f\n", x,y,p, fRes);

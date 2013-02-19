@@ -19,13 +19,14 @@ import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.GameButton;
 import com.raimsoft.spacetrader.obj.Planet;
 import com.raimsoft.spacetrader.obj.RainbowMessageBox;
-import com.raimsoft.spacetrader.util.RandomNameMaker;
+import com.raimsoft.spacetrader.util.GenConst;
+import com.raimsoft.spacetrader.util.PlanetNameMaker;
 import com.raimsoft.spacetrader.util.SoundManager;
 
 public class SSystemMap  extends SBase
 {
 	private UserInfo uInfo;
-	private RandomNameMaker RNM;
+	private PlanetNameMaker PNM;
 	
 	Sprite sprBackgroundA= new Sprite();
 	Sprite sprPlanets= new Sprite();
@@ -48,7 +49,9 @@ public class SSystemMap  extends SBase
 	
 	private Font txtInfo= new Font();
 	
-	private Random rand = new Random();
+	//private Random rand = new Random();
+	private GenConst GC;
+	
 	
 	private int PLANET_NUMS= 10;
 	private int PLANET_TYPES= 4;
@@ -58,7 +61,7 @@ public class SSystemMap  extends SBase
 	private int nMyPos;
 	private float fStartX= -1.1f, fCurrX= -1.1f, fScrollDes, fOldX=-0.0f, fGapX= 0.0f;
 	private boolean bDirectionR= true;
-	private int nBeforeType= -1; // planet type before
+	//private int nBeforeType= -1; // planet type before
 	
 	private MediaPlayer Music;
 	
@@ -69,8 +72,9 @@ public class SSystemMap  extends SBase
 		super(mContext, gInfo);
 		
 		uInfo= UserInfo.GetInstance();
-		RNM= new RandomNameMaker();
-		arrPlanetName= RNM.GetNames(10);
+		PNM= new PlanetNameMaker();
+		GC= new GenConst();
+		arrPlanetName= PNM.GetNames(10);
 		
 		//Collections.shuffle(arrPlanetName);
 		
@@ -122,31 +126,33 @@ public class SSystemMap  extends SBase
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");		
 		for(Planet PN : arrPlanet)	// 
 		{
-			PN.nPlanetType= rand.nextInt(PLANET_TYPES);
+			PN.nPlanetType= (int) GC.GetConstF(PN.nIndex, PLANET_TYPES); // rand.nextInt(PLANET_TYPES);
 
-			if(nBeforeType==-1)	// first loop
-			{
-				nBeforeType= PN.nPlanetType; 
-			}
-			else	// 이전 행성과 다른 타입으로 설정하기
-			{
-				while(PN.nPlanetType == nBeforeType)
-					PN.nPlanetType= rand.nextInt(PLANET_TYPES);
-				nBeforeType= PN.nPlanetType;
-			}			
+//			if(nBeforeType==-1)	// first loop
+//			{
+//				nBeforeType= PN.nPlanetType; 
+//			}
+//			else	// 이전 행성과 다른 타입으로 설정하기
+//			{
+//				while(PN.nPlanetType == nBeforeType)
+//					PN.nPlanetType= rand.nextInt(PLANET_TYPES);
+//				nBeforeType= PN.nPlanetType;
+//			}
 				
-			float x= 100+rand.nextInt(200) + 300*PN.nIndex;
-			float y= 200+rand.nextInt(500);
+			float x= 100+GC.GetConstF(PN.nIndex, 200) + 300*PN.nIndex;
+			float y= 200+GC.GetConstF(PN.nIndex, 500);
+			
 			Log.d("Planet ["+PN.nIndex+"]"," => X : "+x+"  //  Y : "+y+"  //  type : "+PN.nPlanetType);
+			
 			PN.SetObject(sprPlanets, 0, 0, x, y, PN.nPlanetType, 0);
-			float fRandomScale= 0.5f+rand.nextFloat()/2;
-			PN.scalex= fRandomScale;
-			PN.scaley= fRandomScale;
+			float fPlanetScale= 0.5f + GC.GetConstF(PN.nIndex, 0.5f);
+			PN.scalex= fPlanetScale;
+			PN.scaley= fPlanetScale;
 		}
 		
 //		gInfo.TileData.LoadTile(gl, mContext, R.drawable.planets, 32, 32);
 //		gInfo.TileData.LoadMap(mContext, "plantes.map");
-		uInfo.SetPlanets(arrPlanet);
+		//uInfo.SetPlanets(arrPlanet);
 		Planet currPlanet= arrPlanet.get( nMyPos );
 		
 		objPositionMarker.SetObject(sprPosMark, 0, 0, currPlanet.x, currPlanet.y-(currPlanet.scaley*MARKER_Y), 0, 0);
