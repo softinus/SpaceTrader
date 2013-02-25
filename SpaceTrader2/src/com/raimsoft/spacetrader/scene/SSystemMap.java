@@ -353,8 +353,17 @@ public class SSystemMap  extends SBase
 		int nRes= msgBox.CheckOverButtons();
 		if(nRes==0)
 		{
-			uInfo.SetSystemMapPlanet_going(nSelectionIndex);
-			SetScene(EnumScene.E_GAME_WRAP);
+			
+			if(uInfo.GetDestinationDistance()==0)
+			{
+				uInfo.SetSystemMapPlanet(nSelectionIndex);
+				SetScene(EnumScene.E_GAME_DOCKING);
+			}
+			else
+			{
+				uInfo.SetSystemMapPlanet_going(nSelectionIndex);
+				SetScene(EnumScene.E_GAME_WRAP);
+			}
 		}
 		else if(nRes==1)
 		{
@@ -376,11 +385,21 @@ public class SSystemMap  extends SBase
 			float fX2= (int) arrPlanet.get(nMyPos).x;
 			float fY2= (int) arrPlanet.get(nMyPos).y;
 			int nDistance=  (int) ( Math.sqrt((Math.pow((fX2-fX1), 2) + Math.pow((fY2-fY1), 2) )) * 1000 );	// 두 포인트 거리 구한다.
+			
 			uInfo.SetDestinationDistance(nDistance);	// 유저 정보에 목적지까지의 거리 세팅
 			
-			msgBox.SetButtonTextScr(22f, "["+arrPlanet.get(nSelectionIndex).strName+"]\n거리 : "+nDistance+"km\n이 행성으로 이동하시겠습니까?", "출발", "뒤로");
-			msgBox.SetBoxPosition((int)gInfo.ScrollX);
-			msgBox.SetShow(true);
+			if(nDistance==0)
+			{
+				msgBox.SetButtonTextScr(22f, "현재 스테이션으로\n다시 도킹하시겠습니가?", "도킹", "취소");
+				msgBox.SetBoxPosition((int)gInfo.ScrollX);
+				msgBox.SetShow(true);
+			}
+			else
+			{
+				msgBox.SetButtonTextScr(22f, "["+arrPlanet.get(nSelectionIndex).strName+"]\n거리 : "+nDistance+"km\n이 행성으로 이동하시겠습니까?", "출발", "취소");
+				msgBox.SetBoxPosition((int)gInfo.ScrollX);
+				msgBox.SetShow(true);
+			}
 		}
 		
 		// Selection Tool
@@ -404,7 +423,7 @@ public class SSystemMap  extends SBase
 					objSelection.scalex= PN.scalex+0.35f;
 					objSelection.scaley= PN.scaley+0.35f;
 					int nSelGap= Math.abs(nSelectionIndex-nMyPos);
-					if( (nMyPos!=nSelectionIndex) && (nSelGap<=2) )	// 이동 가능 행성만 버튼 띄워줌
+					if(nSelGap<=2)//if( (nMyPos!=nSelectionIndex) && (nSelGap<=2) )	// 이동 가능 행성만 버튼 띄워줌
 					{
 						btnMove.x= PN.x;
 						btnMove.y= PN.y;
@@ -430,7 +449,15 @@ public class SSystemMap  extends SBase
 	@Override
 	public void onBackPressed()
 	{
-		super.onBackPressed();		
+		super.onBackPressed();
+		
+		if( msgBox.GetShow() )	// 메세지 떠있으면
+		{
+			msgBox.SetShow(false);	// 메세지 끈다.
+			return;
+		}
+		
+		
 		this.SetScene(EnumScene.E_MAIN);
 	}
 
