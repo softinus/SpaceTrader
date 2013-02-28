@@ -4,14 +4,17 @@
 #include "stdafx.h"
 #include <math.h>
 
+#define P_COUNT 10
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	int x= 320;
-	int y= 50;
+	int x= 341;
+	int y= 754;
 	float fRes= 0.0f;
+	float fSummary= 0.0f;
+	float fAverage= 0.0f;
 
-	for (int p=0; p<=10; ++p)
+	for (int p=0; p<=P_COUNT; ++p)
 	{
 		fRes= ((x+1)*(y+1)*(p+2) / (( (x+1) % (p+2) )+1)) / 100000.0f;
 
@@ -33,7 +36,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			++nLogCalcCount;
 		}
 
-		fRes *= 200;
+		//fRes *= 200;
+		fSummary += fRes;
 
 		if((nMultiCalcCount==0) && (nLogCalcCount==0))
 		{
@@ -53,6 +57,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		
 	}
+
+	printf("[%d,%d:*] SUM : %.3f\n", x,y, fSummary);
+	printf("[%d,%d:*] AVR : %.3f\n", x,y, fSummary/P_COUNT);
 
 	return 0;
 }
