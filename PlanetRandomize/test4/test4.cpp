@@ -3,11 +3,24 @@
 
 #include "stdafx.h"
 #include <math.h>
+#include <ctime>
+#include <iostream>
+
+using namespace std;
 
 #define P_COUNT 10
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	time_t cur_time;
+	struct tm* pTime;
+
+	time(&cur_time);
+	pTime = localtime(&cur_time);
+
+	cout << "Current time : " << asctime(pTime) << endl;
+
+
 	int x= 341;
 	int y= 754;
 	float fRes= 0.0f;
