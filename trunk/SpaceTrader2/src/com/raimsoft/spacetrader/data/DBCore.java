@@ -275,10 +275,7 @@ class DBCore
 		@Override
 		public void onCreate(SQLiteDatabase _DB)
 		{
-			CreateMyInfoTable(_DB);
-			CreateQuizInfoTable(_DB);
-			CreateHelpSettingTable(_DB);
-			CreateTheologyTable(_DB);
+			CreateItemsInfoTable(_DB);
 			
 			Log.d(Global.LOG_TAG, "Call DB TABLE onCreate Complete");
 		}
@@ -402,139 +399,80 @@ class DBCore
 		
 		
 		
-		private void CreateMyInfoTable(SQLiteDatabase _DB)
-		{
-			//_DB.execSQL("CREATE TABLE IF NOT EXISTS "+DB_NAME+" ("+
-			_DB.execSQL("CREATE TABLE "+Global.DB_TABLE_MYINFO+" ("+	// 나의 정보 테이블을 만든다.
-					"_id INTEGER PRIMARY KEY AUTOINCREMENT, " + // _id(int,기본키,자동증가값)
-					"level INTEGER, " +							// level(int,레벨)
-					"exp INTEGER, " +							// 지식, 경험치(int)
-					"money INTEGER, " +							// money(int,돈)
-					"key INTEGER, " +							// key(int,열쇠)
-					"solved_total INTEGER, " +					// 총 푼 문제
-					"solved_o INTEGER, " +						// 총 맞은 문제
-					"solved_x INTEGER, " +						// 총 틀린 문제
-					"first_run char(1)," +						// 첫 실행 여부
-					"today_quiz_solved char(1),"+				// 오늘의 퀴즈 풀었는지 여부
-					"today_quiz_money INTEGER,"+				// 오늘의 퀴즈 달란트 액수
-					"option_sound char(1)," +					// 소리 옵션
-					"option_vibrate char(1)," +					// 진동 옵션
-					"option_alarm char(1)," +					// 오늘의 퀴즈 알림 옵션
-					"option_quality char(1)," +					// 퀄리티 옵션
-					"do_donation char(1)" +					// 기부 여부
-					")");
+//		private void CreateMyInfoTable(SQLiteDatabase _DB)
+//		{
+//			//_DB.execSQL("CREATE TABLE IF NOT EXISTS "+DB_NAME+" ("+
+//			_DB.execSQL("CREATE TABLE "+Global.DB_TABLE_MYINFO+" ("+	// 나의 정보 테이블을 만든다.
+//					"_id INTEGER PRIMARY KEY AUTOINCREMENT, " + // _id(int,기본키,자동증가값)
+//					"level INTEGER, " +							// level(int,레벨)
+//					"exp INTEGER, " +							// 지식, 경험치(int)
+//					"money INTEGER, " +							// money(int,돈)
+//					"key INTEGER, " +							// key(int,열쇠)
+//					"solved_total INTEGER, " +					// 총 푼 문제
+//					"solved_o INTEGER, " +						// 총 맞은 문제
+//					"solved_x INTEGER, " +						// 총 틀린 문제
+//					"first_run char(1)," +						// 첫 실행 여부
+//					"today_quiz_solved char(1),"+				// 오늘의 퀴즈 풀었는지 여부
+//					"today_quiz_money INTEGER,"+				// 오늘의 퀴즈 달란트 액수
+//					"option_sound char(1)," +					// 소리 옵션
+//					"option_vibrate char(1)," +					// 진동 옵션
+//					"option_alarm char(1)," +					// 오늘의 퀴즈 알림 옵션
+//					"option_quality char(1)," +					// 퀄리티 옵션
+//					"do_donation char(1)" +					// 기부 여부
+//					")");
 			
-			ContentValues CV= new ContentValues();
-			
-			if (!DBBackup.g_bBackuped_MY) // 백업 데이터가 없을 경우에는 기본값
-			{
-				CV.put("level", 1);
-				CV.put("money", 300);
-				CV.put("key", 1);
-				CV.put("solved_total", 0);
-				CV.put("solved_o", 0);
-				CV.put("solved_x", 0);
-				CV.put("first_run", "T");
-				CV.put("today_quiz_solved", "F");
-				CV.put("today_quiz_money", 100);
-				CV.put("option_sound", "T");
-				CV.put("option_vibrate", "T");
-				CV.put("option_alarm", "T");
-				CV.put("option_quality", "T");
-				CV.put("do_donation", "F");
-			}else{
-				CV.put("level", DBBackup.g_Bundle_MY.getInt("level") );
-				CV.put("money", DBBackup.g_Bundle_MY.getInt("money"));
-				CV.put("key", DBBackup.g_Bundle_MY.getInt("key"));				
-				CV.put("solved_total", DBBackup.g_Bundle_MY.getInt("solved_total"));
-				CV.put("solved_o", DBBackup.g_Bundle_MY.getInt("solved_o"));
-				CV.put("solved_x", DBBackup.g_Bundle_MY.getInt("solved_x"));
-				CV.put("first_run", "F");
-				CV.put("today_quiz_solved", DBBackup.g_Bundle_MY.getString("today_quiz_solved"));
-				CV.put("today_quiz_money", DBBackup.g_Bundle_MY.getInt("today_quiz_money"));
-				CV.put("option_sound", "T");
-				CV.put("option_vibrate", "T");
-				CV.put("option_alarm", "T");
-				CV.put("option_quality", "T");
-				CV.put("do_donation", DBBackup.g_Bundle_MY.getString("do_donation"));
-			}
-			
-			_DB.insert(Global.DB_TABLE_MYINFO, null, CV); // DB초기값 insert
-			DBBackup.g_bBackuped_MY= false;		// DB백업 끝
-		}
+//			ContentValues CV= new ContentValues();			
+//			if (!DBBackup.g_bBackuped_MY) // 백업 데이터가 없을 경우에는 기본값
+//			{
+//				CV.put("level", 1);
+//				CV.put("money", 300);
+//				CV.put("key", 1);
+//				CV.put("solved_total", 0);
+//				CV.put("solved_o", 0);
+//				CV.put("solved_x", 0);
+//				CV.put("first_run", "T");
+//				CV.put("today_quiz_solved", "F");
+//				CV.put("today_quiz_money", 100);
+//				CV.put("option_sound", "T");
+//				CV.put("option_vibrate", "T");
+//				CV.put("option_alarm", "T");
+//				CV.put("option_quality", "T");
+//				CV.put("do_donation", "F");
+//			}else{
+//				CV.put("level", DBBackup.g_Bundle_MY.getInt("level") );
+//				CV.put("money", DBBackup.g_Bundle_MY.getInt("money"));
+//				CV.put("key", DBBackup.g_Bundle_MY.getInt("key"));				
+//				CV.put("solved_total", DBBackup.g_Bundle_MY.getInt("solved_total"));
+//				CV.put("solved_o", DBBackup.g_Bundle_MY.getInt("solved_o"));
+//				CV.put("solved_x", DBBackup.g_Bundle_MY.getInt("solved_x"));
+//				CV.put("first_run", "F");
+//				CV.put("today_quiz_solved", DBBackup.g_Bundle_MY.getString("today_quiz_solved"));
+//				CV.put("today_quiz_money", DBBackup.g_Bundle_MY.getInt("today_quiz_money"));
+//				CV.put("option_sound", "T");
+//				CV.put("option_vibrate", "T");
+//				CV.put("option_alarm", "T");
+//				CV.put("option_quality", "T");
+//				CV.put("do_donation", DBBackup.g_Bundle_MY.getString("do_donation"));
+//			}
+//			
+//			_DB.insert(Global.DB_TABLE_MYINFO, null, CV); // DB초기값 insert
+//			DBBackup.g_bBackuped_MY= false;		// DB백업 끝
+//			}
 		
 		
-		private void CreateQuizInfoTable(SQLiteDatabase _DB)
+		private void CreateItemsInfoTable(SQLiteDatabase _DB)
 		{
 			//_DB.execSQL("CREATE TABLE IF NOT EXISTS "+DB_NAME+" ("+
-			_DB.execSQL("CREATE TABLE "+Global.DB_TABLE_QUIZINFO+" ("+	// 퀴즈 정보 테이블을 만든다.
+			_DB.execSQL("CREATE TABLE "+Global.DB_TABLE_ITEMSINFO+" ("+	// 퀴즈 정보 테이블을 만든다.
 					"_id INTEGER PRIMARY KEY AUTOINCREMENT, " + // _id(int,기본키,자동증가값)
-					"char_name TEXT, " +						// 캐릭터 이름(String)
-					"score INTEGER, " +							// 캐릭터 인지도(int)
-					"locked char(1), " +						// 잠금여부(char)
-					"price INTEGER, " +							// 가격(int)
-					"char_solved_o INTEGER, " +					// 캐릭터별 맞은 문제
-					"char_solved_x INTEGER" +					// 캐릭터별 틀린 문제
+					"type INTEGER, " +							// 아이템 타입(int)
+					"count INTEGER, " +							// 아이템 개수 (int)
+					"price INTEGER" +							// 살 당시의 개당 가격(int)
 					")");
 
 			
-			
-			if (!DBBackup.g_bBackuped_QUIZ) // 백업 데이터가 없을 경우에는 기본값
-			{
-//				ContentValues CV= new ContentValues();
-//				CV.put("char_name", "없음");
-//				CV.put("score", 0);
-//				CV.put("locked", "T");
-//				CV.put("price", 0);
-//				CV.put("char_solved_o", 0);
-//				CV.put("char_solved_x", 0);
-//				_DB.insert(Global.DB_TABLE_QUIZINFO, null, CV); // DB초기값 insert
-			}else{
-				for( int i=0; i<DBBackup.g_DB_QUIZ.size(); ++i )	// 백업된 캐릭터 수 만큼 for문
-				{
-					ContentValues CV= new ContentValues();
-					CV.put("char_name", DBBackup.g_DB_QUIZ.get(i).getString("char_name"));
-					CV.put("score", DBBackup.g_DB_QUIZ.get(i).getInt("score"));
-					CV.put("locked", DBBackup.g_DB_QUIZ.get(i).getString("locked"));
-					CV.put("char_solved_o", DBBackup.g_DB_QUIZ.get(i).getInt("char_solved_o"));
-					CV.put("char_solved_x", DBBackup.g_DB_QUIZ.get(i).getInt("char_solved_x"));
-					_DB.insert(Global.DB_TABLE_QUIZINFO, null, CV); // DB초기값 insert
-				}
-			}
-			//DBBackup.g_bBackuped_QUIZ= false; //DB 백업 끝
-			
 		}
 		
-		private void CreateTheologyTable(SQLiteDatabase _DB)
-		{
-			_DB.execSQL("CREATE TABLE "+Global.DB_TABLE_THEOLOGY+" ("+	// 퀴즈 정보 테이블을 만든다.
-					"_id INTEGER PRIMARY KEY AUTOINCREMENT, " + // _id(int,기본키,자동증가값)
-					"char_name TEXT, " +						// 기출문제 이름(String)
-					"score INTEGER, " +							// 기출문제 점수(int)
-					"locked char(1), " +						// 잠금여부(char)
-					"char_solved_o INTEGER, " +					// 기출문제별 맞은 문제
-					"char_solved_x INTEGER" +					// 기출문제별 틀린 문제
-					")");
-		}
-		
-		private void CreateHelpSettingTable(SQLiteDatabase _DB)
-		{
-			//_DB.execSQL("CREATE TABLE IF NOT EXISTS "+DB_NAME+" ("+
-			_DB.execSQL("CREATE TABLE "+Global.DB_TABLE_HELPSET+" ("+	// 도움말 세팅 테이블을 만든다.
-					"_id INTEGER PRIMARY KEY AUTOINCREMENT, " + // _id(int,기본키,자동증가값)
-					"help_main char(1), " +						// MainActivity
-					"help_sel char(1), " +						// CharSelActivity
-					"help_myinfo char(1)" +						// MyRecordActivity
-					")");
-			
-			ContentValues CV= new ContentValues();
-			
-			CV.put("help_main", "T");
-			CV.put("help_sel", "T");
-			CV.put("help_myinfo", "T");
-			
-			_DB.insert(Global.DB_TABLE_HELPSET, null, CV);
-		}
 		
 	}
 			
