@@ -1,9 +1,10 @@
 package com.raimsoft.spacetrader.scene;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.Log;
-import android.widget.Button;
 import bayaba.engine.lib.ButtonObject;
 import bayaba.engine.lib.ButtonType;
 import bayaba.engine.lib.Font;
@@ -12,9 +13,11 @@ import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
 
 import com.raimsoft.spacetrader.R;
+import com.raimsoft.spacetrader.data.DBManager;
 import com.raimsoft.spacetrader.data.EnumShip;
 import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.GameButton;
+import com.raimsoft.spacetrader.obj.items.BaseItem;
 import com.raimsoft.spacetrader.util.GenConst;
 import com.raimsoft.spacetrader.util.PlanetNameMaker;
 
@@ -23,14 +26,26 @@ public class SStation extends SBase
 
 	public SStation(Context mContext, GameInfo gInfo)
 	{
-		super(mContext, gInfo);
+		super(mContext, gInfo);		
 		
-		for(int i=0; i<btnItems.length; ++i)
+		DBMgr= new DBManager(mContext);
+		
+		//DBMgr.AddItems(0, 50, 10);
+		//DBMgr.AddItems(1, 1, 45);
+		
+		arrItems= DBMgr.GetItems().toArray(new BaseItem[30]);
+		
+		for(int i=0; i<30; ++i)
 		{
 			btnItems[i]= new GameButton();
+			//objItems[i]= new BaseItem()
 		}
 		
+		
+		
 	}
+	
+	private DBManager DBMgr;
 	
 	private int PLANET_TYPES= 4;
 	private int nCurrPlanetType= -1;
@@ -49,8 +64,9 @@ public class SStation extends SBase
 	private Sprite sprPlanets= new Sprite();
 	private Sprite sprShip1= new Sprite();
 	private Sprite sprProgress= new Sprite();
-	private Sprite sprItem= new Sprite();
+	private Sprite sprItemButton= new Sprite();
 	private Sprite sprPower= new Sprite();
+	private Sprite sprItems= new Sprite();
 	
 	private GameButton btnInfo= new GameButton();
 	private GameButton btnNews= new GameButton();
@@ -59,6 +75,7 @@ public class SStation extends SBase
 	private GameButton btnExit= new GameButton();
 	private GameObject objPlanet= new GameObject();
 	private GameObject objShip= new GameObject();
+	private BaseItem[] arrItems= new BaseItem[30];
 
 	private GameButton[] btnItems= new GameButton[30];
 	private GameButton btnPower= new GameButton();
@@ -152,18 +169,31 @@ public class SStation extends SBase
 		objHexagon.SetObject(sprHexagon, 0, 0, 135, 230, 0, 0);
 		//objHexagon.scalex= 1.10f; objHexagon.scaley= 1.10f;
 		
-		sprItem.LoadSprite(gl, mContext, R.drawable.buttons_2, "btn_item.spr");
+		sprItemButton.LoadSprite(gl, mContext, R.drawable.buttons_2, "btn_item.spr");
 		for(int i=0; i<10; ++i)
 		{
 			int nRow= (int)(i/5);
 			int nCol= i%5;
-			btnItems[i].SetButton(mContext, sprItem, 85+nCol*80, 190+nRow*80, 0);
+			btnItems[i].SetButton(mContext, sprItemButton, 85+nCol*80, 190+nRow*80, 0);
+			//arrItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 190+nRow*80, 0, 0);
 		}
 		for(int i=10; i<30; ++i)
 		{
 			int nRow= (int)(i/5);
 			int nCol= i%5;
-			btnItems[i].SetButton(mContext, sprItem, 85+nCol*80, 255+nRow*80, 0);
+			btnItems[i].SetButton(mContext, sprItemButton, 85+nCol*80, 255+nRow*80, 0);
+			//arrItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 255+nRow*80, 0, 0);
+		}
+		
+		sprItems.LoadSprite(gl, mContext, R.drawable.list_items, "list_items.spr");
+		for(int i=0; i<arrItems.length; ++i)
+		{
+			if(arrItems[i]==null)
+				break;
+			
+			int nRow= (int)(i/5);
+			int nCol= i%5;
+			arrItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 415+nRow*80, 0, arrItems[i].eType.ordinal());
 		}
 		sprPower.LoadSprite(gl, mContext, R.drawable.buttons_2, "btn_power.spr");
 		btnPower.SetButton(mContext, sprPower, 415, 50, 0);
@@ -218,6 +248,15 @@ public class SStation extends SBase
 			{
 				if(BTN.pattern!=null)
 					BTN.DrawSprite(gInfo);
+			}
+			for(BaseItem ITEMS : arrItems)
+			{
+				if(ITEMS != null)
+				{
+					ITEMS.scalex= 0.5f;
+					ITEMS.scaley= 0.5f;
+					ITEMS.DrawSprite(gInfo);
+				}
 			}
 			break;
 		case 4:	//함선 관리

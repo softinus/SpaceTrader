@@ -8,8 +8,14 @@ public class Global
 	public static final String LOG_TAG="SpaceTrader";
 	
 	public static final String DB_NAME= "spacetrader.db";			// DB 이름
-	public static final String DB_TABLE_MYINFO= "myinfo";		// DB TABLE 이름
+	//public static final String DB_TABLE_MYINFO= "my_info";		// DB TABLE 이름
+	public static final String DB_TABLE_ITEMSINFO= "items_info";		// DB TABLE 이름
 	public static final int DB_VERSION= 1;						// DB버전
+	
+	// 아래는 Shared Preference 예약어
+	public static final String SP_LOGIN_ID="login_id";
+	public static final String SP_LOGIN_PW="login_pw";
+	public static final String SP_MONEY="money";
 	
 //	public static final String GOOGLE_AD_ID = "a14f34da9ed5c1f";
 //	public static final String DAUM_AD_ID = "1d02Z6oT134d197e7da";

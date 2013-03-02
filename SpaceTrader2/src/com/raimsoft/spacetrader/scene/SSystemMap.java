@@ -33,6 +33,7 @@ public class SSystemMap  extends SBase
 	Sprite sprButtonMove= new Sprite();
 	Sprite sprMessage= new Sprite();
 	
+	
 	private SoundManager Sound;
 	
 	private int nSelectionIndex= 0; 	// 선택된 행성 인덱스

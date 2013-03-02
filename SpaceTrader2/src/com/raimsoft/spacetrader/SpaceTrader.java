@@ -35,6 +35,7 @@ import com.kth.baasio.entity.entity.BaasioEntity;
 import com.kth.baasio.entity.user.BaasioUser;
 import com.kth.baasio.exception.BaasioException;
 import com.raimsoft.spacetrader.data.EnumShip;
+import com.raimsoft.spacetrader.data.Global;
 import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.util.SPUtil;
@@ -110,8 +111,8 @@ public class SpaceTrader extends Activity implements SensorEventListener
 			{
 				LoadingDL.hide();
 				
-				final String strID= SPUtil.getString(getApplicationContext(), "login_id");
-				final String strPW= SPUtil.getString(getApplicationContext(), "login_pw"); 
+				final String strID= SPUtil.getString(getApplicationContext(), Global.SP_LOGIN_ID);
+				final String strPW= SPUtil.getString(getApplicationContext(), Global.SP_LOGIN_PW); 
 				if( (strID!=null) && (strPW!=null) )	// 저장된 ID가 있으면 로그인한다.
 				{
 					LoadingHandler.sendEmptyMessage(1);
@@ -140,8 +141,8 @@ public class SpaceTrader extends Activity implements SensorEventListener
 					            	if(response==null)
 					            	{
 		            	        		ShowAlertDialog("[로그인]", "로그인 실패", "확인");
-		            	        		SPUtil.putString(getApplicationContext(), "login_id", null);
-		            	        		SPUtil.putString(getApplicationContext(), "login_pw", null);
+		            	        		SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_ID, null);
+		            	        		SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_PW, null);
 					            	}
 		            	        	else
 		            	        	{
@@ -153,8 +154,8 @@ public class SpaceTrader extends Activity implements SensorEventListener
 		            	        			uInfo.SetLogin(true);
 		            	        			uInfo.SetGold(0);
     	            	        			uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_2);
-    	            	        			uInfo.SetWorldMapX(16);
-    	            	        			uInfo.SetWorldMapY(177);
+    	            	        			uInfo.SetWorldMapX(138);
+    	            	        			uInfo.SetWorldMapY(287);
     	            	        			uInfo.SetSystemMapPlanet(1);
 		            	        			//SPUtil.putBoolean(getApplicationContext(), "login", true);
 		            	        		}
@@ -398,8 +399,8 @@ public class SpaceTrader extends Activity implements SensorEventListener
 		        			        		            }
 		        			        		        });
 
-	    	            	        			SPUtil.putString(getApplicationContext(), "login_id", EDT_ID.getText().toString());
-	    	            	        			SPUtil.putString(getApplicationContext(), "login_pw", EDT_PW.getText().toString());
+	    	            	        			SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_ID, EDT_ID.getText().toString());
+	    	            	        			SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_PW, EDT_PW.getText().toString());
 	    	            	        			
 	            	        			LoadingHandler.sendEmptyMessage(999);
 	    	            	        			

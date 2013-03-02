@@ -1,9 +1,13 @@
 package com.raimsoft.spacetrader.data;
 
+import java.util.ArrayList;
+
+import com.raimsoft.spacetrader.obj.items.BaseItem;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
-import android.widget.Toast;
 
 public class DBManager extends DBCore
 {
@@ -16,77 +20,81 @@ public class DBManager extends DBCore
 	}
 	
 	
-	/**
-	 * 돈값을 세팅한다.
-	 * @param nMoney : 달란트
-	 */
-	public void SetMoneyToDB(int nMoney)
+	public void AddItems(int nItemType, int nCount, int nCurrPrice)
 	{
-		this.DBUpdate(Global.DB_TABLE_MYINFO, "money", nMoney);
+		ContentValues CV= new ContentValues();
+		CV.put("type", nItemType);
+		CV.put("count", nCount);
+		CV.put("price", nCurrPrice);
+		this.DBInsertCV(Global.DB_TABLE_ITEMSINFO, CV);
 	}
 	
-
-	
-
-	
-	
-	
-	/**
-	 * 학년 정보를 가져온다.
-	 * @return 학년
-	 */
-	public int GetLevel()
+	public ArrayList<BaseItem> GetItems()
 	{
-		int nGrade = 0;
+		ArrayList<BaseItem> arrRes = new ArrayList<BaseItem>();
+		String[] strCol= {"type", "count", "price"};
 		
-		nGrade= this.GetIntDataFromDB(Global.DB_TABLE_MYINFO, "level", 0);
-
-		return nGrade;
-	}
-
-	/**
-	 * 경험치 정보를 가져온다.
-	 * @return 지식
-	 */
-	public int GetExp()
-	{
-		int nEXP = 0;
+		Cursor CS= this.GetCursorFromDB(Global.DB_TABLE_ITEMSINFO, strCol);
 		
-		nEXP= this.GetIntDataFromDB(Global.DB_TABLE_MYINFO, "exp", 0);
-
-		return nEXP;
-	}
-	
-
-	/**
-	 * 경험치를 증가시킨다.
-	 * @param nKnowledge : 지식
-	 */
-	public void AddExp(int nKnowledge)
-	{
-		this.DBUpdate(Global.DB_TABLE_MYINFO, "exp", nKnowledge+GetExp());
-	}
-	
-	
-	/**
-	 * 기부했는지 여부
-	 * @return
-	 */
-	public boolean GetDonation()
-	{
-		boolean bDonation;
-		if( this.GetStrDataFromDB(Global.DB_TABLE_MYINFO, "do_donation").equals("T"))
-			bDonation= true;
-		else
-			bDonation= false;
+		CS.moveToFirst();
 		
-		return bDonation;
+		while( CS.isAfterLast() == false )
+		{
+			BaseItem item = new BaseItem();
+			item.SetItemType( CS.getInt(0) );
+			item.nCount= CS.getInt(1);
+			item.nCurrentPrice= CS.getInt(2);
+			arrRes.add(item);
+			
+			CS.moveToNext();
+		}
+
+		CS.close();	// 이게 오류가 아닐까 추가해봄
+		
+		return arrRes;
 	}
 	
-	public void SetDonation(String _str)
-	{
-		this.DBUpdate(Global.DB_TABLE_MYINFO, "do_donation", _str);
-	}
+//	/**
+//	 * 돈값을 세팅한다.
+//	 * @param nMoney : 달란트
+//	 */
+//	public void SetMoneyToDB(int nMoney)
+//	{
+//		this.DBUpdate(Global.DB_TABLE_ITEMSINFO, "money", nMoney);
+//	}	
+//	
+//	
+	
+
+//	/**
+//	 * 경험치를 증가시킨다.
+//	 * @param nKnowledge : 지식
+//	 */
+//	public void AddExp(int nKnowledge)
+//	{
+//		this.DBUpdate(Global.DB_TABLE_MYINFO, "exp", nKnowledge+GetExp());
+//	}
+//	
+	
+//	/**
+//	 * 기부했는지 여부
+//	 * @return
+//	 */
+//	public boolean GetDonation()
+//	{
+//		boolean bDonation;
+//		if( this.GetStrDataFromDB(Global.DB_TABLE_MYINFO, "do_donation").equals("T"))
+//			bDonation= true;
+//		else
+//			bDonation= false;
+//		
+//		return bDonation;
+//	}
+//	
+//	public void SetDonation(String _str)
+//	{
+//		this.DBUpdate(Global.DB_TABLE_MYINFO, "do_donation", _str);
+//	}
 	
 
 	
