@@ -74,6 +74,29 @@ int _tmain(int argc, _TCHAR* argv[])
 	printf("[%d,%d:*] SUM : %.3f\n", x,y, fSummary);
 	printf("[%d,%d:*] AVR : %.3f\n", x,y, fSummary/P_COUNT);
 
+	int sum_p= 0;
+	int sum_a= 0;
+	int count_p= 0;
+
+	for(int y= 2013; y<=2015; ++y)
+	{
+		for(int m=1; m<=12; ++m)
+		{
+			for(int d= 1; d<=30; ++d)
+			{
+				for(int h=1; h<=24; ++h)
+				{
+					int price= (int) ( (y+(m*12))%(d*h)	);
+					printf("[%d년 %d월 %d일 %d시 -> %d \n", y, m, d, h, price);
+					sum_p+= price;
+					++count_p;
+				}
+			}
+		}
+	}
+
+	printf("평균 -> %d \n", sum_p/count_p);
+
 	return 0;
 }
 
