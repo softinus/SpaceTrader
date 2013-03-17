@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsApplication1", "WindowsApplication1\WindowsApplication1.csproj", "{D6999998-77AB-4995-92A8-3EB67B8358C5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DF2CF875-A572-4B0A-96F3-6DC485D65C3C} = {DF2CF875-A572-4B0A-96F3-6DC485D65C3C}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarChart", "BarChart\BarChart.csproj", "{DF2CF875-A572-4B0A-96F3-6DC485D65C3C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6999998-77AB-4995-92A8-3EB67B8358C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6999998-77AB-4995-92A8-3EB67B8358C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6999998-77AB-4995-92A8-3EB67B8358C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6999998-77AB-4995-92A8-3EB67B8358C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF2CF875-A572-4B0A-96F3-6DC485D65C3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF2CF875-A572-4B0A-96F3-6DC485D65C3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF2CF875-A572-4B0A-96F3-6DC485D65C3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF2CF875-A572-4B0A-96F3-6DC485D65C3C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,16 @@
+C:\Users\ChoiJunHyeok\Downloads\CPHBarChart_Demo\CPBarChart\BarChart\bin\Debug\BarChart.dll
+C:\Users\ChoiJunHyeok\Downloads\CPHBarChart_Demo\CPBarChart\BarChart\bin\Debug\BarChart.pdb
+C:\Users\ChoiJunHyeok\Downloads\CPHBarChart_Demo\CPBarChart\BarChart\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\ChoiJunHyeok\Downloads\CPHBarChart_Demo\CPBarChart\BarChart\obj\Debug\BarChart.BarChart.bmp
+C:\Users\ChoiJunHyeok\Downloads\CPHBarChart_Demo\CPBarChart\BarChart\obj\Debug\BarChart.HBarChart.resources
+C:\Users\ChoiJunHyeok\Downloads\CPHBarChart_Demo\CPBarChart\BarChart\obj\Debug\BarChart.csproj.GenerateResource.Cache
+C:\Users\ChoiJunHyeok\Downloads\CPHBarChart_Demo\CPBarChart\BarChart\obj\Debug\BarChart.dll
+C:\Users\ChoiJunHyeok\Downloads\CPHBarChart_Demo\CPBarChart\BarChart\obj\Debug\BarChart.pdb
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\bin\Debug\BarChart.dll
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\bin\Debug\BarChart.pdb
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Debug\ResolveAssemblyReference.cache
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Debug\BarChart.BarChart.bmp
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Debug\BarChart.HBarChart.resources
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Debug\BarChart.csproj.GenerateResource.Cache
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Debug\BarChart.dll
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Debug\BarChart.pdb
