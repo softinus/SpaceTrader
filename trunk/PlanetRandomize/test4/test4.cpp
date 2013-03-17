@@ -75,10 +75,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	printf("[%d,%d:*] AVR : %.3f\n", x,y, fSummary/P_COUNT);
 
 	int sum_p= 0;
-	int sum_a= 0;
+	int	min_p= INT_MAX;
+	int	max_p= INT_MIN;
 	int count_p= 0;
 
-	for(int y= 2013; y<=2015; ++y)
+	for(int y= 2009; y<=2020; ++y)
 	{
 		for(int m=1; m<=12; ++m)
 		{
@@ -87,6 +88,10 @@ int _tmain(int argc, _TCHAR* argv[])
 				for(int h=1; h<=24; ++h)
 				{
 					int price= (int) ( (y+(m*12))%(d*h)	);
+					
+					min_p= min(min_p, price);
+					max_p= max(max_p, price);
+
 					printf("[%d년 %d월 %d일 %d시 -> %d \n", y, m, d, h, price);
 					sum_p+= price;
 					++count_p;
@@ -96,6 +101,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	printf("평균 -> %d \n", sum_p/count_p);
+	printf("최소 -> %d \n", min_p);
+	printf("최대 -> %d \n", max_p);
 
 	return 0;
 }
