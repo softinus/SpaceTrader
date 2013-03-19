@@ -17,7 +17,7 @@ public class BaseItem extends GameObject
 	{
 		
 	}
-	public BaseItem(EItems _eType)
+	public BaseItem(EItems _eType, float fConst)
 	{
 		eType= _eType;				
 		
@@ -34,6 +34,7 @@ public class BaseItem extends GameObject
 			nMaxPrice= 68;
 		}
 		
+		nCurrentPrice = (int)(nMinPrice + (nMaxPrice - nMinPrice) * fConst);
 	}
 	
 	public void SetItemType(int _nType)
