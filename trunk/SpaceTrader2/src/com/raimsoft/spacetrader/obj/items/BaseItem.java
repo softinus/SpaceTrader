@@ -19,13 +19,15 @@ public class BaseItem extends GameObject
 	}
 	public BaseItem(EItems _eType)
 	{
-		if(eType== EItems.E_BOX)
+		eType= _eType;				
+		
+		if(_eType== EItems.E_BOX)
 		{
 			nMinPrice= 7;
 			nFixPrice= 10;
 			nMaxPrice= 15;
 		}
-		else if(eType== EItems.E_MATERIAL)
+		else if(_eType== EItems.E_MATERIAL)
 		{
 			nMinPrice= 32;
 			nFixPrice= 45;
