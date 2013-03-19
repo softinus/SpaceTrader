@@ -113,9 +113,9 @@ public class PlanetNameMaker
 	
 	private String CombineNames(int nPlanetPos)
 	{
-		a= (int) (GC.GetConstF(nPlanetPos)*arrWord1.size());
-		b= (int) (GC.GetConstF(nPlanetPos)*arrWord2.size());
-		c= (int) (GC.GetConstF(nPlanetPos)*arrWord3.size());
+		a= (int) (GC.GetPositionConstF(nPlanetPos)*arrWord1.size());
+		b= (int) (GC.GetPositionConstF(nPlanetPos)*arrWord2.size());
+		c= (int) (GC.GetPositionConstF(nPlanetPos)*arrWord3.size());
 		
 		return ( arrWord1.get(a) +" "+ arrWord2.get(b) +" "+ arrWord3.get(c)+ " 행성" );
 	}

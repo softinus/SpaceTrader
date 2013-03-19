@@ -1,7 +1,5 @@
 package com.raimsoft.spacetrader.scene;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.Log;
@@ -18,6 +16,7 @@ import com.raimsoft.spacetrader.data.EnumShip;
 import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.GameButton;
 import com.raimsoft.spacetrader.obj.items.BaseItem;
+import com.raimsoft.spacetrader.obj.items.EItems;
 import com.raimsoft.spacetrader.util.GenConst;
 import com.raimsoft.spacetrader.util.PlanetNameMaker;
 
@@ -33,7 +32,10 @@ public class SStation extends SBase
 		//DBMgr.AddItems(0, 50, 10);
 		//DBMgr.AddItems(1, 1, 45);
 		
-		arrItems= DBMgr.GetItems().toArray(new BaseItem[30]);
+		arrInvenItems= DBMgr.GetItems().toArray(new BaseItem[30]);
+
+		arrShopItems[0]= new BaseItem(EItems.E_BOX);
+		arrShopItems[1]= new BaseItem(EItems.E_MATERIAL);
 		
 		for(int i=0; i<30; ++i)
 		{
@@ -75,7 +77,8 @@ public class SStation extends SBase
 	private GameButton btnExit= new GameButton();
 	private GameObject objPlanet= new GameObject();
 	private GameObject objShip= new GameObject();
-	private BaseItem[] arrItems= new BaseItem[30];
+	private BaseItem[] arrShopItems= new BaseItem[10];	// 샵 아이템
+	private BaseItem[] arrInvenItems= new BaseItem[20];	// 인벤토리
 
 	private GameButton[] btnItems= new GameButton[30];
 	private GameButton btnPower= new GameButton();
@@ -111,7 +114,7 @@ public class SStation extends SBase
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");
 		//objPlanet= uInfo.GetCurrentPlanet();
 		
-		nCurrPlanetType= (int) GC.GetConstF(uInfo.GetSystemMapPlanet(), PLANET_TYPES);
+		nCurrPlanetType= (int) GC.GetPositionConstF(uInfo.GetSystemMapPlanet(), PLANET_TYPES);
 		objPlanet.SetObject(sprPlanets, nCurrPlanetType, 0, 135, 230,  nCurrPlanetType, 0);//objPlanet.show= true; objPlanet.x= 200; objPlanet.y= 200; objPlanet.scalex= 0.75f; objPlanet.scaley= 0.75f;
 		objPlanet.scalex= 0.50f;	objPlanet.scaley= 0.50f;
 		
@@ -185,16 +188,28 @@ public class SStation extends SBase
 			//arrItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 255+nRow*80, 0, 0);
 		}
 		
+		
 		sprItems.LoadSprite(gl, mContext, R.drawable.list_items, "list_items.spr");
-		for(int i=0; i<arrItems.length; ++i)
+		for(int i=0; i<arrInvenItems.length; ++i)	// 인벤토리 아이템 리스트 돌면서
 		{
-			if(arrItems[i]==null)
+			if(arrInvenItems[i]==null)
 				break;
 			
 			int nRow= (int)(i/5);
 			int nCol= i%5;
-			arrItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 415+nRow*80, 0, arrItems[i].eType.ordinal());
+			arrInvenItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 415+nRow*80, 0, arrInvenItems[i].eType.ordinal());
 		}
+		
+		for(int i=0; i<arrShopItems.length; ++i)	// 샵 아이템 리스트 돌면서
+		{
+			if(arrShopItems[i]==null)
+				break;
+			
+			int nRow= (int)(i/5);
+			int nCol= i%5;
+			arrShopItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 190+nRow*80, 0, arrShopItems[i].eType.ordinal());
+		}
+		
 		sprPower.LoadSprite(gl, mContext, R.drawable.buttons_2, "btn_power.spr");
 		btnPower.SetButton(mContext, sprPower, 415, 50, 0);
 		
@@ -249,7 +264,16 @@ public class SStation extends SBase
 				if(BTN.pattern!=null)
 					BTN.DrawSprite(gInfo);
 			}
-			for(BaseItem ITEMS : arrItems)
+			for(BaseItem ITEMS : arrInvenItems)
+			{
+				if(ITEMS != null)
+				{
+					ITEMS.scalex= 0.5f;
+					ITEMS.scaley= 0.5f;
+					ITEMS.DrawSprite(gInfo);
+				}
+			}
+			for(BaseItem ITEMS : arrShopItems)
 			{
 				if(ITEMS != null)
 				{

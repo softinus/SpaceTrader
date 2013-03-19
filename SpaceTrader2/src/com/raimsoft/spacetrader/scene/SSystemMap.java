@@ -126,7 +126,7 @@ public class SSystemMap  extends SBase
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");		
 		for(Planet PN : arrPlanet)	// 
 		{
-			PN.nPlanetType= (int) GC.GetConstF(PN.nIndex, PLANET_TYPES); // rand.nextInt(PLANET_TYPES);
+			PN.nPlanetType= (int) GC.GetPositionConstF(PN.nIndex, PLANET_TYPES); // rand.nextInt(PLANET_TYPES);
 
 //			if(nBeforeType==-1)	// first loop
 //			{
@@ -139,13 +139,13 @@ public class SSystemMap  extends SBase
 //				nBeforeType= PN.nPlanetType;
 //			}
 				
-			float x= 100+GC.GetConstF(PN.nIndex, 200) + 300*PN.nIndex;
-			float y= 200+GC.GetConstF(PN.nIndex, 500);
+			float x= 100+GC.GetPositionConstF(PN.nIndex, 200) + 300*PN.nIndex;
+			float y= 200+GC.GetPositionConstF(PN.nIndex, 500);
 			
 			Log.d("Planet ["+PN.nIndex+"]"," => X : "+x+"  //  Y : "+y+"  //  type : "+PN.nPlanetType);
 			
 			PN.SetObject(sprPlanets, 0, 0, x, y, PN.nPlanetType, 0);
-			float fPlanetScale= 0.5f + GC.GetConstF(PN.nIndex, 0.5f);
+			float fPlanetScale= 0.5f + GC.GetPositionConstF(PN.nIndex, 0.5f);
 			PN.scalex= fPlanetScale;
 			PN.scaley= fPlanetScale;
 		}
