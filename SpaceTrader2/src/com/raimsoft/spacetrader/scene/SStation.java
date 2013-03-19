@@ -29,13 +29,15 @@ public class SStation extends SBase
 		
 		DBMgr= new DBManager(mContext);
 		
-		//DBMgr.AddItems(0, 50, 10);
-		//DBMgr.AddItems(1, 1, 45);
 		
 		arrInvenItems= DBMgr.GetItems().toArray(new BaseItem[30]);
 
-		arrShopItems[0]= new BaseItem(EItems.E_BOX);
-		arrShopItems[1]= new BaseItem(EItems.E_MATERIAL);
+
+	//DBMgr.DropItemsTable();
+		//DBMgr.AddItems(0, 100, 10);
+		//DBMgr.AddItems(1, 100, 45);
+		
+		//arrItems= DBMgr.GetItems().toArray(new BaseItem[30]);
 		
 		for(int i=0; i<30; ++i)
 		{
@@ -43,6 +45,10 @@ public class SStation extends SBase
 			//objItems[i]= new BaseItem()
 		}
 		
+		float fConst= GC.GetPositionTimeConstF();
+		
+		arrShopItems[0]= new BaseItem(EItems.E_BOX, fConst);
+		arrShopItems[1]= new BaseItem(EItems.E_MATERIAL, fConst);
 		
 		
 	}
@@ -54,7 +60,7 @@ public class SStation extends SBase
 	
 	private PlanetNameMaker PNM;	
 	private UserInfo uInfo;
-	private GenConst GC;
+	private GenConst GC= new GenConst();
 	
 	private Sprite bg_station= new Sprite();
 	private Sprite sprStationButton= new Sprite();
@@ -103,7 +109,6 @@ public class SStation extends SBase
 		super.LoadData();
 		
 		uInfo= UserInfo.GetInstance();
-		GC= new GenConst();
 		PNM= new PlanetNameMaker();
 		
 		Music = MediaPlayer.create(mContext, R.raw.station2);
@@ -188,8 +193,7 @@ public class SStation extends SBase
 			//arrItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 255+nRow*80, 0, 0);
 		}
 		
-		
-		sprItems.LoadSprite(gl, mContext, R.drawable.list_items, "list_items.spr");
+		sprItems.LoadSprite(gl, mContext, R.drawable.list_items, "list_items.spr");		// 아이템들 그림 불러옴.
 		for(int i=0; i<arrInvenItems.length; ++i)	// 인벤토리 아이템 리스트 돌면서
 		{
 			if(arrInvenItems[i]==null)
@@ -271,6 +275,17 @@ public class SStation extends SBase
 					ITEMS.scalex= 0.5f;
 					ITEMS.scaley= 0.5f;
 					ITEMS.DrawSprite(gInfo);
+					
+					float fXFactor=0f;
+					
+					if(ITEMS.nCount==100)
+						fXFactor= 0.1f;
+					else if(ITEMS.nCount >= 10)	
+						fXFactor= 5f;
+					else
+						fXFactor= 17f;
+					
+					font.DrawFont(gl, ITEMS.x+fXFactor, ITEMS.y+5.5f, 22.5f, Integer.toString(ITEMS.nCount) );
 				}
 			}
 			for(BaseItem ITEMS : arrShopItems)
@@ -280,6 +295,17 @@ public class SStation extends SBase
 					ITEMS.scalex= 0.5f;
 					ITEMS.scaley= 0.5f;
 					ITEMS.DrawSprite(gInfo);
+					
+					float fXFactor=0f;
+					
+					if(ITEMS.nCurrentPrice>=100)
+						fXFactor= -5f;
+					else if(ITEMS.nCurrentPrice >= 10)	
+						fXFactor= 0f;
+					else
+						fXFactor= 5f;
+					
+					font.DrawFont(gl, ITEMS.x+fXFactor, ITEMS.y+5.5f, 22.5f, "$"+ITEMS.nCurrentPrice );
 				}
 			}
 			break;

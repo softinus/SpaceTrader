@@ -80,11 +80,11 @@ public class GenConst
 	{
 		GregorianCalendar today = new GregorianCalendar ( );
 
-		int nYear = today.get ( today.YEAR );
-		int nMonth = today.get ( today.MONTH ) + 1;
-		int nDay = today.get ( today.DAY_OF_MONTH ); 
-		int nHour= today.get(today.HOUR_OF_DAY);
-		int nMinute= today.get(today.MINUTE);
+		int nYear = today.get ( GregorianCalendar.YEAR );
+		int nMonth = today.get ( GregorianCalendar.MONTH ) + 1;
+		int nDay = today.get ( GregorianCalendar.DAY_OF_MONTH ); 
+		int nHour= today.get( GregorianCalendar.HOUR_OF_DAY) + 1;
+		int nMinute= today.get( GregorianCalendar.MINUTE);
 		
 		float fParam1 = (nHour % nYear) * (nDay + 10 % nHour) + nMonth;
         float fParam2 = (((x % nHour) + (y % nHour)) / (p + 2)) + 1;       

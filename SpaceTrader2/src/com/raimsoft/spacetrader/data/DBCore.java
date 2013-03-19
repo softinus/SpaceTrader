@@ -229,6 +229,13 @@ class DBCore
 		CV.clear();
 	}
 	
+	/**
+	 * 
+	 * @param _strTable : 테이블명
+	 * @param strLabel : 컬럼명
+	 * @param nData : 수정할 데이터
+	 * @param strWhere : 조건
+	 */
 	public void DBUpdate(String _strTable, String strLabel, int nData, String strWhere)
 	{
 		ContentValues CV= new ContentValues();
