@@ -19,11 +19,17 @@ namespace WindowsApplication1
         int nCroodX = 341;
         int nCroodY = 754;
         ArrayList arrRes = new ArrayList();
+        ArrayList arrNextHourPrices = new ArrayList();
+        ArrayList arrFinalPrices = new ArrayList();
+        ArrayList arrInventory = new ArrayList();
+
         int nYear;
         int nMonth;
         int nDay;
         int nHour;
+        int nMin;
         DateTime MyDateTime;
+        EItems currItem = EItems.E_GAS;
 
         public Form1()
         {
@@ -34,12 +40,17 @@ namespace WindowsApplication1
             nMonth = MyDateTime.Month;
             nDay = MyDateTime.Day;
             nHour = MyDateTime.Hour + 1;
+            nMin = MyDateTime.Minute;
 
             txtCroodX.Text = nCroodX.ToString();
             txtCroodY.Text = nCroodY.ToString();
 
             cboHour.SelectedIndex = nHour - 2;
-            txtMinute.Text = MyDateTime.Minute.ToString();
+            txtMinute.Text = nMin.ToString();
+            txtMinute.Maximum = 59;
+            txtMinute.Minimum = 00;
+
+            cboMaterial.SelectedIndex = (int)currItem;
             
 
             barColor = new Color[12];
@@ -87,24 +98,37 @@ namespace WindowsApplication1
             for (int i = 0; i < arrRes.Count; ++i)
                 barChart.RemoveAt(0);
 
-            barChart.RedrawChart();
+            //barChart.RedrawChart();
             arrRes.Clear();
-
+            arrNextHourPrices.Clear();
+            arrFinalPrices.Clear();
+            arrInventory.Clear();
             
             for (int i = 0; i < P_COUNT; ++i)
             {
-                float fPosConst = GetPositionConst(nCroodX, nCroodY, i);
-                float fTimeConst = GetTimeConst();
+                //float fPosConst = GetPositionConst(nCroodX, nCroodY, i);
+                //float fTimeConst = GetTimeConst();
 
                 float fConst = GetPositionTimeConst(nCroodX, nCroodY, i);
+                float fNextConst = GetNextTimeConst(nCroodX, nCroodY, i);
 
-                arrRes.Add(fPosConst);
+                arrRes.Add(fConst);
+                arrNextHourPrices.Add(fNextConst);
+
+                float fTemp = ((fNextConst - fConst) * ((float)nMin / 60.0f));   // 다음Hour와 현재Hour의 차이만큼 interpolation함.
+                float fFinalConst = fConst + fTemp;
+                arrFinalPrices.Add(fFinalConst);
+
+                lstLog.Items.Add("("+nCroodX+","+nCroodY+"):"+i+" --> "+fFinalConst);
+                lstLog.SelectedIndex = lstLog.Items.Count - 1;
+
+                arrInventory.Add(new BaseItem(currItem, fFinalConst));
             }
 
-            for (int i = 0; i < arrRes.Count; ++i)
+            for (int i = 0; i < arrInventory.Count; ++i)
             {
-                float fValue = (float)arrRes[i];
-                barChart.Add(fValue, (i + 1) + "번 행성", barColor[i]);
+                float fValue = (float)((BaseItem)arrInventory[i]).nCurrentPrice;
+                barChart.Add(fValue, (i + 1) + " Planet", barColor[i]);
             }
             barChart.RedrawChart();
         }
@@ -131,11 +155,48 @@ namespace WindowsApplication1
             return fRes;
         }
 
+        private float GetNextTimeConst(int x, int y, int p)
+        {
+            int nNextHour = nHour + 1;
+            float fParam1 = (nNextHour % nYear) * (nDay + 10 % nNextHour) + nMonth;
+            float fParam2 = (((x % nNextHour) + (y % nNextHour)) / (p + 2)) + 1;
+
+            float fRes = fParam1 / fParam2;
+            fRes /= 100000.0f;
+            fRes = Math.Abs(fRes);
+
+            int nMultiCalcCount = 0, nLogCalcCount = 0;
+            while (fRes < 0.09f)	// 0.05보다 작으면
+            {
+                fRes *= (p + 2);
+                ++nMultiCalcCount;
+            }
+
+            while (fRes > 1.0f)	// 1이 넘어가면
+            {
+                fRes = (float)Math.Log(fRes);
+                ++nLogCalcCount;
+            }
+
+            return fRes;
+        }
+
         private float GetPositionTimeConst(int x, int y, int p)
         {
-            float fRes = ((x + 1) * (y + 1) * (p + 2) * (nYear + (nMonth * 12) / (((x + 1) % (p + 2)) + (nDay * nHour) + 1)));
-            fRes /= 1000000000.0f;
+            float fParam1 = (nHour % nYear) * (nDay + 10 % nHour) + nMonth;
+            float fParam2 = (((x % nHour) + (y % nHour)) / (p + 2)) + 1;
+            
+           
+
+            float fRes= fParam1 / fParam2;
+            fRes /= 100000.0f;
             fRes = Math.Abs(fRes);
+
+            //lstLog.Items.Add(fParam1 + " / " + fParam2 + " = " + fRes);
+            //lstLog.SelectedIndex = lstLog.Items.Count - 1;
+
+            //txtAlgorithm.Text = fParam1 + " / " + fParam2 + " = " + fRes;
+
             int nMultiCalcCount = 0, nLogCalcCount = 0;
             while (fRes < 0.09f)	// 0.05보다 작으면
             {
@@ -196,18 +257,18 @@ namespace WindowsApplication1
         private void cboHour_SelectedIndexChanged(object sender, EventArgs e)
         {
             nHour = cboHour.SelectedIndex + 2;
-            this.UpdateChart();
+            //this.UpdateChart();
         }
 
-        private void txtMinute_TextChanged(object sender, EventArgs e)
-        {
-            int nMin= Int32.Parse(txtMinute.Text);
-            if (nMin >= 60)
-            {
-                txtMinute.Text = "59";
-            }
-            this.UpdateChart();
-        }
+        //private void txtMinute_TextChanged(object sender, EventArgs e)
+        //{
+        //    int nMin= Int32.Parse(txtMinute.Text);
+        //    if (nMin >= 60)
+        //    {
+        //        txtMinute.Text = "59";
+        //    }
+        //    this.UpdateChart();
+        //}
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
@@ -216,9 +277,79 @@ namespace WindowsApplication1
             nMonth = MyDateTime.Month;
             nDay = MyDateTime.Day;
             nHour = MyDateTime.Hour + 1;
+            nMin = MyDateTime.Minute;
+            //this.UpdateChart();
+        }
+
+        private void txtMinute_ValueChanged(object sender, EventArgs e)
+        {
+            nMin = Int32.Parse(txtMinute.Text);
+            
+            //if (nMin + txtMinute.Maximum >= 60)
+            //{
+            //    txtMinute.Text = "59";
+            //}
+            //this.UpdateChart();
+        }
+
+        private void timer_auto_Tick(object sender, EventArgs e)
+        {
+            int nCheckMin = Int32.Parse(txtMinute.Text);
+            if (nCheckMin + txtMinute.Increment == 60)
+            {
+                if (cboHour.Items.Count-1 == cboHour.SelectedIndex) // 타임 끝나면 [3/19/2013 ChoiJunHyeok]
+                    timer_auto.Enabled = false;
+                else
+                    cboHour.SelectedIndex += 1;
+
+                txtMinute.Text = "0";
+                nMin = 0;
+            }
+            else
+            {
+                txtMinute.UpButton();
+            }
+
+            this.UpdateChart();
+            
+        }
+
+        private void chkAuto_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkAuto.Checked)
+            {
+                cboMaterial.Enabled = false;
+                timer_auto.Enabled = true;
+            }
+            else
+            {
+                cboMaterial.Enabled = true;
+                timer_auto.Enabled = false;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
             this.UpdateChart();
         }
 
+        private void cboMaterial_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //cboMaterial.SelectedIndex = (int)currItem;
+            switch (cboMaterial.SelectedIndex)
+            {
+                case 0:
+                    currItem = EItems.E_BOX;
+                    break;
+                case 1:
+                    currItem = EItems.E_GAS;
+                    break;
+                case 2:
+                    currItem = EItems.E_OIL;
+                    break;
+            }
+            this.UpdateChart();
+        }
       
     }
 }
