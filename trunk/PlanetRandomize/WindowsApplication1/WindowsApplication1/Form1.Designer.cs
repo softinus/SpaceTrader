@@ -28,6 +28,7 @@ namespace WindowsApplication1
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.DatePicker = new System.Windows.Forms.DateTimePicker();
             this.cboMaterial = new System.Windows.Forms.ComboBox();
@@ -38,15 +39,20 @@ namespace WindowsApplication1
             this.txtCroodY = new System.Windows.Forms.TextBox();
             this.txtPlanetNum = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.txtMinute = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.txtMinute = new System.Windows.Forms.NumericUpDown();
+            this.lstLog = new System.Windows.Forms.ListBox();
+            this.chkAuto = new System.Windows.Forms.CheckBox();
+            this.timer_auto = new System.Windows.Forms.Timer(this.components);
+            this.button1 = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.txtMinute)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.Location = new System.Drawing.Point(3, 75);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(812, 503);
+            this.panel1.Size = new System.Drawing.Size(562, 503);
             this.panel1.TabIndex = 0;
             // 
             // DatePicker
@@ -61,12 +67,14 @@ namespace WindowsApplication1
             // 
             this.cboMaterial.FormattingEnabled = true;
             this.cboMaterial.Items.AddRange(new object[] {
-            "가스",
-            "오일"});
+            "(Lv1)박스",
+            "(Lv2)가스",
+            "(Lv3)오일"});
             this.cboMaterial.Location = new System.Drawing.Point(694, 12);
             this.cboMaterial.Name = "cboMaterial";
             this.cboMaterial.Size = new System.Drawing.Size(121, 20);
             this.cboMaterial.TabIndex = 2;
+            this.cboMaterial.SelectedIndexChanged += new System.EventHandler(this.cboMaterial_SelectedIndexChanged);
             // 
             // cboHour
             // 
@@ -95,8 +103,7 @@ namespace WindowsApplication1
             "21시",
             "22시",
             "23시",
-            "24시",
-            "1시"});
+            "24시"});
             this.cboHour.Location = new System.Drawing.Point(257, 12);
             this.cboHour.Name = "cboHour";
             this.cboHour.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -163,16 +170,6 @@ namespace WindowsApplication1
             this.label3.TabIndex = 10;
             this.label3.Text = ":";
             // 
-            // txtMinute
-            // 
-            this.txtMinute.Location = new System.Drawing.Point(319, 12);
-            this.txtMinute.MaxLength = 2;
-            this.txtMinute.Name = "txtMinute";
-            this.txtMinute.Size = new System.Drawing.Size(45, 21);
-            this.txtMinute.TabIndex = 11;
-            this.txtMinute.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtMinute.TextChanged += new System.EventHandler(this.txtMinute_TextChanged);
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -182,13 +179,58 @@ namespace WindowsApplication1
             this.label4.TabIndex = 12;
             this.label4.Text = "분";
             // 
+            // txtMinute
+            // 
+            this.txtMinute.Location = new System.Drawing.Point(319, 13);
+            this.txtMinute.Name = "txtMinute";
+            this.txtMinute.Size = new System.Drawing.Size(43, 21);
+            this.txtMinute.TabIndex = 13;
+            this.txtMinute.ValueChanged += new System.EventHandler(this.txtMinute_ValueChanged);
+            // 
+            // lstLog
+            // 
+            this.lstLog.FormattingEnabled = true;
+            this.lstLog.ItemHeight = 12;
+            this.lstLog.Location = new System.Drawing.Point(571, 75);
+            this.lstLog.Name = "lstLog";
+            this.lstLog.Size = new System.Drawing.Size(244, 496);
+            this.lstLog.TabIndex = 14;
+            // 
+            // chkAuto
+            // 
+            this.chkAuto.AutoSize = true;
+            this.chkAuto.Location = new System.Drawing.Point(319, 45);
+            this.chkAuto.Name = "chkAuto";
+            this.chkAuto.Size = new System.Drawing.Size(69, 16);
+            this.chkAuto.TabIndex = 15;
+            this.chkAuto.Text = "Auto IC.";
+            this.chkAuto.UseVisualStyleBackColor = true;
+            this.chkAuto.CheckedChanged += new System.EventHandler(this.chkAuto_CheckedChanged);
+            // 
+            // timer_auto
+            // 
+            this.timer_auto.Tick += new System.EventHandler(this.timer_auto_Tick);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(400, 12);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "&Refresh";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(819, 578);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.chkAuto);
+            this.Controls.Add(this.lstLog);
             this.Controls.Add(this.txtMinute);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtPlanetNum);
             this.Controls.Add(this.txtCroodY);
@@ -199,8 +241,10 @@ namespace WindowsApplication1
             this.Controls.Add(this.cboMaterial);
             this.Controls.Add(this.DatePicker);
             this.Controls.Add(this.panel1);
+            this.DoubleBuffered = true;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Trader";
+            ((System.ComponentModel.ISupportInitialize)(this.txtMinute)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -218,8 +262,12 @@ namespace WindowsApplication1
         private System.Windows.Forms.TextBox txtCroodY;
         private System.Windows.Forms.TextBox txtPlanetNum;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox txtMinute;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown txtMinute;
+        private System.Windows.Forms.ListBox lstLog;
+        private System.Windows.Forms.CheckBox chkAuto;
+        private System.Windows.Forms.Timer timer_auto;
+        private System.Windows.Forms.Button button1;
     }
 }
 

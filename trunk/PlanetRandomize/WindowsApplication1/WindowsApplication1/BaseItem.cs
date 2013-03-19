@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WindowsApplication1
 {
-    enum EItems { E_BOX, E_MATERIAL }
+    enum EItems { E_BOX, E_GAS, E_OIL }
 
     class BaseItem
     {
@@ -22,17 +22,23 @@ namespace WindowsApplication1
         }
         public BaseItem(EItems _eType, float fConst)
         {
-            if (eType == EItems.E_BOX)
+            if (_eType == EItems.E_BOX)
             {
                 nMinPrice = 7;
                 nFixPrice = 10;
-                nMaxPrice = 15;                
+                nMaxPrice = 15;  
             }
-            else if (eType == EItems.E_MATERIAL)
+            else if (_eType == EItems.E_GAS)
             {
-                nMinPrice = 32;
-                nFixPrice = 45;
-                nMaxPrice = 68;
+                nMinPrice = 105;
+                nFixPrice = 160;
+                nMaxPrice = 230;
+            }
+            else if (_eType == EItems.E_OIL)
+            {
+                nMinPrice = 320;
+                nFixPrice = 450;
+                nMaxPrice = 680;
             }
 
             nCurrentPrice = (int)(nMinPrice + (nMaxPrice - nMinPrice) * fConst);
