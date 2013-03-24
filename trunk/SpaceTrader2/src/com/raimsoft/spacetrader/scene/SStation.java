@@ -44,14 +44,9 @@ public class SStation extends SBase
 			btnItems[i]= new GameButton();
 			//objItems[i]= new BaseItem()
 		}
-		
-		float fConst= GC.GetPositionTimeConstF();
-		
-		arrShopItems[0]= new BaseItem(EItems.E_BOX, fConst);
-		arrShopItems[1]= new BaseItem(EItems.E_MATERIAL, fConst);
-		
-		
 	}
+	
+	
 	
 	private DBManager DBMgr;
 	
@@ -71,10 +66,12 @@ public class SStation extends SBase
 //	private Sprite sprStationUI_MANAGE= new Sprite();
 	private Sprite sprPlanets= new Sprite();
 	private Sprite sprShip1= new Sprite();
-	private Sprite sprProgress= new Sprite();
-	private Sprite sprItemButton= new Sprite();
-	private Sprite sprPower= new Sprite();
-	private Sprite sprItems= new Sprite();
+	private Sprite sprProgress= new Sprite();			// 
+	private Sprite sprItemButton= new Sprite();			// 아이템 버튼
+	private Sprite sprPower= new Sprite();				// 파워 버튼
+	private Sprite sprItems= new Sprite();				// 아이템 리스트 (png에 있는 순대로)
+	
+	
 	
 	private GameButton btnInfo= new GameButton();
 	private GameButton btnNews= new GameButton();
@@ -85,6 +82,7 @@ public class SStation extends SBase
 	private GameObject objShip= new GameObject();
 	private BaseItem[] arrShopItems= new BaseItem[10];	// 샵 아이템
 	private BaseItem[] arrInvenItems= new BaseItem[20];	// 인벤토리
+	
 
 	private GameButton[] btnItems= new GameButton[30];
 	private GameButton btnPower= new GameButton();
@@ -114,6 +112,10 @@ public class SStation extends SBase
 		Music = MediaPlayer.create(mContext, R.raw.station2);
 		Music.setLooping(true);
 		Music.start();
+		
+		float fConst= GC.GetPositionTimeConstF();		
+		arrShopItems[0]= new BaseItem(mContext, gl, EItems.E_BOX, fConst);
+		arrShopItems[1]= new BaseItem(mContext, gl, EItems.E_MATERIAL, fConst);
 		
 		/// 스테이션 정보
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");
@@ -177,6 +179,8 @@ public class SStation extends SBase
 		objHexagon.SetObject(sprHexagon, 0, 0, 135, 230, 0, 0);
 		//objHexagon.scalex= 1.10f; objHexagon.scaley= 1.10f;
 		
+		
+		/// 상점 메뉴
 		sprItemButton.LoadSprite(gl, mContext, R.drawable.buttons_2, "btn_item.spr");
 		for(int i=0; i<10; ++i)
 		{
@@ -213,6 +217,7 @@ public class SStation extends SBase
 			int nCol= i%5;
 			arrShopItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 190+nRow*80, 0, arrShopItems[i].eType.ordinal());
 		}
+		///==
 		
 		sprPower.LoadSprite(gl, mContext, R.drawable.buttons_2, "btn_power.spr");
 		btnPower.SetButton(mContext, sprPower, 415, 50, 0);
@@ -346,8 +351,27 @@ public class SStation extends SBase
 		
 		if(nMenu==3)
 		{
+			for(int i=10; i<btnItems.length; ++i)	// 내 아이템에 대해서
+			{
+				if(btnItems[i].CheckOver())
+				{
+					arrInvenItems[i-10].CheckSetting(true);	// 누른거 체크
+					
+					for(int j=0; j<arrInvenItems.length; ++j)
+					{
+						if(i-10==j)	// 아까 누른거 빼고
+							continue;
+						
+						if(arrInvenItems[j]==null)	//아이템없으면 빼고
+							continue;
+							
+						arrInvenItems[j].CheckSetting(false);							
+					}
+				}
+			}
+			
 			for(GameButton BTN : btnItems)
-				BTN.ButtonUpdate(0);	
+				BTN.ButtonUpdate(0);
 		}
 		
 		if(nMenu!=0)

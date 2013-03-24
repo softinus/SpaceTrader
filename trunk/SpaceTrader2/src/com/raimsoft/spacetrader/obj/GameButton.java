@@ -26,15 +26,25 @@ public class GameButton extends GameObject
 	private float fTextSize;
 	private float fR= 0.75f, fG= 0.75f, fB=0.75f;
 
-	public void SetButton(Context _context, Sprite spr, int _x, int _y, int s_motion)
+	public void SetButton(Context _context, Sprite spr, int _x, int _y, int _normal_motion)
 	{		
-		SetObject(spr, 0, 0, _x, _y, s_motion, 0);
+		SetObject(spr, 0, 0, _x, _y, _normal_motion, 0);
 		
 		Sound= new SoundManager(_context);
 		Sound.Create();
 		Sound.Load(0, R.raw.button1);		
 		
 		nMouseOverFrame= 1;
+	}
+	public void SetButton(Context _context, Sprite spr, int _x, int _y, int _normal_motion, int n_over_motion)
+	{		
+		SetObject(spr, 0, 0, _x, _y, _normal_motion, 0);
+		
+		Sound= new SoundManager(_context);
+		Sound.Create();
+		Sound.Load(0, R.raw.button1);		
+		
+		nMouseOverFrame= n_over_motion;
 	}
 	public void SetText(int _x, int _y, float _size, String _str)
 	{
