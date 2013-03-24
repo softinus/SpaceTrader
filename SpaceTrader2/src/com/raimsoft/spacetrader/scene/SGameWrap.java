@@ -238,8 +238,11 @@ public class SGameWrap extends SBase
 		
 		for(Meteor MTO : qMetoer)
 		{
+			boolean bCheck= crashMgr.IsNeedParticleCrashCheck();
+			if(!bCheck) break;	// 파티클 아무것도 없으면 검사안함.
+			
 			GameObject[] arrParticleGroup= crashMgr.GetFristParticleGroup();
-			if(arrParticleGroup==null) break;	// 파티클 아무것도 없으면 검사안함.
+			
 			for(GameObject BOOM : arrParticleGroup)
 			{
 				if( gInfo.CrashCheck(BOOM, MTO, 0, 0) && (MTO.dead==false) && (BOOM.dead==false)  )			// 파편과 메테오 충돌했을 때 파편의 방향대로 메테오 나감.
