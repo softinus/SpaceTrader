@@ -32,8 +32,7 @@ public class SStation extends SBase
 		
 		arrInvenItems= DBMgr.GetItems().toArray(new BaseItem[30]);
 
-
-	//DBMgr.DropItemsTable();
+		//DBMgr.DropItemsTable();
 		//DBMgr.AddItems(0, 100, 10);
 		//DBMgr.AddItems(1, 100, 45);
 		
@@ -42,7 +41,6 @@ public class SStation extends SBase
 		for(int i=0; i<30; ++i)
 		{
 			btnItems[i]= new GameButton();
-			//objItems[i]= new BaseItem()
 		}
 	}
 	
@@ -106,6 +104,8 @@ public class SStation extends SBase
 	{
 		super.LoadData();
 		
+
+		
 		uInfo= UserInfo.GetInstance();
 		PNM= new PlanetNameMaker();
 		
@@ -116,6 +116,15 @@ public class SStation extends SBase
 		float fConst= GC.GetPositionTimeConstF();		
 		arrShopItems[0]= new BaseItem(mContext, gl, EItems.E_BOX, fConst);
 		arrShopItems[1]= new BaseItem(mContext, gl, EItems.E_MATERIAL, fConst);
+		
+		for(BaseItem ITEM : arrInvenItems)
+		{
+			if(ITEM==null)
+				continue;
+			
+			if(!ITEM.bInit)	// 초기화 다 안된상태면
+				ITEM.SpriteInit(mContext, gl);
+		}
 		
 		/// 스테이션 정보
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");
@@ -355,6 +364,9 @@ public class SStation extends SBase
 			{
 				if(btnItems[i].CheckOver())
 				{
+					if(arrInvenItems[i-10]==null)
+						continue;
+					
 					arrInvenItems[i-10].CheckSetting(true);	// 누른거 체크
 					
 					for(int j=0; j<arrInvenItems.length; ++j)

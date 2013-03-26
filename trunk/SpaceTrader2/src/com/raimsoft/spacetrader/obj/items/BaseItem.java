@@ -18,6 +18,7 @@ public class BaseItem extends GameObject
 	private GameObject objShadow= new GameObject();		// 그림자
 	
 	private Context mContext;
+	public boolean bInit= true;	// 스프라이트 초기화가 제대로 되었는지
 
 
 	int nMinPrice;
@@ -33,7 +34,7 @@ public class BaseItem extends GameObject
 	
 	public BaseItem()
 	{
-		
+		bInit= false;
 	}
 	public BaseItem(Context _Context, GL10 _gl, EItems _eType, float fConst)
 	{
@@ -58,6 +59,12 @@ public class BaseItem extends GameObject
 		
 		nCurrentPrice = (int)(nMinPrice + (nMaxPrice - nMinPrice) * fConst);
 		
+		SpriteInit(mContext, _gl);
+	}
+	public void SpriteInit(Context _Context, GL10 _gl)
+	{
+		mContext= _Context;
+		
 		sprShopButton.LoadSprite(_gl, mContext, R.drawable.buttons_2, "station_shop_buttons.spr");	// 버튼 스프라이트 로드
 		objShadow.SetObject(sprShopButton, 0, 0, 0, 0, 0, 0);			// 그림자 설정 
 		btnShopCheck.SetButton(mContext, sprShopButton, 0, 0, 1,2);		// 체크버튼 설정
@@ -70,11 +77,17 @@ public class BaseItem extends GameObject
 		{
 			if(!bCheck && !bLastCheck)	// 한번도 안눌린 버튼이면
 				bLastCheck= true;
+			
+			if(bCheck)	// 장바구니면
+				bLastCheck= true;	// 체크로 다시 바꿈
 		}
 		else			// 다른 버튼이 눌린건데
 		{
 			if(bLastCheck)		// 이 버튼이 마지막 눌렸었던 버튼이면
+			{
+				bLastCheck= false;
 				bCheck= true;	// 장바구니로 바꿈
+			}
 		}
 	}
 	
