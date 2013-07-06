@@ -20,15 +20,8 @@ public class BaseItem extends GameObject
 	private Context mContext;
 	public boolean bInit= true;	// 스프라이트 초기화가 제대로 되었는지
 
-
-	int nMinPrice;
-	int nMaxPrice;
-	int nFixPrice;
+	public ItemData itemData= new ItemData();
 	
-	public int nCurrentPrice;
-	
-	public EItems eType;
-	public int nCount;
 	public boolean bCheck;		// 상점에서 체크 되었는지 여부
 	public boolean bLastCheck;	// 상점에서 체크 되었는데 마지막으로 체크되었을 경우 트루
 	
@@ -39,25 +32,25 @@ public class BaseItem extends GameObject
 	public BaseItem(Context _Context, GL10 _gl, EItems _eType, float fConst)
 	{
 		mContext= _Context;
-		eType= _eType;				
+		itemData.eType= _eType;				
 		
 		bCheck= false;
 		bLastCheck= false;
 		
 		if(_eType== EItems.E_BOX)
 		{
-			nMinPrice= 7;
-			nFixPrice= 10;
-			nMaxPrice= 15;
+			itemData.nMinPrice= 7;
+			itemData.nFixPrice= 10;
+			itemData.nMaxPrice= 15;
 		}
 		else if(_eType== EItems.E_MATERIAL)
 		{
-			nMinPrice= 32;
-			nFixPrice= 45;
-			nMaxPrice= 68;
+			itemData.nMinPrice= 32;
+			itemData.nFixPrice= 45;
+			itemData.nMaxPrice= 68;
 		}
 		
-		nCurrentPrice = (int)(nMinPrice + (nMaxPrice - nMinPrice) * fConst);
+		itemData.nCurrentPrice = (int)(itemData.nMinPrice + (itemData.nMaxPrice - itemData.nMinPrice) * fConst);
 		
 		SpriteInit(mContext, _gl);
 	}
@@ -65,13 +58,33 @@ public class BaseItem extends GameObject
 	{
 		mContext= _Context;
 		
-		sprShopButton.LoadSprite(_gl, mContext, R.drawable.buttons_2, "station_shop_buttons.spr");	// 버튼 스프라이트 로드
-		objShadow.SetObject(sprShopButton, 0, 0, 0, 0, 0, 0);			// 그림자 설정 
-		btnShopCheck.SetButton(mContext, sprShopButton, 0, 0, 1,2);		// 체크버튼 설정
-		objShopCheck2.SetObject(sprShopButton, 0, 0, 0, 0, 3, 0);		// 장바구니 설정
+		sprShopButton.LoadSprite(_gl, mContext, R.drawable.buttons_2, "station_shopbtn.spr");	// 버튼 스프라이트 로드
+		objShadow.SetObject(sprShopButton, 0, 0, this.x, this.y, 3, 0);			// 그림자 설정 
+		btnShopCheck.SetButton(mContext, sprShopButton, this.x, this.y, 1,2);		// 체크버튼 설정
+		objShopCheck2.SetObject(sprShopButton, 0, 0, this.x, this.y, 0, 0);		// 장바구니 설정
 	}
 	
-	public void CheckSetting(boolean bCurrent)
+	/**
+	 * Shop Item이면 요걸 쓴다.
+	 * @param bCurrent
+	 */
+	public void CheckSettingShop(boolean bCurrent)
+	{
+		if(bCurrent)	// 지금 이 버튼이 눌렸으면
+		{
+			bLastCheck= true;
+		}
+		else
+		{
+			bLastCheck= false;
+		}
+	}
+	
+	/**
+	 * Inventory Item이면 요걸 쓴다.
+	 * @param bCurrent
+	 */
+	public void CheckSettingInventory(boolean bCurrent)
 	{
 		if(bCurrent)	// 지금 이 버튼이 눌렸는데
 		{
@@ -104,17 +117,19 @@ public class BaseItem extends GameObject
 		
 		btnShopCheck.x= s_x;
 		btnShopCheck.y= s_y;		
+		btnShopCheck.bSound= false;
 	}
 	@Override
 	public void DrawSprite(GameInfo info)
-	{
+	{		
 		super.DrawSprite(info);	// 아이템 먼저 그리고
 		
 		if(bLastCheck)	// 마지막 체크이면
 		{
 			objShadow.DrawSprite(info);
-			btnShopCheck.DrawSprite(info);	// 구매체크버튼
+			btnShopCheck.DrawSprite(info);	// 구매체크버튼			
 			
+			btnShopCheck.ButtonUpdate(0.0f);
 		}
 		else if(bCheck)	// 그냥 체크면
 		{
@@ -124,16 +139,19 @@ public class BaseItem extends GameObject
 		
 	}
 	
-	public void SetItemType(int _nType)
-	{
-		switch(_nType)
-		{
-		case 0:
-			eType= EItems.E_BOX;
-			break;
-		case 1:
-			eType= EItems.E_MATERIAL;
-			break;
-		}
+	/**
+	 * 버튼 체크인지
+	 * @return
+	 */
+	public boolean CheckOver()
+	{		
+		if(btnShopCheck.CheckOver())
+			return true;
+		else
+			return false;	
 	}
+	
+
+	
+
 }

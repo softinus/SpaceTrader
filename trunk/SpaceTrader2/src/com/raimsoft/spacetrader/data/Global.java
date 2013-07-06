@@ -13,9 +13,19 @@ public class Global
 	public static final int DB_VERSION= 1;						// DB버전
 	
 	// 아래는 Shared Preference 예약어
+	public static final String SP_LOGIN_SUCCESS="login";
 	public static final String SP_LOGIN_ID="login_id";
 	public static final String SP_LOGIN_PW="login_pw";
 	public static final String SP_MONEY="money";
+	
+	// 아래는 Parse 통신 예약어
+	public static final String PO_USER_ID="user_id";
+	public static final String PO_MOENY="gold";
+	public static final String PO_SHIP_TYPE="ship_type";
+	public static final String PO_CROOD_WORLD_X="crood_world_x";
+	public static final String PO_CROOD_WORLD_Y="crood_world_y";
+	public static final String PO_CROOD_SYSTEM_MAP_PLANET="system_map_planet";
+	
 	
 //	public static final String GOOGLE_AD_ID = "a14f34da9ed5c1f";
 //	public static final String DAUM_AD_ID = "1d02Z6oT134d197e7da";

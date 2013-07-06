@@ -216,7 +216,7 @@ public class BaseFleet extends GameObject
 			objDestroy.DrawSprite(info);
 			return;
 		}
-		sprHP.PutValue(info, 25, 35, 0, nHP);
+		sprHP.PutValue(info, 25, 35, 0, nHP, false);
 
 		super.DrawSprite(info);		
 		

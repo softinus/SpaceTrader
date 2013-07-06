@@ -1,5 +1,7 @@
 package com.raimsoft.spacetrader;
 
+import java.util.List;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -8,6 +10,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -18,7 +22,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +30,18 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import bayaba.engine.lib.GameInfo;
 
-import com.kth.baasio.Baas;
-import com.kth.baasio.callback.BaasioCallback;
-import com.kth.baasio.callback.BaasioSignInCallback;
-import com.kth.baasio.callback.BaasioSignUpCallback;
-import com.kth.baasio.entity.entity.BaasioEntity;
-import com.kth.baasio.entity.user.BaasioUser;
-import com.kth.baasio.exception.BaasioException;
+import com.parse.FindCallback;
+import com.parse.GetDataCallback;
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.ProgressCallback;
+import com.parse.SignUpCallback;
 import com.raimsoft.spacetrader.data.EnumShip;
 import com.raimsoft.spacetrader.data.Global;
 import com.raimsoft.spacetrader.data.GlobalInput;
@@ -66,10 +74,8 @@ public class SpaceTrader extends Activity implements SensorEventListener
         
         LoadingDL = new ProgressDialog(this);
         
-        Baas.io().init(this,
-        		"https://api.baas.io",
-        		"june",
-        		"spacetrader");
+        Parse.initialize(this, "vA3nQDWd1bB1m9mWqktDWcOU1VYV1JPU7JtEczLd", "cOJJqTw8dc69kGpwtR5PpYhle1ECx3SnxNOudcWJ");
+        ParseAnalytics.trackAppOpened(getIntent());
         
         
         getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
@@ -107,7 +113,7 @@ public class SpaceTrader extends Activity implements SensorEventListener
 		
 		public void handleMessage(Message msg)
 		{			
-			if(msg.what==0)
+			if(msg.what==0)	// Play 버튼 누르면!
 			{
 				LoadingDL.hide();
 				
@@ -116,54 +122,8 @@ public class SpaceTrader extends Activity implements SensorEventListener
 				if( (strID!=null) && (strPW!=null) )	// 저장된 ID가 있으면 로그인한다.
 				{
 					LoadingHandler.sendEmptyMessage(1);
-					
-					BaasioUser.signInInBackground(
-							getApplicationContext()
-					        , strID
-					        , strPW
-					        , new BaasioSignInCallback() {
-
-					            @Override
-					            public void onException(BaasioException e) {
-					                if (e.getStatusCode() != null)
-					                {
-					                    if (e.getErrorCode() == 201)
-					                    {
-					                        return;
-					                    }
-					                }
-					                //기타 오류
-					            }
-
-					            @Override
-					            public void onResponse(BaasioUser response)
-					            {
-					            	if(response==null)
-					            	{
-		            	        		ShowAlertDialog("[로그인]", "로그인 실패", "확인");
-		            	        		SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_ID, null);
-		            	        		SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_PW, null);
-					            	}
-		            	        	else
-		            	        	{
-		            	        		LoadingHandler.sendEmptyMessage(999);
-		            	        		
-		            	        		if(!TextUtils.isEmpty(response.getEmail()))	            	        			
-		            	        		{
-		            	        			ShowAlertDialog("[로그인 성공]", "우주무역 시스템...\n장사꾼 "+strID+"의 정보를 가져왔습니다.\n게임 시작해주세요!", "확인");
-		            	        			uInfo.SetLogin(true);
-		            	        			uInfo.SetGold(0);
-    	            	        			uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_2);
-    	            	        			uInfo.SetWorldMapX(138);
-    	            	        			uInfo.SetWorldMapY(287);
-    	            	        			uInfo.SetSystemMapPlanet(1);
-		            	        			//SPUtil.putBoolean(getApplicationContext(), "login", true);
-		            	        		}
-		            	        		else
-		            	        			ShowAlertDialog("[로그인 실패]", response.toString(), "확인");
-		            	        	}
-					            }
-					        });
+					            		
+            		SignIn(strID, strPW);
 					
 				}
 				else
@@ -219,7 +179,7 @@ public class SpaceTrader extends Activity implements SensorEventListener
     @Override
     protected void onDestroy()
     {
-    	Baas.io().uninit(this);	// baas.io 종료
+    	//Baas.io().uninit(this);	// baas.io 종료
         super.onDestroy();
     };
 
@@ -312,110 +272,8 @@ public class SpaceTrader extends Activity implements SensorEventListener
 	            	{	            	
 	            		LoadingHandler.sendEmptyMessage(1);
 	            		
+	            		SignIn(EDT_ID.getText().toString(), EDT_PW.getText().toString());
 	            		
-	            		BaasioUser.signInInBackground(
-	            				getApplicationContext()
-	            		        , EDT_ID.getText().toString()
-	            		        , EDT_PW.getText().toString()
-	            		        , new BaasioSignInCallback() {
-
-	            		            @Override
-	            		            public void onException(BaasioException e)
-	            		            {
-	            		                if (e.getStatusCode() != null)
-	            		                {
-	            		                	if (e.getErrorCode() == 201)
-     		        		                {
-     		        		                	LoadingHandler.sendEmptyMessage(999);
-     		        		                	ShowAlertDialog("[로그인 실패]", "잘못된 아이디 또는 패스워드입니다.", "확인");
-     		        		                    return;
-     		        		                }
-     		        		                else
-     		        		                {
-     		        		                	LoadingHandler.sendEmptyMessage(999);
-     		        		                	ShowAlertDialog("[로그인 실패]", "실패코드 : "+e.getErrorCode(), "확인");
-     		        		                    return;
-     		        		                }
-	            		                }
-
-	            		                //기타 오류
-	            		            }
-
-	            		            @Override
-	            		            public void onResponse(BaasioUser response)
-	            		            {
-	            		            	if(response==null)
-	    	            	        		ShowAlertDialog("[로그인]", "로그인 실패", "확인");
-	    	            	        	else
-	    	            	        	{
-	            	        		LoadingHandler.sendEmptyMessage(3);
-    	            	        		
-	    	            	        		BaasioEntity entity = new BaasioEntity("ship");
-	    	            	        		entity.setUuid(response.getUuid());                               // Entity의 uuid
-	    	            	        		entity.getInBackground(new BaasioCallback<BaasioEntity>()
-	    	            	        		{
-
-	    	                                    @Override
-	    	                                    public void onResponse(BaasioEntity response)
-	    	                                    {
-	    	                                        if (response != null)
-	    	                                        {
-	    	                                        	LoadingHandler.sendEmptyMessage(999);
-   				        		                		ShowAlertDialog("[정보]", "정보 : "+response.toString(), "확인");
-	    	                                        }
-	    	                                    }
-
-	    	                                    @Override
-	    	                                    public void onException(BaasioException e)
-	    	                                    {
-	    	                                        Log.e("baas.io", e.toString());
-	    	                                        LoadingHandler.sendEmptyMessage(999);
-			        		                		ShowAlertDialog("[정보기입 실패]", "실패코드 : "+e.getErrorCode(), "확인");
-	    	                                    }
-	    	                                });
-//	    	            	        		
-	    	            	        		
-		        			        		BaasioEntity entity2 = new BaasioEntity("ship");
-		        			        		entity2.setProperty("username", EDT_ID.getText().toString());
-		        			        		entity2.setProperty("GOLD", 300);
-		        			        		entity2.setProperty("SHIP_TYPE", 0);
-		        			        		entity2.setProperty("SHIP_CROOD", "0-0:0");
-		        			        		entity2.saveInBackground(
-		        			        		    new BaasioCallback<BaasioEntity>() {
-
-		        			        		            @Override
-		        			        		            public void onException(BaasioException e)
-		        			        		            {
-		        			        		            	LoadingHandler.sendEmptyMessage(999);
-	   				        		                		ShowAlertDialog("[정보기입 실패]", "실패코드 : "+e.getErrorCode(), "확인");
-		        			        		            }
-
-		        			        		            @Override
-		        			        		            public void onResponse(BaasioEntity response) {
-		        			        		                if (response != null)
-		        			        		                {
-		        			        		                	ShowAlertDialog("[정보]", "정보 : "+response.toString(), "확인");
-		        			        		                }
-		        			        		            }
-		        			        		        });
-
-	    	            	        			SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_ID, EDT_ID.getText().toString());
-	    	            	        			SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_PW, EDT_PW.getText().toString());
-	    	            	        			
-	            	        			LoadingHandler.sendEmptyMessage(999);
-	    	            	        			
-	    	            	        			uInfo.SetLogin(true);
-	    	            	        			uInfo.SetGold(0);
-	    	            	        			uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_2);
-	    	            	        			uInfo.SetWorldMapX(125);
-	    	            	        			uInfo.SetWorldMapY(235);
-	    	            	        			uInfo.SetSystemMapPlanet(1);
-	    	            	        			//SPUtil.putBoolean(getApplicationContext(), "login", true);
-	    	            	        			
-	    	            	        			ShowAlertDialog("[로그인 성공]", "우주무역 시스템...\n장사꾼 "+EDT_ID.getText().toString()+"의 정보를 가져왔습니다.\n게임 시작해주세요!", "확인");
-	    	            	        	}
-	            		            }
-	            		        });
 	            	}
 	            	
 	            	
@@ -428,7 +286,10 @@ public class SpaceTrader extends Activity implements SensorEventListener
 	            	if( TextUtils.isEmpty(EDT_ID.getText()) )
 	            	{
 	            		ShowAlertDialog("회원가입 실패", "아이디를 입력해주세요", "확인");
-	            		//Toast.makeText(getApplicationContext(), "아이디를 입력해주세요.", Toast.LENGTH_LONG).show();
+	            	}
+	            	else if( !EDT_ID.getText().toString().contains("@") )
+	            	{
+	            		ShowAlertDialog("회원가입 실패", "아이디를 이메일 형식으로 입력해주세요 :)", "확인");
 	            	}
 	            	else if( TextUtils.isEmpty(EDT_PW.getText()) )	            		
 	            	{
@@ -450,50 +311,41 @@ public class SpaceTrader extends Activity implements SensorEventListener
 		        		TelephonyManager TM = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE); 
 		        		if (TM.getSimState() == TelephonyManager.SIM_STATE_ABSENT)
 		        		{
-		        			strNumber= "USIM정보가 없음";
+		        			strNumber= "usim_absent";
 		        		} 
 		        		else {
 		        			strNumber= TM.getLine1Number();
 		        			strIMEI= TM.getDeviceId();
 		        		}
 		        		
+		        		ParseUser user = new ParseUser();
+		        		user.setUsername(EDT_ID.getText().toString());
+		        		user.setPassword(EDT_PW.getText().toString()	);
+		        		user.setEmail(EDT_ID.getText().toString());
+		        		 
+
+		        		if(strNumber==null)
+		        			user.put("phone", "usim_null");
+		        		else
+		        			user.put("phone", strNumber);
+		        		 
+		        		user.signUpInBackground(new SignUpCallback()
+		        		{
+		        		  public void done(ParseException e)
+		        		  {
+		        		    if (e == null)
+		        		    {
+		        		    	LoadingHandler.sendEmptyMessage(999);
+		        		    	ShowAlertDialog("[회원가입 성공]", "Welcome abroad!\n다시 로그인해주세요 +_+", "확인");
+    		                    return;
+		        		    } else {
+		        		    	LoadingHandler.sendEmptyMessage(999);
+    		                	ShowAlertDialog("[회원가입 실패]", "실패코드 : "+e.getCode(), "확인");
+    		                    return;
+		        		    }
+		        		  }
+		        		});
 		        		
-		        		BaasioUser.signUpInBackground(
-		        				EDT_ID.getText().toString()	          	//ID(username)
-		        		        , strNumber          					//이름
-		        		        , EDT_ID.getText().toString()			//이메일
-		        		        , EDT_PW.getText().toString()       	//비밀번호
-		        		        , new BaasioSignUpCallback()
-		        				{
-
-		        		            @Override
-		        		            public void onException(BaasioException e)
-		        		            {
-		        		                if (e.getErrorCode() == 913)
-		        		                {
-		        		                	LoadingHandler.sendEmptyMessage(999);
-		        		                	ShowAlertDialog("[회원가입 실패]", "이미 가입된 사용자입니다.", "확인");
-		        		                    return;
-		        		                }
-		        		                else
-		        		                {
-		        		                	LoadingHandler.sendEmptyMessage(999);
-		        		                	ShowAlertDialog("[회원가입 실패]", "실패코드 : "+e.getErrorCode(), "확인");
-		        		                    return;
-		        		                }
-		        		            }
-
-		        		            @Override
-		        		            public void onResponse(BaasioUser response)
-		        		            {
-		        		            	LoadingHandler.sendEmptyMessage(999);
-		        		                if (response != null)
-		        		                {	        		                	
-		        			        		
-		        			        		ShowAlertDialog("[회원가입 성공]", EDT_ID.getText().toString()+"님 우주무역에 합류!\n다시 한번 로그인해주세요~", "확인");
-		        		                }
-		        		            }
-		        		        });	
 		        		
 		        		 
 	            	}
@@ -508,5 +360,72 @@ public class SpaceTrader extends Activity implements SensorEventListener
 	            }
 	        })
 	        .create();
+	}
+
+	private void SignIn(final String strID, final String strPW)
+	{
+		ParseUser.logInInBackground(strID, strPW
+				,new LogInCallback()
+		{
+		  public void done(ParseUser user, ParseException e)
+		  {
+		    if (user != null)
+		    {
+		    	LoadingHandler.sendEmptyMessage(3);
+		    	
+		    	SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_ID, strID);
+				SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_PW, strPW);    	        			
+				
+				ParseQuery<ParseObject> query= ParseQuery.getQuery("UserInfo");	// 유저 데이터를 찾는다.
+				query.whereEqualTo("user_id", user);
+				query.findInBackground(new FindCallback<ParseObject>()
+						{			
+							@Override
+							public void done(List<ParseObject> list, ParseException e)
+							{
+								for(ParseObject PO : list)
+								{									
+									uInfo.SetLogin(true);
+									uInfo.SetGold( PO.getInt( Global.PO_MOENY ) );
+									uInfo.SetShipType( PO.getInt(Global.PO_SHIP_TYPE) );
+		    	        			uInfo.SetWorldMapX( PO.getInt(Global.PO_CROOD_WORLD_X));
+		    	        			uInfo.SetWorldMapY( PO.getInt(Global.PO_CROOD_WORLD_Y));
+		    	        			uInfo.SetSystemMapPlanet( PO.getInt(Global.PO_CROOD_SYSTEM_MAP_PLANET));
+								}
+							}
+						});
+				
+				if(!uInfo.GetLogin())	// 해당하는 정보가 없으면... 모두 NULL 처리하고 겜시작시 튜토리얼 시작함.
+				{
+					uInfo.SetLogin(true);	// 로그인을 설정하면 게임 넘어감
+					uInfo.SetGold(-1);
+					uInfo.SetShipType(EnumShip.E_NULL_INFO);
+					uInfo.SetWorldMapX(-1);
+					uInfo.SetWorldMapY(-1);
+					uInfo.SetSystemMapPlanet(-1);
+				}
+				
+				LoadingHandler.sendEmptyMessage(999);
+				
+				
+				SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_ID, strID);
+		    	SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_PW, strPW);
+				
+		    	//SPUtil.putBoolean(getApplicationContext(), Global.SP_LOGIN_SUCCESS, true);	
+		    	
+				ShowAlertDialog("[로그인 성공]", "우주무역 시스템...\n장사꾼 "+strID+"의 정보를 가져왔습니다.\n게임 시작해주세요!", "확인");        	        			
+				
+		    } else {
+		    	LoadingHandler.sendEmptyMessage(999);
+		    	ShowAlertDialog("[로그인 실패]", "잘못된 아이디 또는 패스워드입니다.", "확인");
+		    	
+		    	SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_ID, null);
+		    	SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_PW, null);
+		    	// 로그인 실패하면 저장된 정보를 지움.
+		    	
+		        return;
+		    }
+		  }
+		});
 	}
 }

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.raimsoft.spacetrader.obj.items.BaseItem;
+import com.raimsoft.spacetrader.obj.items.ItemData;
 
 public class DBManager extends DBCore
 {
@@ -32,7 +33,7 @@ public class DBManager extends DBCore
 	 */
 	public int AddItems(int nItemType, int nCount, int nCurrPrice)
 	{
-		ArrayList<BaseItem> arrRes= GetItems();
+		ArrayList<ItemData> arrRes= GetItems();
 		
 		for(int i=0; i<arrRes.size(); ++i)	// 아이템 리스트 돌면서
 		{
@@ -68,9 +69,34 @@ public class DBManager extends DBCore
 		return 1;
 	}
 	
-	public ArrayList<BaseItem> GetItems()
+	/**
+	 * 
+	 * @param nIdx
+	 * @param nCount
+	 * @return
+	 */
+	public int RemoveItem(int nIdx, int nCount)
 	{
-		ArrayList<BaseItem> arrRes = new ArrayList<BaseItem>();
+		ArrayList<ItemData> arrRes= GetItems();
+		
+		ItemData data= arrRes.get(nIdx);
+		if(data==null)	// 데이터가 없음.
+			return -1;
+		
+		if( data.nCount < nCount )	// 소지한 개수보다 많은 양을 팔 수 없음
+			return -2;
+		
+		this.UpdateItem(nIdx, data.nCount-nCount);
+		if(data.nCount-nCount == 0)	// 아이템 개수가 0이면 해당 row 지운다.
+		{
+			this.DBDelete(Global.DB_TABLE_ITEMSINFO, "_id="+(nIdx+1));
+		}
+		return 0;		
+	}
+	
+	public ArrayList<ItemData> GetItems()
+	{
+		ArrayList<ItemData> arrRes = new ArrayList<ItemData>();
 		String[] strCol= {"type", "count", "price"};
 		
 		Cursor CS= this.GetCursorFromDB(Global.DB_TABLE_ITEMSINFO, strCol);
@@ -79,7 +105,7 @@ public class DBManager extends DBCore
 		
 		while( CS.isAfterLast() == false )
 		{
-			BaseItem item = new BaseItem();
+			ItemData item = new ItemData();
 			item.SetItemType( CS.getInt(0) );
 			item.nCount= CS.getInt(1);
 			item.nCurrentPrice= CS.getInt(2);
@@ -97,6 +123,7 @@ public class DBManager extends DBCore
 	{
 		this.DBUpdate(Global.DB_TABLE_ITEMSINFO, "count", nUpdateCount, "_id="+(nItemIndex+1));
 	}
+
 	
 //	/**
 //	 * 돈값을 세팅한다.

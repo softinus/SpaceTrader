@@ -8,6 +8,7 @@ import bayaba.engine.lib.Sprite;
 
 import com.raimsoft.spacetrader.R;
 import com.raimsoft.spacetrader.SpaceTrader;
+import com.raimsoft.spacetrader.data.EnumShip;
 import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.GameButton;
 
@@ -77,7 +78,12 @@ public class SMainMenu extends SBase
 		if( btnPlay.CheckOver() )
 		{
 			if(s_uInfo.GetLogin())
-				this.SetScene(EnumScene.E_GAME_SYSTEMMAP);
+			{
+				if(s_uInfo.GetShipType() == EnumShip.E_NULL_INFO )	// 처음 가입된 회원이면
+					this.SetScene(EnumScene.E_GAME_GALAXYMAP);	// 갤럭시 선택화면으로
+				else
+					this.SetScene(EnumScene.E_GAME_SYSTEMMAP);	// 기존 회원이면 마지막 시스템 화면으로
+			}
 			else
 				((SpaceTrader)mContext).LoadingHandler.sendEmptyMessage(0);
 		}
