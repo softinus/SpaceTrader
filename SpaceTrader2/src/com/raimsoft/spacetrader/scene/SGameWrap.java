@@ -1,6 +1,7 @@
 package com.raimsoft.spacetrader.scene;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
@@ -11,8 +12,14 @@ import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.raimsoft.spacetrader.R;
 import com.raimsoft.spacetrader.data.EnumShip;
+import com.raimsoft.spacetrader.data.Global;
 import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.CrashParticlesManager;
@@ -290,6 +297,29 @@ public class SGameWrap extends SBase
 			}
 			else
 			{
+				ParseUser currentUser = ParseUser.getCurrentUser();
+				if (currentUser != null)
+				{
+					ParseQuery<ParseObject> query= ParseQuery.getQuery("UserInfo");	// 유저 데이터를 찾는다.
+					query.whereEqualTo("user_id", currentUser);	// 해당되는 유저의
+					query.findInBackground(new FindCallback<ParseObject>()
+							{			
+								@Override
+								public void done(List<ParseObject> list, ParseException e)
+								{
+									for(ParseObject PO : list)
+									{
+										PO.put(Global.PO_CROOD_SYSTEM_MAP_PLANET, nWhereIgoing);	// 시스템 좌표 변경
+										PO.saveInBackground();
+									}
+								}
+							});
+				} else {
+				  // show the signup or login screen
+				}
+				
+				
+				
 				uInfo.SetSystemMapPlanet(nWhereIgoing);	// 도착한 곳!
 				uInfo.SetCurrHull(objShip.nHP);	// 도착했을 때 Hull 저장.				
 				SetScene(EnumScene.E_GAME_DOCKING);

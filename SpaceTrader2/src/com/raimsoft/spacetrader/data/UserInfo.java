@@ -99,6 +99,30 @@ public class UserInfo
 			break;
 		}
 	}
+	
+	public void SetShipType(int nShip)
+	{		
+		switch (nShip)
+		{
+		case 1:
+			this.eShip= EnumShip.E_TRAINING_SHIP_1;
+			SetShipName("T-1");
+			SetShipAtt(220);
+			SetShipHull(3500);
+			SetHandling(2.0f);
+			SetVelocity(13.0f);
+			break;
+
+		case 2:
+			this.eShip= EnumShip.E_TRAINING_SHIP_2;
+			SetShipName("T-2");
+			SetShipAtt(280);
+			SetShipHull(3200);
+			SetHandling(2.3f);
+			SetVelocity(14.0f);
+			break;
+		}
+	}
 
 	public boolean GetLogin()
 	{

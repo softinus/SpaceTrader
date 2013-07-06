@@ -18,7 +18,8 @@ public class GameButton extends GameObject
 	int nButtonState= ButtonType.STATE_NON_BUTTON;
 	int nMouseOverFrame;
 	int nClickX, nClickY;
-	private SoundManager Sound;
+	private SoundManager Sound;	
+	public boolean bSound;
 	
 	private boolean bTextDraw= false;
 	private String strContent= "";
@@ -26,17 +27,19 @@ public class GameButton extends GameObject
 	private float fTextSize;
 	private float fR= 0.75f, fG= 0.75f, fB=0.75f;
 
-	public void SetButton(Context _context, Sprite spr, int _x, int _y, int _normal_motion)
+	public void SetButton(Context _context, Sprite spr, float _x, float _y, int _normal_motion)
 	{		
 		SetObject(spr, 0, 0, _x, _y, _normal_motion, 0);
 		
 		Sound= new SoundManager(_context);
 		Sound.Create();
-		Sound.Load(0, R.raw.button1);		
+		Sound.Load(0, R.raw.button1);
+		
+		bSound= true;
 		
 		nMouseOverFrame= 1;
 	}
-	public void SetButton(Context _context, Sprite spr, int _x, int _y, int _normal_motion, int n_over_motion)
+	public void SetButton(Context _context, Sprite spr, float _x, float _y, int _normal_motion, int n_over_motion)
 	{		
 		SetObject(spr, 0, 0, _x, _y, _normal_motion, 0);
 		
@@ -113,7 +116,7 @@ public class GameButton extends GameObject
 		int nY= (int) GlobalInput.fTouchY;
 		boolean bTouch= GlobalInput.bTouch;
 		
-		if( CheckPos(nX, nY) && bTouch )
+		if( CheckPos(nX, nY) && bTouch )	// 버튼 안에 X,Y가 있고 터치면 갱신하고 프레임바꿈
 		{
 			nClickX= nX; 
 			nClickY= nY;
@@ -134,7 +137,9 @@ public class GameButton extends GameObject
 				{
 					nButtonState= ButtonType.STATE_CLK_BUTTON;
 					this.frame= 0;
-					Sound.Play(0);
+					
+					if(bSound)
+						Sound.Play(0);
 				}
 				else
 				{

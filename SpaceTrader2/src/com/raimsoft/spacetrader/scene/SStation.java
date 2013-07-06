@@ -1,5 +1,7 @@
 package com.raimsoft.spacetrader.scene;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.Log;
@@ -17,11 +19,14 @@ import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.GameButton;
 import com.raimsoft.spacetrader.obj.items.BaseItem;
 import com.raimsoft.spacetrader.obj.items.EItems;
+import com.raimsoft.spacetrader.obj.items.ItemData;
 import com.raimsoft.spacetrader.util.GenConst;
 import com.raimsoft.spacetrader.util.PlanetNameMaker;
 
 public class SStation extends SBase
 {
+	private final int SHOP_ITEM_COUNT= 10;
+	private final int IVEN_ITEM_COUNT= 20;
 
 	public SStation(Context mContext, GameInfo gInfo)
 	{
@@ -30,7 +35,7 @@ public class SStation extends SBase
 		DBMgr= new DBManager(mContext);
 		
 		
-		arrInvenItems= DBMgr.GetItems().toArray(new BaseItem[30]);
+		//arrInvenItems= DBMgr.GetItems().toArray(new BaseItem[IVEN_ITEM_COUNT]);
 
 		//DBMgr.DropItemsTable();
 		//DBMgr.AddItems(0, 100, 10);
@@ -40,7 +45,7 @@ public class SStation extends SBase
 		
 		for(int i=0; i<30; ++i)
 		{
-			btnItems[i]= new GameButton();
+			btnItemsBackground[i]= new GameButton();
 		}
 	}
 	
@@ -78,11 +83,11 @@ public class SStation extends SBase
 	private GameButton btnExit= new GameButton();
 	private GameObject objPlanet= new GameObject();
 	private GameObject objShip= new GameObject();
-	private BaseItem[] arrShopItems= new BaseItem[10];	// 샵 아이템
-	private BaseItem[] arrInvenItems= new BaseItem[20];	// 인벤토리
+	private BaseItem[] arrShopItems= new BaseItem[SHOP_ITEM_COUNT];	// 샵 아이템
+	private BaseItem[] arrInvenItems= new BaseItem[IVEN_ITEM_COUNT];	// 인벤토리
 	
 
-	private GameButton[] btnItems= new GameButton[30];
+	private GameButton[] btnItemsBackground= new GameButton[SHOP_ITEM_COUNT+IVEN_ITEM_COUNT];
 	private GameButton btnPower= new GameButton();
 	
 	private ButtonObject prgBG1= new ButtonObject();
@@ -117,14 +122,7 @@ public class SStation extends SBase
 		arrShopItems[0]= new BaseItem(mContext, gl, EItems.E_BOX, fConst);
 		arrShopItems[1]= new BaseItem(mContext, gl, EItems.E_MATERIAL, fConst);
 		
-		for(BaseItem ITEM : arrInvenItems)
-		{
-			if(ITEM==null)
-				continue;
-			
-			if(!ITEM.bInit)	// 초기화 다 안된상태면
-				ITEM.SpriteInit(mContext, gl);
-		}
+		this.IventoryRefresh();	// DB에서 아이템 새로 가져옴
 		
 		/// 스테이션 정보
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");
@@ -195,14 +193,14 @@ public class SStation extends SBase
 		{
 			int nRow= (int)(i/5);
 			int nCol= i%5;
-			btnItems[i].SetButton(mContext, sprItemButton, 85+nCol*80, 190+nRow*80, 0);
+			btnItemsBackground[i].SetButton(mContext, sprItemButton, 85+nCol*80, 190+nRow*80, 0);
 			//arrItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 190+nRow*80, 0, 0);
 		}
 		for(int i=10; i<30; ++i)
 		{
 			int nRow= (int)(i/5);
 			int nCol= i%5;
-			btnItems[i].SetButton(mContext, sprItemButton, 85+nCol*80, 255+nRow*80, 0);
+			btnItemsBackground[i].SetButton(mContext, sprItemButton, 85+nCol*80, 255+nRow*80, 0);
 			//arrItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 255+nRow*80, 0, 0);
 		}
 		
@@ -214,7 +212,7 @@ public class SStation extends SBase
 			
 			int nRow= (int)(i/5);
 			int nCol= i%5;
-			arrInvenItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 415+nRow*80, 0, arrInvenItems[i].eType.ordinal());
+			arrInvenItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 415+nRow*80, 0, arrInvenItems[i].itemData.eType.ordinal());
 		}
 		
 		for(int i=0; i<arrShopItems.length; ++i)	// 샵 아이템 리스트 돌면서
@@ -224,7 +222,7 @@ public class SStation extends SBase
 			
 			int nRow= (int)(i/5);
 			int nCol= i%5;
-			arrShopItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 190+nRow*80, 0, arrShopItems[i].eType.ordinal());
+			arrShopItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 190+nRow*80, 0, arrShopItems[i].itemData.eType.ordinal());
 		}
 		///==
 		
@@ -277,30 +275,30 @@ public class SStation extends SBase
 			sprStationUI_PANEL.PutAni(gInfo, 40, 100, 6, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 320, 7, 0);
 			btnPower.DrawSprite(gInfo);
-			for(GameButton BTN : btnItems)
+			for(GameButton BTN : btnItemsBackground)
 			{
 				if(BTN.pattern!=null)
 					BTN.DrawSprite(gInfo);
 			}
 			for(BaseItem ITEMS : arrInvenItems)
 			{
-				if(ITEMS != null)
-				{
-					ITEMS.scalex= 0.5f;
-					ITEMS.scaley= 0.5f;
-					ITEMS.DrawSprite(gInfo);
-					
-					float fXFactor=0f;
-					
-					if(ITEMS.nCount==100)
-						fXFactor= 0.1f;
-					else if(ITEMS.nCount >= 10)	
-						fXFactor= 5f;
-					else
-						fXFactor= 17f;
-					
-					font.DrawFont(gl, ITEMS.x+fXFactor, ITEMS.y+5.5f, 22.5f, Integer.toString(ITEMS.nCount) );
-				}
+				if(ITEMS == null || ITEMS.pattern==null) 
+					continue;
+				
+				ITEMS.scalex= 0.5f;
+				ITEMS.scaley= 0.5f;
+				ITEMS.DrawSprite(gInfo);
+				
+				float fXFactor=0f;
+				
+				if(ITEMS.itemData.nCount==100)
+					fXFactor= 0.1f;
+				else if(ITEMS.itemData.nCount >= 10)	
+					fXFactor= 5f;
+				else
+					fXFactor= 17f;
+				
+				font.DrawFont(gl, ITEMS.x+fXFactor, ITEMS.y+5.5f, 22.5f, Integer.toString(ITEMS.itemData.nCount) );
 			}
 			for(BaseItem ITEMS : arrShopItems)
 			{
@@ -312,14 +310,14 @@ public class SStation extends SBase
 					
 					float fXFactor=0f;
 					
-					if(ITEMS.nCurrentPrice>=100)
+					if(ITEMS.itemData.nCurrentPrice>=100)
 						fXFactor= -5f;
-					else if(ITEMS.nCurrentPrice >= 10)	
+					else if(ITEMS.itemData.nCurrentPrice >= 10)	
 						fXFactor= 0f;
 					else
 						fXFactor= 5f;
 					
-					font.DrawFont(gl, ITEMS.x+fXFactor, ITEMS.y+5.5f, 22.5f, "$"+ITEMS.nCurrentPrice );
+					font.DrawFont(gl, ITEMS.x+fXFactor, ITEMS.y+5.5f, 22.5f, "$"+ITEMS.itemData.nCurrentPrice );
 				}
 			}
 			break;
@@ -335,12 +333,12 @@ public class SStation extends SBase
 			font.DrawFont(gl, 290, 220, 20f, "핸들링 : "+uInfo.GetHandling());
 			font.DrawFont(gl, 290, 245, 20f, "스피드 : "+uInfo.GetVelocity());
 			//font.DrawFont(gl, 200, 435, 24f, "함선 정비");
-			prgBG1.DrawSprite(gl, gInfo, font);
-			prgBG2.DrawSprite(gl, gInfo, font);
-			prgBG3.DrawSprite(gl, gInfo, font);
-			prgHull.DrawSprite(gl, gInfo, font);
-			prgFuel.DrawSprite(gl, gInfo, font);
-			prgShield.DrawSprite(gl, gInfo, font);
+			prgBG1.DrawSprite(gl, 0, gInfo, font);
+			prgBG2.DrawSprite(gl, 0, gInfo, font);
+			prgBG3.DrawSprite(gl, 0, gInfo, font);
+			prgHull.DrawSprite(gl,0, gInfo, font);
+			prgFuel.DrawSprite(gl,0, gInfo, font);
+			prgShield.DrawSprite(gl,0, gInfo, font);
 			objShip.DrawSprite(gInfo);
 			btnPower.DrawSprite(gInfo);
 			break;
@@ -360,29 +358,70 @@ public class SStation extends SBase
 		
 		if(nMenu==3)
 		{
-			for(int i=10; i<btnItems.length; ++i)	// 내 아이템에 대해서
+			for(int i=0; i<SHOP_ITEM_COUNT; ++i)	// 샵 아이템들 돌면서
 			{
-				if(btnItems[i].CheckOver())
+				if(btnItemsBackground[i].CheckOver())	// 눌렀으면
 				{
-					if(arrInvenItems[i-10]==null)
+					if(arrShopItems[i]==null)
 						continue;
 					
-					arrInvenItems[i-10].CheckSetting(true);	// 누른거 체크
+					arrShopItems[i].CheckSettingShop(true);
 					
-					for(int j=0; j<arrInvenItems.length; ++j)
+					for(int j=0; j<arrShopItems.length; ++j)
 					{
-						if(i-10==j)	// 아까 누른거 빼고
+						BaseItem currItem= arrShopItems[j]; 
+						
+						if(currItem==null)	//아이템없으면 빼고 
 							continue;
 						
-						if(arrInvenItems[j]==null)	//아이템없으면 빼고
-							continue;
-							
-						arrInvenItems[j].CheckSetting(false);							
+						if(currItem.bLastCheck)	// 체크되면.. 해당 아이템 추가
+						{
+							DBMgr.AddItems(currItem.itemData.eType.ordinal(), 1, currItem.itemData.nCurrentPrice);	// 구매하고
+							this.IventoryRefresh();	// 아이템창 갱신
+						}
+						
+						if(i!=j)	// 아까 누른거 아니면 체크세팅
+							currItem.CheckSettingShop(false);
 					}
 				}
 			}
 			
-			for(GameButton BTN : btnItems)
+			for(int i=SHOP_ITEM_COUNT; i<btnItemsBackground.length; ++i)	// 내 아이템에 대해서
+			{
+				if(btnItemsBackground[i].CheckOver())	// 버튼이 눌렸음
+				{
+					if(arrInvenItems[i-SHOP_ITEM_COUNT]==null)	// 아이템이 없으면 넘어감
+						continue;
+					
+					arrInvenItems[i-SHOP_ITEM_COUNT].CheckSettingInventory(true);	// 누른거 체크
+
+					
+					for(int j=0; j<arrInvenItems.length; ++j)	// 인벤토리 목록 돌면서
+					{
+						BaseItem currItem= arrInvenItems[j]; 
+						
+						if(currItem==null)	//아이템없으면 빼고
+							continue;
+						
+						if(currItem.bLastCheck)	// 체크되면.. 해당 아이템 추가
+						{
+							DBMgr.RemoveItem(j, 1);
+							this.IventoryRefresh();	// 아이템창 갱신
+						}
+						
+						if(i-SHOP_ITEM_COUNT==j)	// 아까 누른거 빼고
+							continue;
+						
+						
+													
+						currItem.CheckSettingInventory(false);							
+					}
+				}
+			}
+			
+			
+			
+			for(GameButton BTN : btnItemsBackground)	// 아이템 배경버튼들 업데이트
 				BTN.ButtonUpdate(0);
 		}
 		
@@ -422,6 +461,25 @@ public class SStation extends SBase
 		else if(btnExit.CheckOver())
 		{
 			SetScene(EnumScene.E_GAME_SYSTEMMAP);
+		}
+	}
+	
+	protected void IventoryRefresh()
+	{
+		for(BaseItem BI : arrInvenItems)
+			BI= null;
+		
+		arrInvenItems= new BaseItem[IVEN_ITEM_COUNT];
+		 
+		ArrayList<ItemData> arrItemsData= DBMgr.GetItems();
+		for(int i=0; i<arrItemsData.size(); ++i)
+		{
+			arrInvenItems[i]= new BaseItem();
+			arrInvenItems[i].itemData= arrItemsData.get(i);
+			
+			int nRow= (int)(i/5);
+			int nCol= i%5;
+			arrInvenItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 415+nRow*80, 0, arrInvenItems[i].itemData.eType.ordinal());
 		}
 	}
 	@Override

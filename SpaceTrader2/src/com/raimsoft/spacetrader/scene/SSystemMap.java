@@ -378,7 +378,8 @@ public class SSystemMap  extends SBase
 		
 		btnMove.ButtonUpdate(gInfo.ScrollX);
 		
-		Scroll();		
+		Scroll();	
+		
 		if(btnMove.CheckOver())
 		{
 			float fX1= (int) arrPlanet.get(nSelectionIndex).x;

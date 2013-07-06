@@ -246,6 +246,16 @@ class DBCore
 		CV.clear();
 	}
 	
+	/**
+	 * 데이터 지운다.
+	 * @param _strTable	: 테이블명
+	 * @param strWhere : 조건
+	 */
+	public void DBDelete(String _strTable, String strWhere)
+	{
+		DB.delete(_strTable, strWhere, null);
+	}
+	
 	public int CountDBRows(String _strTable, String strLabel)
 	{
 		String[] strCol= {strLabel.toString()};
