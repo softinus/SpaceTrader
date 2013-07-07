@@ -309,6 +309,7 @@ public class SGameWrap extends SBase
 								{
 									for(ParseObject PO : list)
 									{
+										PO.put(Global.PO_SHIP_HULL, objShip.nHP);
 										PO.put(Global.PO_CROOD_SYSTEM_MAP_PLANET, nWhereIgoing);	// 시스템 좌표 변경
 										PO.saveInBackground();
 									}
