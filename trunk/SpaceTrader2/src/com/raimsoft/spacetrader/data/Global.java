@@ -22,6 +22,7 @@ public class Global
 	public static final String PO_USER_ID="user_id";
 	public static final String PO_MOENY="gold";
 	public static final String PO_SHIP_TYPE="ship_type";
+	public static final String PO_SHIP_HULL="ship_hull";
 	public static final String PO_CROOD_WORLD_X="crood_world_x";
 	public static final String PO_CROOD_WORLD_Y="crood_world_y";
 	public static final String PO_CROOD_SYSTEM_MAP_PLANET="system_map_planet";
