@@ -98,6 +98,7 @@ public class SGalaxyMap extends SBase
 				userInfo.put(Global.PO_USER_ID, currentUser);
 				userInfo.put(Global.PO_MOENY, 350);
 				userInfo.put(Global.PO_SHIP_TYPE, EnumShip.E_TRAINING_SHIP_1.ordinal());
+				userInfo.put(Global.PO_SHIP_HULL, 3500);
 				userInfo.put(Global.PO_CROOD_WORLD_X, (int)tX);
 				userInfo.put(Global.PO_CROOD_WORLD_Y, (int)tY);
 				userInfo.put(Global.PO_CROOD_SYSTEM_MAP_PLANET, 1);
@@ -106,6 +107,7 @@ public class SGalaxyMap extends SBase
 				uInfo.SetLogin(true);	// 로그인을 설정하면 게임 넘어감
 				uInfo.SetGold(350);
 				uInfo.SetShipType(EnumShip.E_TRAINING_SHIP_1);
+				uInfo.SetCurrHull(3500);
 				uInfo.SetWorldMapX((int)tX);
 				uInfo.SetWorldMapY((int)tY);
 				uInfo.SetSystemMapPlanet(1);
