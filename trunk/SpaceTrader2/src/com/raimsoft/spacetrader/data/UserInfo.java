@@ -10,7 +10,7 @@ public class UserInfo
 	private EnumShip eShip= EnumShip.E_NULL_INFO;	// 함선 정보
 	private String strShipName="UnNamed";
 	private int nShipAtt= 0;
-	private int nShipHull= 0;
+	private int nShipMaxHull= 0;	
 	private float fVelocity= 13.0f;
 	private float fHandling= 2.0f;
 	
@@ -191,11 +191,11 @@ public class UserInfo
 	}
 
 	public int GetShipHull() {
-		return nShipHull;
+		return nShipMaxHull;
 	}
 
 	public void SetShipHull(int nShipHull) {
-		this.nShipHull = nShipHull;
+		this.nShipMaxHull = nShipHull;
 	}
 
 	public float GetVelocity() {
