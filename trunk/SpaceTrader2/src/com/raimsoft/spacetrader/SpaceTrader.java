@@ -378,23 +378,25 @@ public class SpaceTrader extends Activity implements SensorEventListener
 				
 				ParseQuery<ParseObject> query= ParseQuery.getQuery("UserInfo");	// 유저 데이터를 찾는다.
 				query.whereEqualTo("user_id", user);
-				query.findInBackground(new FindCallback<ParseObject>()
-						{			
-							@Override
-							public void done(List<ParseObject> list, ParseException e)
-							{
-								for(ParseObject PO : list)
-								{									
-									uInfo.SetLogin(true);
-									uInfo.SetGold( PO.getInt( Global.PO_MOENY ) );
-									uInfo.SetShipType( PO.getInt(Global.PO_SHIP_TYPE) );
-									uInfo.SetCurrHull( PO.getInt(Global.PO_SHIP_HULL) );
-		    	        			uInfo.SetWorldMapX( PO.getInt(Global.PO_CROOD_WORLD_X));
-		    	        			uInfo.SetWorldMapY( PO.getInt(Global.PO_CROOD_WORLD_Y));
-		    	        			uInfo.SetSystemMapPlanet( PO.getInt(Global.PO_CROOD_SYSTEM_MAP_PLANET));
-								}
-							}
-						});
+
+				try
+				{
+					List<ParseObject> list= query.find();	// 쿼리를 포그라운드로 떼리고 프로그레스 돌게 한다.					
+					for(ParseObject PO : list)
+					{									
+						uInfo.SetLogin(true);
+						uInfo.SetGold( PO.getInt( Global.PO_MOENY ) );
+						uInfo.SetShipType( PO.getInt(Global.PO_SHIP_TYPE) );
+						uInfo.SetCurrHull( PO.getInt(Global.PO_SHIP_HULL) );
+	        			uInfo.SetWorldMapX( PO.getInt(Global.PO_CROOD_WORLD_X));
+	        			uInfo.SetWorldMapY( PO.getInt(Global.PO_CROOD_WORLD_Y));
+	        			uInfo.SetSystemMapPlanet( PO.getInt(Global.PO_CROOD_SYSTEM_MAP_PLANET));
+	        			LoadingHandler.sendEmptyMessage(999);
+					}
+					
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}				
 				
 				if(!uInfo.GetLogin())	// 해당하는 정보가 없으면... 모두 NULL 처리하고 겜시작시 튜토리얼 시작함.
 				{
@@ -404,9 +406,10 @@ public class SpaceTrader extends Activity implements SensorEventListener
 					uInfo.SetWorldMapX(-1);
 					uInfo.SetWorldMapY(-1);
 					uInfo.SetSystemMapPlanet(-1);
+					LoadingHandler.sendEmptyMessage(999);
 				}
 				
-				LoadingHandler.sendEmptyMessage(999);
+				
 				
 				
 				SPUtil.putString(getApplicationContext(), Global.SP_LOGIN_ID, strID);
