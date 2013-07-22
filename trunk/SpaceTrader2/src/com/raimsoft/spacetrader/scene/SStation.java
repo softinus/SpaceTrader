@@ -90,12 +90,12 @@ public class SStation extends SBase
 	private GameButton[] btnItemsBackground= new GameButton[SHOP_ITEM_COUNT+IVEN_ITEM_COUNT];
 	private GameButton btnPower= new GameButton();
 	
-	private ButtonObject prgBG1= new ButtonObject();
-	private ButtonObject prgBG2= new ButtonObject();
-	private ButtonObject prgBG3= new ButtonObject();
-	private ButtonObject prgHull= new ButtonObject();
-	private ButtonObject prgFuel= new ButtonObject();
-	private ButtonObject prgShield= new ButtonObject();
+	private ButtonObject prgBG1= new ButtonObject();	// 체력바 배경
+	private ButtonObject prgBG2= new ButtonObject();	// 쉴드바 배경
+	private ButtonObject prgBG3= new ButtonObject();	// 연료바 배경
+	private ButtonObject prgHull= new ButtonObject();	// 체력프로그레스
+	private ButtonObject prgShield= new ButtonObject();	// 쉴드프로그레스
+	private ButtonObject prgFuel= new ButtonObject();	// 연료프로그레스
 	private GameObject objHexagon= new GameObject();
 	
 	private MediaPlayer Music;
@@ -147,13 +147,18 @@ public class SStation extends SBase
 		prgBG2.SetButton(sprProgress, ButtonType.TYPE_POPUP, 0, 240, 590, 0);
 		prgBG3.SetButton(sprProgress, ButtonType.TYPE_POPUP, 0, 240, 660, 0);
 		prgHull.SetButton(sprProgress, ButtonType.TYPE_PROGRESS, 0, 240, 520, 1);
-		prgFuel.SetButton(sprProgress, ButtonType.TYPE_PROGRESS, 0, 240, 590, 2);
-		prgShield.SetButton(sprProgress, ButtonType.TYPE_PROGRESS, 0, 240, 660, 3);
+		prgShield.SetButton(sprProgress, ButtonType.TYPE_PROGRESS, 0, 240, 590, 2);
+		prgFuel.SetButton(sprProgress, ButtonType.TYPE_PROGRESS, 0, 240, 660, 3);
 		
 		prgHull.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.GetCurrHull()+" / "+uInfo.GetShipHull());
 		prgHull.energy= ((float)uInfo.GetCurrHull() / (float)uInfo.GetShipHull()) * 100.0f;
-		prgFuel.energy= 100;
+		
+		prgShield.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, "100 / 100");
 		prgShield.energy= 100;
+		
+		prgFuel.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, "100 / 100");
+		prgFuel.energy= 100;
+		
 		Log.d("Hull Progress1", Float.toString(uInfo.GetCurrHull()));
 		Log.d("Hull Progress2", Float.toString(uInfo.GetShipHull()));
 		Log.d("Hull Progress3", Float.toString(uInfo.GetCurrHull() / uInfo.GetShipHull()));
@@ -341,6 +346,11 @@ public class SStation extends SBase
 			prgShield.DrawSprite(gl,0, gInfo, font);
 			objShip.DrawSprite(gInfo);
 			btnPower.DrawSprite(gInfo);
+			
+			font.DrawFont(gl, 65, 510, 14f, "내구도");
+			font.DrawFont(gl, 65, 580, 14f, "보호막");
+			font.DrawFont(gl, 65, 650, 14f, "연료통");
+			
 			break;
 
 		default:
