@@ -27,6 +27,14 @@ public class SStation extends SBase
 {
 	private final int SHOP_ITEM_COUNT= 10;
 	private final int IVEN_ITEM_COUNT= 20;
+	
+	private final static int E_NONE= 0;
+	private final static int E_INFO= 1;
+	private final static int E_NEWS= 2;
+	private final static int E_TRADE=3;
+	private final static int E_MANAGE=4;
+	private final static int E_EXIT= 5;
+	
 
 	public SStation(Context mContext, GameInfo gInfo)
 	{
@@ -48,7 +56,6 @@ public class SStation extends SBase
 			btnItemsBackground[i]= new GameButton();
 		}
 	}
-	
 	
 	
 	private DBManager DBMgr;
@@ -90,9 +97,9 @@ public class SStation extends SBase
 	private GameButton[] btnItemsBackground= new GameButton[SHOP_ITEM_COUNT+IVEN_ITEM_COUNT];
 	private GameButton btnPower= new GameButton();
 	
-	private ButtonObject prgBG1= new ButtonObject();	// 체력바 배경
-	private ButtonObject prgBG2= new ButtonObject();	// 쉴드바 배경
-	private ButtonObject prgBG3= new ButtonObject();	// 연료바 배경
+	private GameButton prgBG1= new GameButton();	// 체력바 배경
+	private GameButton prgBG2= new GameButton();	// 쉴드바 배경
+	private GameButton prgBG3= new GameButton();	// 연료바 배경
 	private ButtonObject prgHull= new ButtonObject();	// 체력프로그레스
 	private ButtonObject prgShield= new ButtonObject();	// 쉴드프로그레스
 	private ButtonObject prgFuel= new ButtonObject();	// 연료프로그레스
@@ -143,9 +150,10 @@ public class SStation extends SBase
 		
 		objShip.SetObject(sprShip1, 0, 0, 140, 275, 0, 0);
 		sprProgress.LoadSprite(gl, mContext, R.drawable.progress, "progress_station.spr");
-		prgBG1.SetButton(sprProgress, ButtonType.TYPE_POPUP, 0, 240, 520, 0);
-		prgBG2.SetButton(sprProgress, ButtonType.TYPE_POPUP, 0, 240, 590, 0);
-		prgBG3.SetButton(sprProgress, ButtonType.TYPE_POPUP, 0, 240, 660, 0);
+		
+		prgBG1.SetButton(mContext, sprProgress, 240, 520, 0);
+		prgBG2.SetButton(mContext, sprProgress, 240, 590, 0);
+		prgBG3.SetButton(mContext, sprProgress, 240, 660, 0);
 		prgHull.SetButton(sprProgress, ButtonType.TYPE_PROGRESS, 0, 240, 520, 1);
 		prgShield.SetButton(sprProgress, ButtonType.TYPE_PROGRESS, 0, 240, 590, 2);
 		prgFuel.SetButton(sprProgress, ButtonType.TYPE_PROGRESS, 0, 240, 660, 3);
@@ -248,14 +256,14 @@ public class SStation extends SBase
 		font.BeginFont();
 		switch (nMenu)
 		{
-		case 0:	// 메뉴상태
+		case SStation.E_NONE:	// 메뉴상태
 			btnInfo.DrawButtonWithText(gInfo, gl, font);
 			btnNews.DrawButtonWithText(gInfo, gl, font);
 			btnTrade.DrawButtonWithText(gInfo, gl, font);
 			btnManage.DrawButtonWithText(gInfo, gl, font);
 			btnExit.DrawButtonWithText(gInfo, gl, font);
 			break;
-		case 1:	// 스테이션 정보
+		case SStation.E_INFO:	// 스테이션 정보
 			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 100, 1, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 250, 100, 2, 0);
@@ -269,13 +277,13 @@ public class SStation extends SBase
 			btnPower.DrawSprite(gInfo);
 			
 			break;
-		case 2:	//월드 뉴스	
+		case SStation.E_NEWS:	//월드 뉴스	
 			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 100, 4, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 320, 5, 0);
 			btnPower.DrawSprite(gInfo);
 			break;
-		case 3:	//상품 거래
+		case SStation.E_TRADE:	//상품 거래
 			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 100, 6, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 320, 7, 0);
@@ -326,7 +334,7 @@ public class SStation extends SBase
 				}
 			}
 			break;
-		case 4:	//함선 관리
+		case SStation.E_MANAGE:	//함선 관리
 			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 100, 8, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 250, 100, 9, 0);
@@ -338,9 +346,11 @@ public class SStation extends SBase
 			font.DrawFont(gl, 290, 220, 20f, "핸들링 : "+uInfo.GetHandling());
 			font.DrawFont(gl, 290, 245, 20f, "스피드 : "+uInfo.GetVelocity());
 			//font.DrawFont(gl, 200, 435, 24f, "함선 정비");
-			prgBG1.DrawSprite(gl, 0, gInfo, font);
-			prgBG2.DrawSprite(gl, 0, gInfo, font);
-			prgBG3.DrawSprite(gl, 0, gInfo, font);
+			
+			prgBG1.DrawSprite(gInfo);
+			prgBG2.DrawSprite(gInfo);
+			prgBG3.DrawSprite(gInfo);
+			
 			prgHull.DrawSprite(gl,0, gInfo, font);
 			prgFuel.DrawSprite(gl,0, gInfo, font);
 			prgShield.DrawSprite(gl,0, gInfo, font);
@@ -366,7 +376,29 @@ public class SStation extends SBase
 	{
 		super.Update();
 		
-		if(nMenu==3)
+		if(nMenu==SStation.E_MANAGE)	// 관리 상태이면
+		{
+			prgBG1.ButtonUpdate(0.0f);
+			prgBG2.ButtonUpdate(0.0f);
+			prgBG3.ButtonUpdate(0.0f);
+			
+			if(prgBG1.CheckOver())
+			{
+				uInfo.SetCurrHull(uInfo.GetShipHull());
+				prgHull.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.GetCurrHull()+" / "+uInfo.GetShipHull());
+				prgHull.energy= ((float)uInfo.GetCurrHull() / (float)uInfo.GetShipHull()) * 100.0f;				
+				Log.d("SStation Update::", "prgBG1 CheckOver()");
+			}
+			else if(prgBG2.CheckOver())
+			{
+				Log.d("SStation Update::", "prgBG2 CheckOver()");
+			}
+			else if(prgBG3.CheckOver())
+			{
+				Log.d("SStation Update::", "prgBG3 CheckOver()");
+			}
+		}		
+		else if(nMenu==SStation.E_TRADE)	// 트레이드 상태이면
 		{
 			for(int i=0; i<SHOP_ITEM_COUNT; ++i)	// 샵 아이템들 돌면서
 			{
