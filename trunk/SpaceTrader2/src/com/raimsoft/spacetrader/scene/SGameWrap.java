@@ -96,6 +96,7 @@ public class SGameWrap extends SBase
 			objShip= new TraningShip2(gl, mContext);
 		}
 		objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY+60, 0, 0 );
+		objShip.nHP= uInfo.GetCurrHull();	// 저장된 체력을 불러옴
 		objShip.scalex= 0.6f;
 		objShip.scaley= 0.6f;
 		
