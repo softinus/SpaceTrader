@@ -10,6 +10,14 @@ import com.raimsoft.spacetrader.obj.items.ItemData;
 
 public class UserInfo
 {
+	/**
+	 * @param arrItems
+	 */
+	private UserInfo()
+	{
+		this.arrItems = new ArrayList<ItemData>();
+	}
+
 	private static final UserInfo instance= new UserInfo();
 	
 	private boolean bLogined= false;				// 로그인 정보
