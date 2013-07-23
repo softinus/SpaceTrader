@@ -1,5 +1,11 @@
 package com.raimsoft.spacetrader.data;
 
+import java.util.ArrayList;
+
+import android.content.ContentValues;
+
+import com.raimsoft.spacetrader.obj.items.ItemData;
+
 
 
 public class UserInfo
@@ -22,8 +28,48 @@ public class UserInfo
 	private int nSystemMapPlanet_going= -1;		// 갈 위치
 	private int nDestinationDistance= -1;		// 목적지까지 거리
 	
+	private ArrayList<ItemData> arrItems;
 	//private ArrayList<Planet> arrPlanet;
 	
+	
+	/**
+	 * 
+	 * @param nItemType : 아이템 타입
+	 * @param nCount : 카운트 (100개 이상넣으면 안됨!)
+	 * @param nCurrPrice : 현재 구매 가격
+	 * @return 1: 정상동작, -1:아이템꽉참
+	 */
+	public int BuyItems(int nItemType, int nCount)
+	{		
+		if(arrItems.size() == 20)	// 20개 이상 안됨.
+			return -1;
+		
+		for(int i=0; i<arrItems.size(); ++i)	// 아이템 리스트 돌면서
+		{
+			if( arrItems.get(i).eType.ordinal() == nItemType)	// 같은 타입이 있으면
+			{
+				arrItems.get(i).nCount += nCount;	// 그 칸의 개수를 추가해줌
+				return 1;
+			}
+			else	// 같은 타입 없으면 그냥 다음 칸에 추가.
+			{
+				ItemData data= new ItemData();
+				data.SetItemType(nItemType);
+				data.nCount= nCount;
+				arrItems.add(data);
+			}
+		}		
+		return 1;
+	}
+	
+	/**
+	 * 아이템들 가져옴
+	 * @return
+	 */
+	public ArrayList<ItemData> GetItems()
+	{
+		return arrItems;
+	}
 	
 	public int GetDestinationDistance()
 	{

@@ -39,18 +39,7 @@ public class SStation extends SBase
 	public SStation(Context mContext, GameInfo gInfo)
 	{
 		super(mContext, gInfo);		
-		
-		DBMgr= new DBManager(mContext);
-		
-		
-		//arrInvenItems= DBMgr.GetItems().toArray(new BaseItem[IVEN_ITEM_COUNT]);
 
-		//DBMgr.DropItemsTable();
-		//DBMgr.AddItems(0, 100, 10);
-		//DBMgr.AddItems(1, 100, 45);
-		
-		//arrItems= DBMgr.GetItems().toArray(new BaseItem[30]);
-		
 		for(int i=0; i<30; ++i)
 		{
 			btnItemsBackground[i]= new GameButton();
@@ -58,7 +47,7 @@ public class SStation extends SBase
 	}
 	
 	
-	private DBManager DBMgr;
+	//private DBManager DBMgr;
 	
 	private int PLANET_TYPES= 4;
 	private int nCurrPlanetType= -1;
@@ -402,7 +391,7 @@ public class SStation extends SBase
 		{
 			for(int i=0; i<SHOP_ITEM_COUNT; ++i)	// 샵 아이템들 돌면서
 			{
-				if(btnItemsBackground[i].CheckOver())	// 눌렀으면
+				if(btnItemsBackground[i].CheckOver())	// 아이템 버튼 눌렀으면
 				{
 					if(arrShopItems[i]==null)
 						continue;
@@ -418,7 +407,8 @@ public class SStation extends SBase
 						
 						if(currItem.bLastCheck)	// 체크되면.. 해당 아이템 추가
 						{
-							DBMgr.AddItems(currItem.itemData.eType.ordinal(), 1, currItem.itemData.nCurrentPrice);	// 구매하고
+							uInfo.BuyItems(currItem.itemData.eType.ordinal(), 1);
+							//DBMgr.AddItems(currItem.itemData.eType.ordinal(), 1, currItem.itemData.nCurrentPrice);	// 구매하고
 							this.IventoryRefresh();	// 아이템창 갱신
 						}
 						
@@ -447,7 +437,7 @@ public class SStation extends SBase
 						
 						if(currItem.bLastCheck)	// 체크되면.. 해당 아이템 추가
 						{
-							DBMgr.RemoveItem(j, 1);
+							//DBMgr.RemoveItem(j, 1);
 							this.IventoryRefresh();	// 아이템창 갱신
 						}
 						
@@ -513,7 +503,7 @@ public class SStation extends SBase
 		
 		arrInvenItems= new BaseItem[IVEN_ITEM_COUNT];
 		 
-		ArrayList<ItemData> arrItemsData= DBMgr.GetItems();
+		ArrayList<ItemData> arrItemsData= uInfo.GetItems();
 		for(int i=0; i<arrItemsData.size(); ++i)
 		{
 			arrInvenItems[i]= new BaseItem();
