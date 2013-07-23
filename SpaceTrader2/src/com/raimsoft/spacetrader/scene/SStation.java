@@ -118,7 +118,7 @@ public class SStation extends SBase
 		arrShopItems[0]= new BaseItem(mContext, gl, EItems.E_BOX, fConst);
 		arrShopItems[1]= new BaseItem(mContext, gl, EItems.E_MATERIAL, fConst);
 		
-		this.IventoryRefresh();	// DB에서 아이템 새로 가져옴
+		this.InventoryRefresh();	// DB에서 아이템 새로 가져옴
 		
 		/// 스테이션 정보
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");
@@ -409,7 +409,7 @@ public class SStation extends SBase
 						{
 							uInfo.BuyItems(currItem.itemData.eType.ordinal(), 1);
 							//DBMgr.AddItems(currItem.itemData.eType.ordinal(), 1, currItem.itemData.nCurrentPrice);	// 구매하고
-							this.IventoryRefresh();	// 아이템창 갱신
+							this.InventoryRefresh();	// 아이템창 갱신
 						}
 						
 						if(i!=j)	// 아까 누른거 아니면 체크세팅
@@ -438,7 +438,7 @@ public class SStation extends SBase
 						if(currItem.bLastCheck)	// 체크되면.. 해당 아이템 추가
 						{
 							//DBMgr.RemoveItem(j, 1);
-							this.IventoryRefresh();	// 아이템창 갱신
+							this.InventoryRefresh();	// 아이템창 갱신
 						}
 						
 						if(i-SHOP_ITEM_COUNT==j)	// 아까 누른거 빼고
@@ -496,7 +496,7 @@ public class SStation extends SBase
 		}
 	}
 	
-	protected void IventoryRefresh()
+	protected void InventoryRefresh()
 	{
 		for(BaseItem BI : arrInvenItems)
 			BI= null;
