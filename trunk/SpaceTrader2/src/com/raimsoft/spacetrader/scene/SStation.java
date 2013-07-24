@@ -69,6 +69,7 @@ public class SStation extends SBase
 	private Sprite sprItemButton= new Sprite();			// 아이템 버튼
 	private Sprite sprPower= new Sprite();				// 파워 버튼
 	private Sprite sprItems= new Sprite();				// 아이템 리스트 (png에 있는 순대로)
+	private Sprite sprCashPanel= new Sprite();			// 골드 보여주는 패널 
 	
 	
 	
@@ -93,11 +94,12 @@ public class SStation extends SBase
 	private ButtonObject prgShield= new ButtonObject();	// 쉴드프로그레스
 	private ButtonObject prgFuel= new ButtonObject();	// 연료프로그레스
 	private GameObject objHexagon= new GameObject();
+	private GameObject objCashPanel= new GameObject();	// 골드 보여주는 패널
 	
 	private MediaPlayer Music;
 	
 	private Font font = new Font();
-	private int nMenu= 0;	
+	private int m_nMenu= 0;	
 	
 	
 	@Override
@@ -231,6 +233,10 @@ public class SStation extends SBase
 		sprPower.LoadSprite(gl, mContext, R.drawable.buttons_2, "btn_power.spr");
 		btnPower.SetButton(mContext, sprPower, 415, 50, 0);
 		
+		sprCashPanel.LoadSprite(gl, mContext, R.drawable.buttons_2, "station_ui_cash.spr");
+		objCashPanel.SetObject(sprCashPanel, 0, 0, 35, 725, 0, 0);
+		
+		
 	}
 	@Override
 	public void Render()
@@ -243,7 +249,7 @@ public class SStation extends SBase
 		int  nY= (int) (gInfo.ScreenY/2);
 		
 		font.BeginFont();
-		switch (nMenu)
+		switch (m_nMenu)
 		{
 		case SStation.E_NONE:	// 메뉴상태
 			btnInfo.DrawButtonWithText(gInfo, gl, font);
@@ -355,7 +361,15 @@ public class SStation extends SBase
 		default:
 			break;
 		}
+		
+		if(m_nMenu!=0)
+		{
+			objCashPanel.DrawSprite(gInfo);
+			font.DrawFont(gl, 265, 735, 34.5f, Integer.toString(uInfo.GetGold()) );
+		}
+		
 		font.EndFont();
+		
 		
 		
 		
@@ -365,7 +379,7 @@ public class SStation extends SBase
 	{
 		super.Update();
 		
-		if(nMenu==SStation.E_MANAGE)	// 관리 상태이면
+		if(m_nMenu==SStation.E_MANAGE)	// 관리 상태이면
 		{
 			prgBG1.ButtonUpdate(0.0f);
 			prgBG2.ButtonUpdate(0.0f);
@@ -387,7 +401,7 @@ public class SStation extends SBase
 				Log.d("SStation Update::", "prgBG3 CheckOver()");
 			}
 		}		
-		else if(nMenu==SStation.E_TRADE)	// 트레이드 상태이면
+		else if(m_nMenu==SStation.E_TRADE)	// 트레이드 상태이면
 		{
 			for(int i=0; i<SHOP_ITEM_COUNT; ++i)	// 샵 아이템들 돌면서
 			{
@@ -457,14 +471,14 @@ public class SStation extends SBase
 				BTN.ButtonUpdate(0);
 		}
 		
-		if(nMenu!=0)
+		if(m_nMenu!=0)
 			btnPower.ButtonUpdate(0);
 		
 		if(btnPower.CheckOver())
-			nMenu= 0;
+			m_nMenu= 0;
 		
 		
-		if(nMenu!=0)	// 메뉴선택중 아니면
+		if(m_nMenu!=0)	// 메뉴선택중 아니면
 			return;
 		
 		btnInfo.ButtonUpdate(0);
@@ -476,19 +490,19 @@ public class SStation extends SBase
 		
 		if(btnInfo.CheckOver())
 		{
-			nMenu= 1;
+			m_nMenu= 1;
 		}
 		else if(btnNews.CheckOver())
 		{
-			nMenu= 2;
+			m_nMenu= 2;
 		}
 		else if(btnTrade.CheckOver())
 		{
-			nMenu= 3;
+			m_nMenu= 3;
 		}		
 		else if(btnManage.CheckOver())
 		{
-			nMenu= 4;
+			m_nMenu= 4;
 		}
 		else if(btnExit.CheckOver())
 		{
@@ -519,10 +533,10 @@ public class SStation extends SBase
 	{
 		super.onBackPressed();
 		
-		if(nMenu==0)
+		if(m_nMenu==0)
 			this.SetScene(EnumScene.E_MAIN);
 		else 
-			nMenu= 0;
+			m_nMenu= 0;
 	}
 
 	
