@@ -58,16 +58,34 @@ public class UserInfo
 			{
 				arrItems.get(i).nCount += nCount;	// 그 칸의 개수를 추가해줌
 				return 1;
-			}
-			else	// 같은 타입 없으면 그냥 다음 칸에 추가.
-			{
-				ItemData data= new ItemData();
-				data.SetItemType(nItemType);
-				data.nCount= nCount;
-				arrItems.add(data);
-			}
-		}		
+			}			
+		}
+		
+		// 같은 타입 없으면 그냥 다음 칸에 추가.
+		ItemData data= new ItemData();
+		data.SetItemType(nItemType);
+		data.nCount= nCount;
+		arrItems.add(data);
+		
 		return 1;
+	}
+	
+	public int SellItems(int nItemType, int nCount)
+	{		
+		for(int i=0; i<arrItems.size(); ++i)	// 아이템 리스트 돌면서
+		{
+			if( arrItems.get(i).eType.ordinal() == nItemType)	// 같은 타입이 있으면
+			{
+				arrItems.get(i).nCount -= nCount;	// 그 칸의 개수를 빼줌.
+				
+				if(arrItems.get(i).nCount == 0)	// 그 칸이 0개의 아이템이면 칸 자체를 지움.
+					arrItems.remove(i);
+				
+				return 1;
+			}			
+		}
+		
+		return -1;	// 같은 타입이 없으면 거래 불가
 	}
 	
 	/**

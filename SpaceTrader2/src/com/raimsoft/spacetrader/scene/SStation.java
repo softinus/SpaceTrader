@@ -107,7 +107,7 @@ public class SStation extends SBase
 	private GameButton btnTradeButtonMAX= new GameButton();			// 거래 버튼
 	private GameButton btnTradeButtonM1= new GameButton();			// 거래 버튼
 	private GameButton btnTradeButtonM10= new GameButton();			// 거래 버튼
-	private GameButton btnTradeButtonBuy= new GameButton();			// 거래 버튼
+	private GameButton btnTradeButtonTrade= new GameButton();			// 거래 버튼
 	private ButtonObject prgTradeWeight= new ButtonObject();		// 무게창
 	private GameObject objTradeTarget= new GameObject();			// 거래 대상 함선 그림
 	private GameObject objTradeItem= new GameObject();					// 거래 중인 물품
@@ -119,6 +119,8 @@ public class SStation extends SBase
 	private int m_nMenu= 0;	
 	private boolean m_bTrading= false;	// 거래중인지?
 	private boolean m_bBuying= true;	// 사는중인지?
+	private ItemData m_TradingItemData= null;
+	private int m_nTradeAmount= 0;
 	
 	
 	@Override
@@ -261,7 +263,7 @@ public class SStation extends SBase
 		sprTradePanel.LoadSprite(gl, mContext, R.drawable.station_ui_shop, "station_ui_shop.spr");
 		objTradePanelBackground.SetObject(sprTradePanel, 0, 0, nX, nY, 0, 0);
 		objArrowBuy.SetObject(sprTradePanel, 0, 0, 60, 350, 1, 0);
-		objArrowSell.SetObject(sprTradePanel, 0, 0, 90, 430, 2, 0);
+		objArrowSell.SetObject(sprTradePanel, 0, 0, 85, 400, 2, 0);
 		objTradeFieldAmount.SetObject(sprTradePanel, 0, 0, 235, 400, 5, 0);
 		objTradeFieldPay.SetObject(sprTradePanel, 0, 0, 235, 435, 5, 0);
 		
@@ -271,9 +273,9 @@ public class SStation extends SBase
 		btnTradeButtonM1.SetButton(mContext, sprTradePanel, 180, 335, 3,4);
 		btnTradeButtonM10.SetButton(mContext, sprTradePanel, 290, 335, 3,4);
 		btnTradeButtonMAX.SetButton(mContext, sprTradePanel, 400, 335, 3,4);
-		btnTradeButtonBuy.SetButton(mContext, sprTradePanel, 400, 420, 3,4);
+		btnTradeButtonTrade.SetButton(mContext, sprTradePanel, 400, 420, 3,4);
 		
-		btnTradeButtonBuy.scaley= 1.8f;
+		btnTradeButtonTrade.scaley= 1.8f;
 		///==
 	}
 	@Override
@@ -318,7 +320,7 @@ public class SStation extends SBase
 			
 
 			
-			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0);
+			sprStationUI_PANEL.PutAni(gInfo, nX, nY, 0, 0); 
 			sprStationUI_PANEL.PutAni(gInfo, 40, 100, 6, 0);
 			sprStationUI_PANEL.PutAni(gInfo, 40, 320, 7, 0);
 			btnPower.DrawSprite(gInfo);
@@ -365,6 +367,7 @@ public class SStation extends SBase
 						fXFactor= 5f;
 					
 					font.DrawFont(gl, ITEMS.x+fXFactor, ITEMS.y+5.5f, 22.5f, "$"+ITEMS.itemData.nCurrentPrice );
+					
 				}
 			}
 			
@@ -380,7 +383,7 @@ public class SStation extends SBase
 				objTradeFieldAmount.DrawSprite(gInfo);
 				objTradeFieldPay.DrawSprite(gInfo);
 				
-				btnTradeButtonBuy.DrawButtonWithText(gInfo, gl, font);
+				btnTradeButtonTrade.DrawButtonWithText(gInfo, gl, font);
 				btnTradeButtonP1.DrawButtonWithText(gInfo, gl, font);
 				btnTradeButtonP10.DrawButtonWithText(gInfo, gl, font);
 				btnTradeButtonM1.DrawButtonWithText(gInfo, gl, font);
@@ -388,10 +391,17 @@ public class SStation extends SBase
 				btnTradeButtonMAX.DrawButtonWithText(gInfo, gl, font);
 				btnTradeButtonZero.DrawButtonWithText(gInfo, gl, font);
 				
-				objTradeTarget.scalex= 0.5f;
-				objTradeTarget.scaley= 0.5f;
-				objTradeTarget.DrawSprite(gInfo);				
+				objTradeTarget.scalex= 0.65f;
+				objTradeTarget.scaley= 0.65f;
+				objTradeTarget.DrawSprite(gInfo);
+				
+				objTradeItem.scalex= 0.6f;
+				objTradeItem.scaley= 0.6f;
 				objTradeItem.DrawSprite(gInfo);
+				
+				font.DrawFont(gl, 135, 208, 30.0f, m_TradingItemData.strItemName + " ( $ "+ m_TradingItemData.nCurrentPrice +" )");
+				font.DrawColorFont(gl, 225, 390, 0.1f, 0.1f, 0.1f, 23.0f, "x"+m_nTradeAmount);
+				font.DrawColorFont(gl, 225, 425, 0.1f, 0.1f, 0.1f, 23.0f, "$"+m_TradingItemData.nCurrentPrice * m_nTradeAmount);
 				
 			}
 			
@@ -469,7 +479,7 @@ public class SStation extends SBase
 		{
 			if(m_bTrading)	// 거래중이면
 			{
-				btnTradeButtonBuy.ButtonUpdate(0.0f);
+				btnTradeButtonTrade.ButtonUpdate(0.0f);
 				btnTradeButtonP1.ButtonUpdate(0.0f);
 				btnTradeButtonP10.ButtonUpdate(0.0f);
 				btnTradeButtonM1.ButtonUpdate(0.0f);
@@ -477,7 +487,7 @@ public class SStation extends SBase
 				btnTradeButtonMAX.ButtonUpdate(0.0f);
 				btnTradeButtonZero.ButtonUpdate(0.0f);
 				
-				btnTradeButtonBuy.SetTextColor(0.1f, 0.1f, 0.1f);
+				btnTradeButtonTrade.SetTextColor(0.1f, 0.1f, 0.1f);
 				btnTradeButtonP1.SetTextColor(0.1f, 0.1f, 0.1f);
 				btnTradeButtonP10.SetTextColor(0.1f, 0.1f, 0.1f);
 				btnTradeButtonM1.SetTextColor(0.1f, 0.1f, 0.1f);
@@ -485,7 +495,10 @@ public class SStation extends SBase
 				btnTradeButtonMAX.SetTextColor(0.1f, 0.1f, 0.1f);
 				btnTradeButtonZero.SetTextColor(0.1f, 0.1f, 0.1f);
 				
-				btnTradeButtonBuy.SetText(-25, -17, 27.0f, "BUY");
+				if(m_bBuying)
+					btnTradeButtonTrade.SetText(-25, -17, 27.0f, "BUY");
+				else
+					btnTradeButtonTrade.SetText(-28, -17, 24.0f, "SELL");
 				btnTradeButtonP1.SetText(-9, -12, 21.0f, "+1");
 				btnTradeButtonP10.SetText(-16, -12, 21.0f, "+10");
 				btnTradeButtonM1.SetText(-9, -12, 21.0f, "-1");
@@ -495,10 +508,80 @@ public class SStation extends SBase
 
 				
 				
-				if(btnTradeButtonBuy.CheckOver())
+				if(btnTradeButtonTrade.CheckOver())
 				{
 					m_bTrading= false;
+					
+					if(m_bBuying)					
+					{
+						uInfo.BuyItems(m_TradingItemData.eType.ordinal(), m_nTradeAmount);
+						uInfo.SetGold( uInfo.GetGold() - (m_nTradeAmount * m_TradingItemData.nCurrentPrice) );
+						m_nTradeAmount= 0;
+					}
+					else
+					{
+						uInfo.SellItems(m_TradingItemData.eType.ordinal(), m_nTradeAmount);
+						uInfo.SetGold( uInfo.GetGold() + (m_nTradeAmount * m_TradingItemData.nCurrentPrice) );
+						m_nTradeAmount= 0;
+					}
+					
+					this.InventoryRefresh();
 				}
+
+				if(btnTradeButtonP1.CheckOver())
+				{
+					if(m_bBuying)					
+					{
+						if(m_TradingItemData.nCurrentPrice * (m_nTradeAmount+1) <= uInfo.GetGold())
+							m_nTradeAmount += 1;
+					}
+					else
+					{
+						if( m_TradingItemData.nCount >= m_nTradeAmount+1 )
+							m_nTradeAmount += 1;
+					}
+				}
+				
+				if(btnTradeButtonP10.CheckOver())
+				{					
+					if(m_bBuying)					
+					{
+						if(m_TradingItemData.nCurrentPrice * (m_nTradeAmount+10) <= uInfo.GetGold())
+							m_nTradeAmount += 10;
+					}
+					else
+					{
+						if( m_TradingItemData.nCount >= m_nTradeAmount+10 )
+							m_nTradeAmount += 10;
+					}
+				}
+				
+				if(btnTradeButtonM1.CheckOver())
+				{
+					if(m_nTradeAmount-1 >= 0)
+						m_nTradeAmount -= 1;
+				}
+				
+				if(btnTradeButtonM10.CheckOver())
+				{
+					if(m_nTradeAmount-10 >= 0)
+						m_nTradeAmount -= 10;
+				}
+				
+				if(btnTradeButtonMAX.CheckOver())
+				{
+					if(m_bBuying)					
+					{
+						m_nTradeAmount= (int) (uInfo.GetGold() / m_TradingItemData.nCurrentPrice);
+					}
+					else
+					{
+						m_nTradeAmount= m_TradingItemData.nCount;
+					}
+				}
+				
+				if(btnTradeButtonZero.CheckOver())
+					m_nTradeAmount= 0;
 				
 				return;
 			}
@@ -510,7 +593,9 @@ public class SStation extends SBase
 					if(arrShopItems[i]==null)
 						continue;
 					
-					objTradeItem.SetObject(sprItems, 0, 0, 60, 250, 0, arrShopItems[i].itemData.eType.ordinal());
+					m_TradingItemData= arrShopItems[i].itemData;
+					objTradeItem.SetObject(sprItems, 0, 0, 60, 250, 0, m_TradingItemData.eType.ordinal());
+					
 					
 					m_bTrading= true;
 					m_bBuying= true;
@@ -524,7 +609,9 @@ public class SStation extends SBase
 					if(arrInvenItems[i-SHOP_ITEM_COUNT]==null)	// 아이템이 없으면 넘어감
 						continue;
 					
-					objTradeItem.SetObject(sprItems, 0, 0, 60, 250, 0, arrInvenItems[i].itemData.eType.ordinal());
+					m_TradingItemData= arrInvenItems[i-SHOP_ITEM_COUNT].itemData;
+					m_TradingItemData.nCurrentPrice= arrShopItems[m_TradingItemData.eType.ordinal()].itemData.nCurrentPrice;
+					objTradeItem.SetObject(sprItems, 0, 0, 60, 250, 0, m_TradingItemData.eType.ordinal());
 					
 					m_bTrading= true;
 					m_bBuying= false;
