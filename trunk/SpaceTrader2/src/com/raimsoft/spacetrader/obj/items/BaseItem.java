@@ -42,12 +42,14 @@ public class BaseItem extends GameObject
 			itemData.nMinPrice= 7;
 			itemData.nFixPrice= 10;
 			itemData.nMaxPrice= 15;
+			itemData.strItemName="Box";
 		}
 		else if(_eType== EItems.E_MATERIAL)
 		{
 			itemData.nMinPrice= 32;
 			itemData.nFixPrice= 45;
 			itemData.nMaxPrice= 68;
+			itemData.strItemName="Material";
 		}
 		
 		itemData.nCurrentPrice = (int)(itemData.nMinPrice + (itemData.nMaxPrice - itemData.nMinPrice) * fConst);

@@ -10,7 +10,7 @@ public class ItemData
 	
 	public EItems eType;
 	public int nCount;
-	
+	public String strItemName;
 	
 	
 	/**
@@ -29,6 +29,7 @@ public class ItemData
 		this.nFixPrice = 0;
 		this.nCurrentPrice = 0;
 		this.eType = EItems.E_BOX;
+		strItemName="Box";
 		this.nCount = 0;
 	}
 
@@ -40,9 +41,11 @@ public class ItemData
 		{
 		case 0:
 			eType= EItems.E_BOX;
+			strItemName="Box";
 			break;
 		case 1:
 			eType= EItems.E_MATERIAL;
+			strItemName="Material";
 			break;
 		}
 	}
