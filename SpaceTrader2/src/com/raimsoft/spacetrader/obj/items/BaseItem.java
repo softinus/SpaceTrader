@@ -22,8 +22,8 @@ public class BaseItem extends GameObject
 
 	public ItemData itemData= new ItemData();
 	
-	public boolean bCheck;		// 상점에서 체크 되었는지 여부
-	public boolean bLastCheck;	// 상점에서 체크 되었는데 마지막으로 체크되었을 경우 트루
+//	public boolean bCheck;		// 상점에서 체크 되었는지 여부
+//	public boolean bLastCheck;	// 상점에서 체크 되었는데 마지막으로 체크되었을 경우 트루
 	
 	public BaseItem()
 	{
@@ -34,8 +34,8 @@ public class BaseItem extends GameObject
 		mContext= _Context;
 		itemData.eType= _eType;				
 		
-		bCheck= false;
-		bLastCheck= false;
+//		bCheck= false;
+//		bLastCheck= false;
 		
 		if(_eType== EItems.E_BOX)
 		{
@@ -64,45 +64,45 @@ public class BaseItem extends GameObject
 		objShopCheck2.SetObject(sprShopButton, 0, 0, this.x, this.y, 0, 0);		// 장바구니 설정
 	}
 	
-	/**
-	 * Shop Item이면 요걸 쓴다.
-	 * @param bCurrent
-	 */
-	public void CheckSettingShop(boolean bCurrent)
-	{
-		if(bCurrent)	// 지금 이 버튼이 눌렸으면
-		{
-			bLastCheck= true;
-		}
-		else
-		{
-			bLastCheck= false;
-		}
-	}
-	
-	/**
-	 * Inventory Item이면 요걸 쓴다.
-	 * @param bCurrent
-	 */
-	public void CheckSettingInventory(boolean bCurrent)
-	{
-		if(bCurrent)	// 지금 이 버튼이 눌렸는데
-		{
-			if(!bCheck && !bLastCheck)	// 한번도 안눌린 버튼이면
-				bLastCheck= true;
-			
-			if(bCheck)	// 장바구니면
-				bLastCheck= true;	// 체크로 다시 바꿈
-		}
-		else			// 다른 버튼이 눌린건데
-		{
-			if(bLastCheck)		// 이 버튼이 마지막 눌렸었던 버튼이면
-			{
-				bLastCheck= false;
-				bCheck= true;	// 장바구니로 바꿈
-			}
-		}
-	}
+//	/**
+//	 * Shop Item이면 요걸 쓴다.
+//	 * @param bCurrent
+//	 */
+//	public void CheckSettingShop(boolean bCurrent)
+//	{
+//		if(bCurrent)	// 지금 이 버튼이 눌렸으면
+//		{
+//			bLastCheck= true;
+//		}
+//		else
+//		{
+//			bLastCheck= false;
+//		}
+//	}
+//	
+//	/**
+//	 * Inventory Item이면 요걸 쓴다.
+//	 * @param bCurrent
+//	 */
+//	public void CheckSettingInventory(boolean bCurrent)
+//	{
+//		if(bCurrent)	// 지금 이 버튼이 눌렸는데
+//		{
+//			if(!bCheck && !bLastCheck)	// 한번도 안눌린 버튼이면
+//				bLastCheck= true;
+//			
+//			if(bCheck)	// 장바구니면
+//				bLastCheck= true;	// 체크로 다시 바꿈
+//		}
+//		else			// 다른 버튼이 눌린건데
+//		{
+//			if(bLastCheck)		// 이 버튼이 마지막 눌렸었던 버튼이면
+//			{
+//				bLastCheck= false;
+//				bCheck= true;	// 장바구니로 바꿈
+//			}
+//		}
+//	}
 	
 	@Override
 	public void SetObject(Sprite s_pat, int s_type, float s_layer, float s_x, float s_y, int s_motion, int s_frame)
@@ -124,18 +124,18 @@ public class BaseItem extends GameObject
 	{		
 		super.DrawSprite(info);	// 아이템 먼저 그리고
 		
-		if(bLastCheck)	// 마지막 체크이면
-		{
-			objShadow.DrawSprite(info);
-			btnShopCheck.DrawSprite(info);	// 구매체크버튼			
-			
-			btnShopCheck.ButtonUpdate(0.0f);
-		}
-		else if(bCheck)	// 그냥 체크면
-		{
-			objShadow.DrawSprite(info);
-			objShopCheck2.DrawSprite(info);	// 장바구니버튼		
-		}
+//		if(bLastCheck)	// 마지막 체크이면
+//		{
+//			objShadow.DrawSprite(info);
+//			btnShopCheck.DrawSprite(info);	// 구매체크버튼			
+//			
+//			btnShopCheck.ButtonUpdate(0.0f);
+//		}
+//		else if(bCheck)	// 그냥 체크면
+//		{
+//			objShadow.DrawSprite(info);
+//			objShopCheck2.DrawSprite(info);	// 장바구니버튼		
+//		}
 		
 	}
 	
