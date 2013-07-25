@@ -52,9 +52,23 @@ public class GameButton extends GameObject
 	public void SetText(int _x, int _y, float _size, String _str)
 	{
 		strContent= _str;
-		nTextX= _x;
-		nTextY= _y;
+		nTextX= (int)this.x + _x;
+		nTextY= (int)this.y + _y;
 		fTextSize= _size;
+	}
+	
+	/**
+	 * 텍스트 color 조정.
+	 * @param _fR
+	 * @param _fG
+	 * @param _fB
+	 */
+	public void SetTextColor(float _fR, float _fG, float _fB)
+	{
+		this.fR= _fR;
+		this.fG= _fG;
+		this.fB= _fB;
+		
 	}
 	
 	/**

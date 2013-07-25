@@ -31,8 +31,9 @@ public final class R {
         public static final int station_bg=0x7f020011;
         public static final int station_dummy1=0x7f020012;
         public static final int station_ui_2=0x7f020013;
-        public static final int systemmap_bg=0x7f020014;
-        public static final int worldmap_bg=0x7f020015;
+        public static final int station_ui_shop=0x7f020014;
+        public static final int systemmap_bg=0x7f020015;
+        public static final int worldmap_bg=0x7f020016;
     }
     public static final class id {
         public static final int edt_password=0x7f060003;
