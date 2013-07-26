@@ -19,6 +19,15 @@ public class Global
 	public static final String SP_MONEY="money";
 	
 	// 아래는 Parse 통신 예약어
+	
+	public static final String PO_TABLE_OWNITEMS="Own_Items";
+	public static final String PO_ITEM_COUNT= "item_count";
+	public static final String PO_ITEM_KEY= "item_key";
+	
+	
+	public static final String PO_TABLE_OWNSKILLS="Own_Skills";
+	
+	public static final String PO_TABLE_USERINFO="UserInfo";
 	public static final String PO_USER_ID="user_id";
 	public static final String PO_MOENY="gold";
 	public static final String PO_SHIP_TYPE="ship_type";

@@ -97,6 +97,11 @@ public class UserInfo
 		return arrItems;
 	}
 	
+	public void SetItems(ArrayList<ItemData> _items)
+	{
+		arrItems= _items;
+	}
+	
 	public int GetDestinationDistance()
 	{
 		return nDestinationDistance;

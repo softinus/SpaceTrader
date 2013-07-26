@@ -1,6 +1,7 @@
 package com.raimsoft.spacetrader.scene;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -12,18 +13,26 @@ import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.raimsoft.spacetrader.R;
 import com.raimsoft.spacetrader.data.EnumShip;
+import com.raimsoft.spacetrader.data.Global;
 import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.GameButton;
 import com.raimsoft.spacetrader.obj.items.BaseItem;
 import com.raimsoft.spacetrader.obj.items.EItems;
 import com.raimsoft.spacetrader.obj.items.ItemData;
 import com.raimsoft.spacetrader.util.GenConst;
+import com.raimsoft.spacetrader.util.ParseConnector;
 import com.raimsoft.spacetrader.util.PlanetNameMaker;
 
 public class SStation extends SBase
 {
+	private ParseConnector PC= new ParseConnector();
+	
 	private final int SHOP_ITEM_COUNT= 10;
 	private final int IVEN_ITEM_COUNT= 20;
 	
@@ -517,12 +526,18 @@ public class SStation extends SBase
 						uInfo.BuyItems(m_TradingItemData.eType.ordinal(), m_nTradeAmount);
 						uInfo.SetGold( uInfo.GetGold() - (m_nTradeAmount * m_TradingItemData.nCurrentPrice) );
 						m_nTradeAmount= 0;
+						
+						PC.SyncPutMoney();
+						PC.SyncPutItems();
 					}
 					else
 					{
 						uInfo.SellItems(m_TradingItemData.eType.ordinal(), m_nTradeAmount);
 						uInfo.SetGold( uInfo.GetGold() + (m_nTradeAmount * m_TradingItemData.nCurrentPrice) );
 						m_nTradeAmount= 0;
+						
+						PC.SyncPutMoney();
+						PC.SyncPutItems();
 					}
 					
 					this.InventoryRefresh();
@@ -564,7 +579,7 @@ public class SStation extends SBase
 				
 				if(btnTradeButtonM10.CheckOver())
 				{
-					if(m_nTradeAmount-10 >= 0)
+					if(m_nTradeAmount-1 >= 0)
 						m_nTradeAmount -= 10;
 				}
 				

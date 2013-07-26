@@ -46,6 +46,7 @@ import com.raimsoft.spacetrader.data.EnumShip;
 import com.raimsoft.spacetrader.data.Global;
 import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.data.UserInfo;
+import com.raimsoft.spacetrader.util.ParseConnector;
 import com.raimsoft.spacetrader.util.SPUtil;
 
 public class SpaceTrader extends Activity implements SensorEventListener
@@ -61,6 +62,7 @@ public class SpaceTrader extends Activity implements SensorEventListener
 	AccountManager mgr;
     Account[] accts;
 	
+    private ParseConnector PC= new ParseConnector();
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -391,8 +393,12 @@ public class SpaceTrader extends Activity implements SensorEventListener
 	        			uInfo.SetWorldMapX( PO.getInt(Global.PO_CROOD_WORLD_X));
 	        			uInfo.SetWorldMapY( PO.getInt(Global.PO_CROOD_WORLD_Y));
 	        			uInfo.SetSystemMapPlanet( PO.getInt(Global.PO_CROOD_SYSTEM_MAP_PLANET));
-	        			LoadingHandler.sendEmptyMessage(999);
+	        		
+	        			PC.SyncGetItems();
+						
+						LoadingHandler.sendEmptyMessage(999);
 					}
+					
 					
 				} catch (ParseException e1) {
 					e1.printStackTrace();
