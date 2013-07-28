@@ -248,17 +248,17 @@ public class SSystemMap  extends SBase
 				txtInfo.DrawFont(gl, 20, gInfo.ScreenY-40, 28.0f, arrPlanet.get(nSelectionIndex).strName );	
 			}		
 			
-			if(bDirectionR)
-				txtInfo.DrawFont(gl, 0, 0, 12f, "Dir : Right");
-			else
-				txtInfo.DrawFont(gl, 0, 0, 12f, "Dir : Left");
-			
-			txtInfo.DrawFont(gl, 0, 20, 12f, "startX : "+Float.toString(fStartX));
-			txtInfo.DrawFont(gl, 0, 40, 12f, "fCurrX : "+Float.toString(fCurrX));
-			txtInfo.DrawFont(gl, 0, 60, 12f, "fOldX : "+Float.toString(fOldX));
-			txtInfo.DrawFont(gl, 0, 80, 12f, "fGapX : "+Float.toString(fGapX));
-			txtInfo.DrawFont(gl, 0, 100, 12f, "fScrollDes : "+Float.toString(fScrollDes));
-			txtInfo.DrawFont(gl, 0, 120, 12f, "ScrollX : "+Float.toString(gInfo.ScrollX));		
+//			if(bDirectionR)
+//				txtInfo.DrawFont(gl, 0, 0, 12f, "Dir : Right");
+//			else
+//				txtInfo.DrawFont(gl, 0, 0, 12f, "Dir : Left");
+//			
+//			txtInfo.DrawFont(gl, 0, 20, 12f, "startX : "+Float.toString(fStartX));
+//			txtInfo.DrawFont(gl, 0, 40, 12f, "fCurrX : "+Float.toString(fCurrX));
+//			txtInfo.DrawFont(gl, 0, 60, 12f, "fOldX : "+Float.toString(fOldX));
+//			txtInfo.DrawFont(gl, 0, 80, 12f, "fGapX : "+Float.toString(fGapX));
+//			txtInfo.DrawFont(gl, 0, 100, 12f, "fScrollDes : "+Float.toString(fScrollDes));
+//			txtInfo.DrawFont(gl, 0, 120, 12f, "ScrollX : "+Float.toString(gInfo.ScrollX));		
 		txtInfo.EndFont();
 		
 		btnMove.DrawSprite(gInfo);	// 이동 버튼
@@ -392,7 +392,7 @@ public class SSystemMap  extends SBase
 			
 			if(nDistance==0)
 			{
-				msgBox.SetButtonTextScr(22f, "현재 스테이션으로\n다시 도킹하시겠습니가?", "도킹", "취소");
+				msgBox.SetButtonTextScr(22f, "현재 스테이션으로\n다시 도킹하시겠습니까?", "도킹", "취소");
 				msgBox.SetBoxPosition((int)gInfo.ScrollX);
 				msgBox.SetShow(true);
 			}

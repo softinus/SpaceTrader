@@ -76,8 +76,10 @@ public class GenConst
 	 * 시간과 장소에 비례하는 상수를 만든다.
 	 * @return
 	 */
-	public float GetPositionTimeConstF()
+	public float GetPositionTimeConstF(int nItems)
 	{
+		float fRes;
+		
 		GregorianCalendar today = new GregorianCalendar ( );
 
 		int nYear = today.get ( GregorianCalendar.YEAR );
@@ -86,10 +88,20 @@ public class GenConst
 		int nHour= today.get( GregorianCalendar.HOUR_OF_DAY) + 1;
 		int nMinute= today.get( GregorianCalendar.MINUTE);
 		
-		float fParam1 = (nHour % nYear) * (nDay + 10 % nHour) + nMonth;
-        float fParam2 = (((x % nHour) + (y % nHour)) / (p + 2)) + 1;       
-
-        float fRes= fParam1 / fParam2;
+		if(nItems==-1)
+		{
+			float fParam1 = (nHour % nYear) * (nDay + 10 % nHour) + nMonth;
+			float fParam2 = (((x % nHour) + (y % nHour)) / (p + 2)) + 1;       
+			
+			fRes= fParam1 / fParam2;			
+		}
+		else
+		{
+			float fParam1 = (nHour % nYear) * (nDay + 10 % nHour) + nMonth;
+			float fParam2 = (((x % nHour+nItems) + (y % nHour+nItems)) / (p + nItems + 2)) + 1;       
+			
+			fRes= fParam1 / fParam2;
+		}
         fRes /= 100000.0f;
         fRes = Math.abs(fRes);
         
@@ -103,7 +115,7 @@ public class GenConst
             fRes = (float)Math.log(fRes);
         }
         
-        float fNextConst= GetNextPositionTimeConstF();
+        float fNextConst= GetNextPositionTimeConstF(nItems);
         
         float fTemp = ((fNextConst - fRes) * ((float)nMinute / 60.0f));   // 다음Hour와 현재Hour의 차이만큼 interpolation함.
         float fFinalConst = fRes + fTemp;
@@ -111,8 +123,10 @@ public class GenConst
         return fFinalConst;
 	}
 	
-	protected float GetNextPositionTimeConstF()
+	protected float GetNextPositionTimeConstF(int nItems)
 	{
+		float fRes;
+		
 		GregorianCalendar today = new GregorianCalendar ( );
 
 		int nYear = today.get ( today.YEAR );
@@ -122,10 +136,21 @@ public class GenConst
 		//int nMinute= today.get(today.MINUTE);
 		
 		 int nNextHour = nHour + 1;
-         float fParam1 = (nNextHour % nYear) * (nDay + 10 % nNextHour) + nMonth;
-         float fParam2 = (((x % nNextHour) + (y % nNextHour)) / (p + 2)) + 1;
-
-         float fRes = fParam1 / fParam2;
+		if(nItems==-1)
+		{
+			float fParam1 = (nNextHour % nYear) * (nDay + 10 % nNextHour) + nMonth;
+			float fParam2 = (((x % nNextHour) + (y % nNextHour)) / (p + 2)) + 1;       
+			
+			fRes= fParam1 / fParam2;			
+		}
+		else
+		{
+			float fParam1 = (nNextHour % nYear) * (nDay + 10 % nNextHour) + nMonth;
+			float fParam2 = (((x % nNextHour+nItems) + (y % nNextHour+nItems)) / (p + nItems + 2)) + 1;       
+			
+			fRes= fParam1 / fParam2;
+		}
+		
          fRes /= 100000.0f;
          fRes = Math.abs(fRes);
 

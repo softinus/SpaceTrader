@@ -3,6 +3,8 @@ package com.raimsoft.spacetrader.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -31,9 +33,11 @@ public class ParseConnector
 	 */
 	public void SyncPutMoney()
 	{
+		
 		ParseUser user= ParseUser.getCurrentUser();
 		ParseQuery<ParseObject> query= ParseQuery.getQuery(Global.PO_TABLE_USERINFO);	// 유저 데이터를 찾는다.
 		query.whereEqualTo(Global.PO_USER_ID, user);
+		Log.d(":::::::::::ParseConnector:::::::::::", "111111111111");
 		
 		query.getFirstInBackground(new GetCallback<ParseObject>()
 		{				
@@ -42,6 +46,7 @@ public class ParseConnector
 			{	
 				PO.put(Global.PO_MOENY, uInfo.GetGold());	// 메모리 -> 서버
 				PO.saveInBackground();
+				Log.d(":::::::::::ParseConnector:::::::::::", "22222222222222222");
 			}
 		});
 	}
@@ -72,14 +77,16 @@ public class ParseConnector
 		ParseUser user= ParseUser.getCurrentUser();
 		ParseQuery<ParseObject> query= ParseQuery.getQuery(Global.PO_TABLE_OWNITEMS);	// 유저 데이터를 찾는다.
 		query.whereEqualTo(Global.PO_USER_ID, user);
+		Log.d(":::::::::::ParseConnector:::::::::::", "aaaaaaaaaaaaaa");
 		try
 		{
 			List<ParseObject> list= query.find();	// 쿼리를 포그라운드로 떼리고 프로그레스 돌게 한다.
+			Log.d(":::::::::::ParseConnector:::::::::::", "bbbbbbbbbbbbbbb");
 			for(ParseObject PO : list)
 			{
 				PO.delete();	// 로그인된 유저에 해당하는 아이템 전부 삭제 후
 			}
-			
+			Log.d(":::::::::::ParseConnector:::::::::::", "cccccccccccccccc");
 			
 		} catch (ParseException e1) {
 			e1.printStackTrace();
@@ -94,6 +101,8 @@ public class ParseConnector
 			ownItems.put(Global.PO_USER_ID, user);
 			ownItems.saveInBackground();
 		}	
+		
+		Log.d(":::::::::::ParseConnector:::::::::::", "ddddddddddddddddd");
 		
 	}
 	
