@@ -524,20 +524,18 @@ public class SStation extends SBase
 					if(m_bBuying)					
 					{
 						uInfo.BuyItems(m_TradingItemData.eType.ordinal(), m_nTradeAmount);
-						uInfo.SetGold( uInfo.GetGold() - (m_nTradeAmount * m_TradingItemData.nCurrentPrice) );
-						m_nTradeAmount= 0;
+						uInfo.SetGold( uInfo.GetGold() - (m_nTradeAmount * m_TradingItemData.nCurrentPrice) );						
 						
-						PC.SyncPutMoney();
-						PC.SyncPutItems();
+						PC.SyncTradeItem(true, -1*(m_nTradeAmount * m_TradingItemData.nCurrentPrice), m_TradingItemData.eType.ordinal(), m_nTradeAmount);
+						m_nTradeAmount= 0;
 					}
 					else
 					{
 						uInfo.SellItems(m_TradingItemData.eType.ordinal(), m_nTradeAmount);
 						uInfo.SetGold( uInfo.GetGold() + (m_nTradeAmount * m_TradingItemData.nCurrentPrice) );
-						m_nTradeAmount= 0;
 						
-						PC.SyncPutMoney();
-						PC.SyncPutItems();
+						PC.SyncTradeItem(false, (m_nTradeAmount * m_TradingItemData.nCurrentPrice), m_TradingItemData.eType.ordinal(), -1*m_nTradeAmount);
+						m_nTradeAmount= 0;
 					}
 					
 					this.InventoryRefresh();
