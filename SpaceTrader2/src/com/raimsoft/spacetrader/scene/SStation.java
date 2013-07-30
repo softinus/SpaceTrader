@@ -343,6 +343,9 @@ public class SStation extends SBase
 				if(ITEMS == null || ITEMS.pattern==null) 
 					continue;
 				
+//				if(ITEMS.itemData.nCount==0)
+//					continue;
+				
 				ITEMS.scalex= 0.5f;
 				ITEMS.scaley= 0.5f;
 				ITEMS.DrawSprite(gInfo);
