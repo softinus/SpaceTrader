@@ -18,23 +18,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	time(&cur_time);
 	pTime = localtime(&cur_time);
 
-	cout << "월 : " << pTime->tm_mon+1 << endl;
-	cout << "일 : " << pTime->tm_mday << endl;
-	cout << "시 : " << pTime->tm_hour << endl;
-	cout << "분 : " << pTime->tm_min << endl;
-	cout << "초 : " << pTime->tm_sec << endl;
+	cout << "Current time : " << asctime(pTime) << endl;
 
 
-	int x= 141;
-	int y= 254;
+	int x= 341;
+	int y= 754;
 	float fRes= 0.0f;
 	float fSummary= 0.0f;
 	float fAverage= 0.0f;
 
-	CBase
-
-
-	for (int p=0; p<P_COUNT; ++p)
+	for (int p=0; p<=P_COUNT; ++p)
 	{
 		fRes= ((x+1)*(y+1)*(p+2) / (( (x+1) % (p+2) )+1)) / 100000.0f;
 
@@ -78,8 +71,31 @@ int _tmain(int argc, _TCHAR* argv[])
 		
 	}
 
-	printf("[%d,%d:*] 합계 : %.3f\n", x,y, fSummary);
-	printf("[%d,%d:*] 평균 : %.3f\n", x,y, fSummary/P_COUNT);
+	printf("[%d,%d:*] SUM : %.3f\n", x,y, fSummary);
+	printf("[%d,%d:*] AVR : %.3f\n", x,y, fSummary/P_COUNT);
+
+	int sum_p= 0;
+	int sum_a= 0;
+	int count_p= 0;
+
+	for(int y= 2013; y<=2015; ++y)
+	{
+		for(int m=1; m<=12; ++m)
+		{
+			for(int d= 1; d<=30; ++d)
+			{
+				for(int h=1; h<=24; ++h)
+				{
+					int price= (int) ( (y+(m*12))%(d*h)	);
+					printf("[%d년 %d월 %d일 %d시 -> %d \n", y, m, d, h, price);
+					sum_p+= price;
+					++count_p;
+				}
+			}
+		}
+	}
+
+	printf("평균 -> %d \n", sum_p/count_p);
 
 	return 0;
 }
