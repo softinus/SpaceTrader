@@ -14,3 +14,11 @@ D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\
 D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Debug\BarChart.csproj.GenerateResource.Cache
 D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Debug\BarChart.dll
 D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Debug\BarChart.pdb
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\bin\Release\BarChart.dll
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\bin\Release\BarChart.pdb
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Release\ResolveAssemblyReference.cache
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Release\BarChart.BarChart.bmp
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Release\BarChart.HBarChart.resources
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Release\BarChart.csproj.GenerateResource.Cache
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Release\BarChart.dll
+D:\JAVA_work\spacetrader\trunk\PlanetRandomize\WindowsApplication1\BarChart\obj\Release\BarChart.pdb
