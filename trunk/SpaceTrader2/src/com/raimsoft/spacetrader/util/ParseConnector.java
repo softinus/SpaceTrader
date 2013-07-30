@@ -38,6 +38,8 @@ public class ParseConnector
 	 */
 	public void SyncTradeItem(final boolean bBuy, final int nPay, final int nItemType, final int nItemAmount)
 	{
+		if(nItemAmount==0)
+			return;
 		
 		Log.d(":::::::::::ParseConnector:::::::::::", "111111111111");
 		final ParseUser user= ParseUser.getCurrentUser();
@@ -69,10 +71,10 @@ public class ParseConnector
 				for(ParseObject PO : objects)		// 서버 소유아이템 리스트 돌면서
 				{
 					int nServerItemKey= PO.getInt(Global.PO_ITEM_KEY);
-					int nServerItemCount= PO.getInt(Global.PO_ITEM_COUNT);
+					int nServerItemCount= -1 * PO.getInt(Global.PO_ITEM_COUNT);
 					if(nServerItemKey==nItemType)	// 같은 타입 있으면
 					{
-						if((nServerItemCount==nItemAmount) && !bBuy)	// 아이템창 전부 판매했으면 삭제함.
+						if(( nServerItemCount==nItemAmount) && !bBuy)	// 아이템창 전부 판매했으면 삭제함.
 							PO.deleteInBackground();
 						else							
 							PO.increment(Global.PO_ITEM_COUNT, nItemAmount);	// 추가해줌
