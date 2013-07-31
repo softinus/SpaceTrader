@@ -67,9 +67,9 @@ namespace WindowsApplication1
             // 
             this.cboMaterial.FormattingEnabled = true;
             this.cboMaterial.Items.AddRange(new object[] {
-            "(Lv1)박스",
-            "(Lv2)가스",
-            "(Lv3)오일"});
+            "(Lv1)Box",
+            "(Lv2)Material",
+            "(Lv3)Gas"});
             this.cboMaterial.Location = new System.Drawing.Point(694, 12);
             this.cboMaterial.Name = "cboMaterial";
             this.cboMaterial.Size = new System.Drawing.Size(121, 20);
