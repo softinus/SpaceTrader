@@ -92,7 +92,7 @@ public class RainbowMessageBox extends GameObject
 		
 		if(nBoyType==0)	// OK only
 		{
-			btnPositive.x= nScroll+240-25;
+			btnPositive.x= nScroll+240;
 			btnPositive.y= 470;
 		}
 		else if (nBoyType==1)	// 2 Button
