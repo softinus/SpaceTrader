@@ -194,8 +194,8 @@ public class SStation extends SBase
 		prgShield.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, "100 / 100");
 		prgShield.energy= 100;
 		
-		prgFuel.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, "100 / 100");
-		prgFuel.energy= 100;
+		prgFuel.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.getCurrFuel()+" / "+uInfo.getShipMaxFuel());
+		prgFuel.energy= ((float)uInfo.getCurrFuel() / (float)uInfo.getShipMaxFuel()) * 100.0f;
 		
 		Log.d("Hull Progress1", Float.toString(uInfo.GetCurrHull()));
 		Log.d("Hull Progress2", Float.toString(uInfo.GetShipHull()));
@@ -478,17 +478,38 @@ public class SStation extends SBase
 		msgBox.UpdateObjects(0.0f);
 		int nRes= msgBox.CheckOverButtons();
 		if(nRes==0)
-		{			
-			int nPay= this.CalcRepairCost();
-			
-			uInfo.SetCurrHull(uInfo.GetShipHull());
-			prgHull.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.GetCurrHull()+" / "+uInfo.GetShipHull());
-			prgHull.energy= ((float)uInfo.GetCurrHull() / (float)uInfo.GetShipHull()) * 100.0f;
-			uInfo.AddGold(-1*nPay);
-			
+		{
 			ParseConnector PC= new ParseConnector();
-			PC.SetShipHull(uInfo.GetCurrHull());
-			PC.PayGold( nPay );	
+			int nPay= 0;
+			
+			switch(msgBox.type)
+			{
+			case 1:
+				nPay= this.CalcRepairCost();
+				
+				uInfo.SetCurrHull(uInfo.GetShipHull());
+				prgHull.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.GetCurrHull()+" / "+uInfo.GetShipHull());
+				prgHull.energy= ((float)uInfo.GetCurrHull() / (float)uInfo.GetShipHull()) * 100.0f;
+				uInfo.AddGold(-1*nPay);
+				
+				PC.SetShipHull(uInfo.GetCurrHull());
+				PC.PayGold( nPay );	
+				break;
+			case 2:
+				break;
+			case 3:
+				nPay= this.CalcRefuelCost();				
+				
+				uInfo.setCurrFuel(uInfo.getShipMaxFuel());				
+				prgFuel.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.getCurrFuel()+" / "+uInfo.getShipMaxFuel());
+				prgFuel.energy= ((float)uInfo.getCurrFuel() / (float)uInfo.getShipMaxFuel()) * 100.0f;				
+				uInfo.AddGold(-1*nPay);				
+				
+				PC.SetShipFuel(uInfo.getShipMaxFuel());
+				PC.PayGold( nPay );	
+				break;
+			}
+
 			msgBox.SetShow(false);
 		}
 		else if(nRes==1)
@@ -511,15 +532,24 @@ public class SStation extends SBase
 				{
 					msgBox.SetButtonTextScr(22f, "함선을 수리하시겠습니까?\n수리비용 : $"+this.CalcRepairCost(), "수리", "취소");
 					msgBox.SetBoxPosition(0);
-					msgBox.SetShow(true);	
+					msgBox.SetShow(true);
+					msgBox.type= 1;
 				}					
 				
 			}
 			else if(prgBG2.CheckOver())
 			{
+				msgBox.type= 2;
 			}
 			else if(prgBG3.CheckOver())
 			{
+				if(uInfo.getCurrFuel() != uInfo.getShipMaxFuel())
+				{
+					msgBox.SetButtonTextScr(22f, "연료를 채우시겠습니까?\n연료비용 : $"+this.CalcRefuelCost(), "만땅", "취소");
+					msgBox.SetBoxPosition(0);
+					msgBox.SetShow(true);	
+					msgBox.type= 3;
+				}	
 			}
 		}		
 		else if(m_nMenu==SStation.E_TRADE)	// 트레이드 상태이면
@@ -736,6 +766,12 @@ public class SStation extends SBase
 	{
 		int nRepair= uInfo.GetShipHull() - uInfo.GetCurrHull();
 		return (nRepair/8);
+	}
+	
+	private int CalcRefuelCost()
+	{
+		int nRefuel= uInfo.getShipMaxFuel() - uInfo.getCurrFuel();
+		return (nRefuel/3);
 	}
 	
 	@Override

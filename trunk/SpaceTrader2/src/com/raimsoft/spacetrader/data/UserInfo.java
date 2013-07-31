@@ -24,11 +24,13 @@ public class UserInfo
 	private EnumShip eShip= EnumShip.E_NULL_INFO;	// 함선 정보
 	private String strShipName="UnNamed";
 	private int nShipAtt= 0;
-	private int nShipMaxHull= 0;	
+	private int nShipMaxHull= 0;
+	private int nShipMaxFuel= 0;
 	private float fVelocity= 13.0f;
 	private float fHandling= 2.0f;
 	
 	private int nCurrHull= 0;					// hull
+	private int nCurrFuel= 0;
 	private int nGold= -1;						// cyber money
 	private int nWorldMapX= -1;					// 월드 X
 	private int nWorldMapY= -1;					// 월드 Y
@@ -163,6 +165,7 @@ public class UserInfo
 			SetShipName("T-1");
 			SetShipAtt(220);
 			SetShipHull(3500);
+			setShipMaxFuel(200);
 			SetHandling(2.0f);
 			SetVelocity(13.0f);
 			break;
@@ -171,6 +174,7 @@ public class UserInfo
 			SetShipName("T-2");
 			SetShipAtt(280);
 			SetShipHull(3200);
+			setShipMaxFuel(220);
 			SetHandling(2.3f);
 			SetVelocity(14.0f);
 			break;
@@ -186,6 +190,7 @@ public class UserInfo
 			SetShipName("T-1");
 			SetShipAtt(220);
 			SetShipHull(3500);
+			setShipMaxFuel(200);
 			SetHandling(2.0f);
 			SetVelocity(13.0f);
 			break;
@@ -195,6 +200,7 @@ public class UserInfo
 			SetShipName("T-2");
 			SetShipAtt(280);
 			SetShipHull(3200);
+			setShipMaxFuel(220);
 			SetHandling(2.3f);
 			SetVelocity(14.0f);
 			break;
@@ -297,6 +303,37 @@ public class UserInfo
 
 	public void SetCurrHull(int nCurrHull) {
 		this.nCurrHull = nCurrHull;
+	}
+
+	public int getShipMaxFuel() {
+		return nShipMaxFuel;
+	}
+
+	public void setShipMaxFuel(int nShipMaxFuel) {
+		this.nShipMaxFuel = nShipMaxFuel;
+	}
+
+	public int getCurrFuel() {
+		return nCurrFuel;
+	}
+	
+	public int getCurrFuelPercent()
+	{
+		return (int) (nCurrFuel / nShipMaxFuel * 100.0f);
+	}
+	
+	/**
+	 * 해당 퍼센트만큼 깍음
+	 * @param nPercent
+	 */
+	public void PayFuelPercent(int nPercent)
+	{
+		int n1per= (int) (nShipMaxFuel / 100.0f);		
+		nCurrFuel -= (n1per * nPercent);		
+	}
+
+	public void setCurrFuel(int nCurrFuel) {
+		this.nCurrFuel = nCurrFuel;
 	}
 	
 	

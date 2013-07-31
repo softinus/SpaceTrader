@@ -390,6 +390,7 @@ public class SpaceTrader extends Activity implements SensorEventListener
 						uInfo.SetGold( PO.getInt( Global.PO_MOENY ) );
 						uInfo.SetShipType( PO.getInt(Global.PO_SHIP_TYPE) );
 						uInfo.SetCurrHull( PO.getInt(Global.PO_SHIP_HULL) );
+						uInfo.setCurrFuel( PO.getInt(Global.PO_SHIP_FUEL) );
 	        			uInfo.SetWorldMapX( PO.getInt(Global.PO_CROOD_WORLD_X));
 	        			uInfo.SetWorldMapY( PO.getInt(Global.PO_CROOD_WORLD_Y));
 	        			uInfo.SetSystemMapPlanet( PO.getInt(Global.PO_CROOD_SYSTEM_MAP_PLANET));
