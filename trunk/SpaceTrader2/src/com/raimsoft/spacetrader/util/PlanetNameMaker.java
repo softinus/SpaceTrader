@@ -40,6 +40,9 @@ public class PlanetNameMaker
 		arrWord1.add("민첩한");
 		arrWord1.add("행복한");
 		arrWord1.add("더러운");
+		arrWord1.add("거대한");
+		arrWord1.add("먼지같은");
+		arrWord1.add("행복한");
 		
 		arrWord2.add("금색");
 		arrWord2.add("은색");
@@ -74,6 +77,12 @@ public class PlanetNameMaker
 		arrWord3.add("앵무새");
 		arrWord3.add("카우보이");
 		arrWord3.add("기관차");
+		arrWord1.add("용");
+		arrWord1.add("지렁이");
+		arrWord1.add("선풍기");
+		arrWord1.add("애벌래");
+		arrWord1.add("에프킬라");
+		arrWord1.add("모기");
 		
 //		Collections.shuffle(arrWord1);
 //		Collections.shuffle(arrWord2);

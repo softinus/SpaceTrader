@@ -29,6 +29,43 @@ public class ParseConnector
 		uInfo= UserInfo.GetInstance();
 	}
 	
+	public void SetShipHull(final int nHull)
+	{
+		final ParseUser user= ParseUser.getCurrentUser();
+		ParseQuery<ParseObject> query= ParseQuery.getQuery(Global.PO_TABLE_USERINFO);	// 유저 데이터를 찾는다.
+		query.whereEqualTo(Global.PO_USER_ID, user);
+		query.getFirstInBackground(new GetCallback<ParseObject>()
+		{				
+			@Override
+			public void done(ParseObject PO, ParseException e)
+			{
+				PO.put(Global.PO_SHIP_HULL, nHull);			
+				PO.saveInBackground();
+			}
+		});
+	}
+	/**
+	 * 해당하는 골드를 지불.	
+	 * @param nPay
+	 */
+	public void PayGold(final int nPay)
+	{
+		if(nPay==0)
+			return;
+		
+		final ParseUser user= ParseUser.getCurrentUser();
+		ParseQuery<ParseObject> query= ParseQuery.getQuery(Global.PO_TABLE_USERINFO);	// 유저 데이터를 찾는다.
+		query.whereEqualTo(Global.PO_USER_ID, user);
+		query.getFirstInBackground(new GetCallback<ParseObject>()
+		{				
+			@Override
+			public void done(ParseObject PO, ParseException e)
+			{
+				PO.increment(Global.PO_MOENY, -nPay);	// 메모리 -> 서버				
+				PO.saveInBackground();
+			}
+		});
+	}
 	
 	/**
 	 * 아이템을 거래한 것을 서버에 알림.
