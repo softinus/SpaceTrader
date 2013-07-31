@@ -94,7 +94,7 @@ public class PlanetNameMaker
 		//MakingName(nCount);
 		for(int i=0; i<nCount; ++i)
 		{
-			arrName.add(CombineNames(i));
+			arrName.add(GetCurrPlanetName(i));
 		}		
 		return arrName;
 	}
@@ -107,7 +107,27 @@ public class PlanetNameMaker
 	public String GetCurrPlanetName(int nPlanetPos)
 	{
 		String strRes;
-		strRes= CombineNames(nPlanetPos);
+				
+		int nOverlapCount= 0;
+		while(true)	// 행성 이름이 중복 되지 않을때 까지...  
+		{
+			strRes= CombineNames(nPlanetPos+nOverlapCount);
+			
+			boolean bOverlap= false;
+			for(int i=0; i<nPlanetPos; ++i)
+			{
+				if(CombineNames(nPlanetPos).equals(strRes))	// 이전 행성들하고 같은 이름이 나오면...
+				{
+					bOverlap= true;
+					++nOverlapCount;
+					continue;
+				}
+			}
+			
+			if(!bOverlap)				
+				break;
+		}
+		
 		return strRes;
 	}
 	
