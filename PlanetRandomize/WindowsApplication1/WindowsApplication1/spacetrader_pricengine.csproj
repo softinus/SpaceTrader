@@ -7,7 +7,7 @@
     <ProjectGuid>{D6999998-77AB-4995-92A8-3EB67B8358C5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>spacetrader</RootNamespace>
+    <RootNamespace>SpaceTrader_pricengine</RootNamespace>
     <AssemblyName>SpaceTrader_pricengine</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

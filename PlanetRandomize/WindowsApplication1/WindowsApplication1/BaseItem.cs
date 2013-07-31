@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WindowsApplication1
 {
-    enum EItems { E_BOX, E_GAS, E_OIL }
+    enum EItems { E_BOX, E_MAT, E_GAS }
 
     class BaseItem
     {
@@ -24,17 +24,17 @@ namespace WindowsApplication1
         {
             if (_eType == EItems.E_BOX)
             {
-                nMinPrice = 7;
+                nMinPrice = 6;
                 nFixPrice = 10;
-                nMaxPrice = 15;  
+                nMaxPrice = 16;  
             }
-            else if (_eType == EItems.E_GAS)
+            else if (_eType == EItems.E_MAT)
             {
                 nMinPrice = 105;
                 nFixPrice = 160;
                 nMaxPrice = 230;
             }
-            else if (_eType == EItems.E_OIL)
+            else if (_eType == EItems.E_GAS)
             {
                 nMinPrice = 320;
                 nFixPrice = 450;
