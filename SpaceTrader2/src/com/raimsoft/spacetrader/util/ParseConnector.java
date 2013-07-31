@@ -29,6 +29,30 @@ public class ParseConnector
 		uInfo= UserInfo.GetInstance();
 	}
 	
+	/**
+	 * 함선 현재 연료 수정.
+	 * @param nFuelPercent : 채울 양
+	 */
+	public void SetShipFuel(final int nFuel)
+	{		
+		final ParseUser user= ParseUser.getCurrentUser();
+		ParseQuery<ParseObject> query= ParseQuery.getQuery(Global.PO_TABLE_USERINFO);	// 유저 데이터를 찾는다.
+		query.whereEqualTo(Global.PO_USER_ID, user);
+		query.getFirstInBackground(new GetCallback<ParseObject>()
+		{				
+			@Override
+			public void done(ParseObject PO, ParseException e)
+			{
+				PO.put(Global.PO_SHIP_FUEL, nFuel);			
+				PO.saveInBackground();
+			}
+		});
+	}
+	
+	/**
+	 * 함선 현재 체력 수정.
+	 * @param nHull
+	 */
 	public void SetShipHull(final int nHull)
 	{
 		final ParseUser user= ParseUser.getCurrentUser();

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
+import android.widget.Toast;
 import bayaba.engine.lib.Font;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
@@ -18,6 +20,7 @@ import com.raimsoft.spacetrader.obj.GameButton;
 import com.raimsoft.spacetrader.obj.Planet;
 import com.raimsoft.spacetrader.obj.RainbowMessageBox;
 import com.raimsoft.spacetrader.util.GenConst;
+import com.raimsoft.spacetrader.util.ParseConnector;
 import com.raimsoft.spacetrader.util.PlanetNameMaker;
 import com.raimsoft.spacetrader.util.SoundManager;
 
@@ -45,6 +48,7 @@ public class SSystemMap  extends SBase
 	private GameObject objSelection= new GameObject();	// 선택된 행성 보여주는 마커
 	private GameObject objPanel= new GameObject();
 	private RainbowMessageBox msgBox;
+	private RainbowMessageBox okBox;
 	
 	private Font txtInfo= new Font();
 	
@@ -105,6 +109,11 @@ public class SSystemMap  extends SBase
 		msgBox= new RainbowMessageBox(gl, mContext);
 		msgBox.SetMessageBox(1, sprMessage, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY/2, 0, 0);
 		msgBox.scroll= false;
+		
+		okBox= new RainbowMessageBox(gl, mContext);
+		okBox.SetMessageBox(0, sprMessage, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY/2, 0, 0);
+		okBox.scroll= false;
+		
 		//msgBox.SetButtonTextScr(24f, "출발", "뒤로");
 		
 		nHalfScreenX= (int) (gInfo.ScreenX/2);
@@ -266,6 +275,9 @@ public class SSystemMap  extends SBase
 		if(msgBox.GetShow())
 			msgBox.DrawSprite(gInfo);	// 메세지 박스
 		
+		if(okBox.GetShow())
+			okBox.DrawSprite(gInfo);	// 메세지 박스
+		
 	}
 	
 	
@@ -352,9 +364,22 @@ public class SSystemMap  extends SBase
 	{
 		super.Update();
 		
-		msgBox.UpdateObjects(gInfo.ScrollX);
-		int nRes= msgBox.CheckOverButtons();
+		okBox.UpdateObjects(gInfo.ScrollX);
+		int nRes= okBox.CheckOverButtons();
 		if(nRes==0)
+		{
+			okBox.SetShow(false);
+		}
+		else if(nRes==1)
+		{
+			okBox.SetShow(false);
+		}
+		if(okBox.GetShow())	// 메세지박스 떠있으면 전부 무시
+			return;
+		
+		msgBox.UpdateObjects(gInfo.ScrollX);
+		int nRes2= msgBox.CheckOverButtons();
+		if(nRes2==0)
 		{
 			
 			if(uInfo.GetDestinationDistance()==0)
@@ -364,11 +389,31 @@ public class SSystemMap  extends SBase
 			}
 			else
 			{
-				uInfo.SetSystemMapPlanet_going(nSelectionIndex);
-				SetScene(EnumScene.E_GAME_WRAP);
+				int nFuelCost= this.CalcFuelCost(uInfo.GetDestinationDistance());
+				int nFuelCurr= uInfo.getCurrFuelPercent();
+				if( nFuelCost > nFuelCurr )	// 현재 연료량보다 소모량이 더 크면..
+				{
+//					Toast toast = Toast.makeText(mContext, "연료가 부족합니다.", Toast.LENGTH_SHORT);
+//					toast.setGravity(Gravity.CENTER, 0, 0);
+//					toast.show();
+					okBox.SetButtonTextScr(22f, "연료가 부족합니다.", "확인", "");
+					okBox.SetBoxPosition((int)gInfo.ScrollX);
+					okBox.SetShow(true);
+				}
+				else
+				{
+					uInfo.PayFuelPercent(nFuelCost);	// 연료를 소모하고
+					
+					ParseConnector PC= new ParseConnector();
+					PC.SetShipFuel(uInfo.getCurrFuel());		// 서버에 전송
+					
+					uInfo.SetSystemMapPlanet_going(nSelectionIndex);
+					SetScene(EnumScene.E_GAME_WRAP);	
+				}
+				
 			}
 		}
-		else if(nRes==1)
+		else if(nRes2==1)
 		{
 			msgBox.SetShow(false);
 		}
@@ -388,7 +433,7 @@ public class SSystemMap  extends SBase
 			float fY1= (int) arrPlanet.get(nSelectionIndex).y;
 			float fX2= (int) arrPlanet.get(nMyPos).x;
 			float fY2= (int) arrPlanet.get(nMyPos).y;
-			int nDistance=  (int) ( Math.sqrt((Math.pow((fX2-fX1), 2) + Math.pow((fY2-fY1), 2) )) * 1000 );	// 두 포인트 거리 구한다.
+			int nDistance=  this.CalcDistance(fX1, fY1, fX2, fY2);	// 두 포인트 거리 구한다.
 			
 			uInfo.SetDestinationDistance(nDistance);	// 유저 정보에 목적지까지의 거리 세팅
 			
@@ -400,7 +445,7 @@ public class SSystemMap  extends SBase
 			}
 			else
 			{
-				msgBox.SetButtonTextScr(22f, "["+arrPlanet.get(nSelectionIndex).strName+"]\n거리 : "+nDistance+"km\n이 행성으로 이동하시겠습니까?", "출발", "취소");
+				msgBox.SetButtonTextScr(22f, "["+arrPlanet.get(nSelectionIndex).strName+"]\n거리 : "+nDistance+"km\n연료 : "+this.CalcFuelCost(nDistance)+"% 소모\n이 행성으로 이동하시겠습니까?", "출발", "취소");
 				msgBox.SetBoxPosition((int)gInfo.ScrollX);
 				msgBox.SetShow(true);
 			}
@@ -449,6 +494,21 @@ public class SSystemMap  extends SBase
 		}
 	}
 	
+	
+	private int CalcDistance(float fX1, float fY1, float fX2, float fY2)
+	{
+		return (int) ( Math.sqrt((Math.pow((fX2-fX1), 2) + Math.pow((fY2-fY1), 2) )) * 1000 );
+	}
+	
+	/**
+	 * 리턴된 퍼센테이지 만큼 깍인다.
+	 * @param nDistance
+	 * @return
+	 */
+	private int CalcFuelCost(int nDistance)
+	{
+		return (nDistance/25000);
+	}
 	
 	@Override
 	public void onBackPressed()

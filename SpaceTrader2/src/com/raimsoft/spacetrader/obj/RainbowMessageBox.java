@@ -92,7 +92,7 @@ public class RainbowMessageBox extends GameObject
 		
 		if(nBoyType==0)	// OK only
 		{
-			btnPositive.x= nScroll+240-40;
+			btnPositive.x= nScroll+240-25;
 			btnPositive.y= 470;
 		}
 		else if (nBoyType==1)	// 2 Button
@@ -131,7 +131,9 @@ public class RainbowMessageBox extends GameObject
 			return;
 			
 		btnPositive.ButtonUpdate(_fScroll);
-		btnNegative.ButtonUpdate(_fScroll);
+		
+		if(nBoyType!=0)
+			btnNegative.ButtonUpdate(_fScroll);
 	}
 	
 	/**
@@ -182,8 +184,11 @@ public class RainbowMessageBox extends GameObject
 				++nCount;
 			}
 			
+			
 			btnPositive.DrawButtonWithText2(info, mGL, mFont, -nScroll-5, -5);
-			btnNegative.DrawButtonWithText2(info, mGL, mFont, -nScroll-5, -5);
+			
+			if(nBoyType!=0)
+				btnNegative.DrawButtonWithText2(info, mGL, mFont, -nScroll-5, -5);
 			
 			
 			
