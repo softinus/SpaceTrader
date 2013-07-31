@@ -262,7 +262,9 @@ public class SSystemMap  extends SBase
 		txtInfo.EndFont();
 		
 		btnMove.DrawSprite(gInfo);	// 이동 버튼
-		msgBox.DrawSprite(gInfo);	// 메세지 박스
+		
+		if(msgBox.GetShow())
+			msgBox.DrawSprite(gInfo);	// 메세지 박스
 		
 	}
 	

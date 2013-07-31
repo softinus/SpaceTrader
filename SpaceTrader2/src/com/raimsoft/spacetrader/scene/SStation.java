@@ -22,6 +22,7 @@ import com.raimsoft.spacetrader.data.EnumShip;
 import com.raimsoft.spacetrader.data.Global;
 import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.GameButton;
+import com.raimsoft.spacetrader.obj.RainbowMessageBox;
 import com.raimsoft.spacetrader.obj.items.BaseItem;
 import com.raimsoft.spacetrader.obj.items.EItems;
 import com.raimsoft.spacetrader.obj.items.ItemData;
@@ -81,7 +82,7 @@ public class SStation extends SBase
 	private Sprite sprItems= new Sprite();				// 아이템 리스트 (png에 있는 순대로)
 	private Sprite sprCashPanel= new Sprite();			// 골드 보여주는 패널 	
 	private Sprite sprTradePanel= new Sprite();			// 거래창 패널	
-	
+	Sprite sprMessage= new Sprite();
 	
 	private GameButton btnInfo= new GameButton();
 	private GameButton btnNews= new GameButton();
@@ -121,6 +122,7 @@ public class SStation extends SBase
 	private GameObject objTradeTarget= new GameObject();			// 거래 대상 함선 그림
 	private GameObject objTradeItem= new GameObject();					// 거래 중인 물품
 	
+	private RainbowMessageBox msgBox;
 	
 	private MediaPlayer Music;
 	
@@ -145,6 +147,11 @@ public class SStation extends SBase
 		Music = MediaPlayer.create(mContext, R.raw.station2);
 		Music.setLooping(true);
 		Music.start();
+		
+		sprMessage.LoadSprite(gl, mContext, R.drawable.buttons_2, "rainbow_messagebox.spr");
+		msgBox= new RainbowMessageBox(gl, mContext);
+		msgBox.SetMessageBox(1, sprMessage, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY/2, 0, 0);
+		msgBox.scroll= false;
 		
 		//float fConst= GC.GetPositionTimeConstF();		
 		arrShopItems[0]= new BaseItem(mContext, gl, EItems.E_BOX, GC.GetPositionTimeConstF(1));
@@ -459,14 +466,38 @@ public class SStation extends SBase
 		
 		font.EndFont();
 		
-		
-		
+		if(msgBox.GetShow())
+			msgBox.DrawSprite(gInfo);	// 메세지 박스
 		
 	}
 	@Override
 	public void Update() 
 	{
 		super.Update();
+		
+		msgBox.UpdateObjects(0.0f);
+		int nRes= msgBox.CheckOverButtons();
+		if(nRes==0)
+		{			
+			int nPay= this.CalcRepairCost();
+			
+			uInfo.SetCurrHull(uInfo.GetShipHull());
+			prgHull.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.GetCurrHull()+" / "+uInfo.GetShipHull());
+			prgHull.energy= ((float)uInfo.GetCurrHull() / (float)uInfo.GetShipHull()) * 100.0f;
+			uInfo.AddGold(-1*nPay);
+			
+			ParseConnector PC= new ParseConnector();
+			PC.SetShipHull(uInfo.GetCurrHull());
+			PC.PayGold( nPay );	
+			msgBox.SetShow(false);
+		}
+		else if(nRes==1)
+		{
+			msgBox.SetShow(false);
+		}
+		if(msgBox.GetShow())	// 메세지박스 떠있으면 전부 무시
+			return;
+
 		
 		if(m_nMenu==SStation.E_MANAGE)	// 관리 상태이면
 		{
@@ -476,9 +507,13 @@ public class SStation extends SBase
 			
 			if(prgBG1.CheckOver())
 			{
-				uInfo.SetCurrHull(uInfo.GetShipHull());
-				prgHull.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.GetCurrHull()+" / "+uInfo.GetShipHull());
-				prgHull.energy= ((float)uInfo.GetCurrHull() / (float)uInfo.GetShipHull()) * 100.0f;
+				if(uInfo.GetCurrHull() != uInfo.GetShipHull())
+				{
+					msgBox.SetButtonTextScr(22f, "함선을 수리하시겠습니까?\n수리비용 : $"+this.CalcRepairCost(), "수리", "취소");
+					msgBox.SetBoxPosition(0);
+					msgBox.SetShow(true);	
+				}					
+				
 			}
 			else if(prgBG2.CheckOver())
 			{
@@ -634,40 +669,6 @@ public class SStation extends SBase
 				}
 			}
 			
-//			for(int i=SHOP_ITEM_COUNT; i<btnItemsBackground.length; ++i)	// 내 아이템에 대해서
-//			{
-//				if(btnItemsBackground[i].CheckOver())	// 버튼이 눌렸음
-//				{
-//					if(arrInvenItems[i-SHOP_ITEM_COUNT]==null)	// 아이템이 없으면 넘어감
-//						continue;
-//					
-//					arrInvenItems[i-SHOP_ITEM_COUNT].CheckSettingInventory(true);	// 누른거 체크
-//
-//					
-//					for(int j=0; j<arrInvenItems.length; ++j)	// 인벤토리 목록 돌면서
-//					{
-//						BaseItem currItem= arrInvenItems[j]; 
-//						
-//						if(currItem==null)	//아이템없으면 빼고
-//							continue;
-//						
-//						if(currItem.bLastCheck)	// 체크되면.. 해당 아이템 추가
-//						{
-//							//DBMgr.RemoveItem(j, 1);
-//							this.InventoryRefresh();	// 아이템창 갱신
-//						}
-//						
-//						if(i-SHOP_ITEM_COUNT==j)	// 아까 누른거 빼고
-//							continue;
-//						
-//						
-//													
-//						currItem.CheckSettingInventory(false);							
-//					}
-//				}
-//			}
-			
-			
 			
 			for(GameButton BTN : btnItemsBackground)	// 아이템 배경버튼들 업데이트
 				BTN.ButtonUpdate(0);
@@ -730,10 +731,23 @@ public class SStation extends SBase
 			arrInvenItems[i].SetObject(sprItems, 0, 0, 85+nCol*80, 415+nRow*80, 0, arrInvenItems[i].itemData.eType.ordinal());
 		}
 	}
+	
+	private int CalcRepairCost()
+	{
+		int nRepair= uInfo.GetShipHull() - uInfo.GetCurrHull();
+		return (nRepair/8);
+	}
+	
 	@Override
 	public void onBackPressed()
 	{
 		super.onBackPressed();
+		
+		if( msgBox.GetShow() )	// 메세지 떠있으면
+		{
+			msgBox.SetShow(false);	// 메세지 끈다.
+			return;
+		}
 		
 		if(m_bTrading)
 		{
