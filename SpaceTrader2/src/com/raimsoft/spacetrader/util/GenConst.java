@@ -97,8 +97,8 @@ public class GenConst
 		}
 		else
 		{
-			float fParam1 = (nHour % nYear) * (nDay + 10 % nHour) + nMonth;
-			float fParam2 = (((x % nHour+nItems) + (y % nHour+nItems)) / (p + nItems + 2)) + 1;       
+			float fParam1 = (nHour % nYear * nItems) * (nDay*nItems + 10 % nHour) + nMonth;
+            float fParam2 = (((x % nHour) + (y % nHour)) / (nItems*3 + p + 2)) + nItems;
 			
 			fRes= fParam1 / fParam2;
 		}
@@ -139,14 +139,14 @@ public class GenConst
 		if(nItems==-1)
 		{
 			float fParam1 = (nNextHour % nYear) * (nDay + 10 % nNextHour) + nMonth;
-			float fParam2 = (((x % nNextHour) + (y % nNextHour)) / (p + 2)) + 1;       
+			float fParam2 = (((x % nNextHour) + (y % nNextHour)) / (p + 2)) + 1;
 			
 			fRes= fParam1 / fParam2;			
 		}
 		else
-		{
-			float fParam1 = (nNextHour % nYear) * (nDay + 10 % nNextHour) + nMonth;
-			float fParam2 = (((x % nNextHour+nItems) + (y % nNextHour+nItems)) / (p + nItems + 2)) + 1;       
+		{			
+			float fParam1 = (nNextHour % nYear * nItems) * (nDay*nItems + 10 % nNextHour) + nMonth;
+            float fParam2 = (((x % nNextHour) + (y % nNextHour)) / (nItems*3 + p + 2)) + nItems;
 			
 			fRes= fParam1 / fParam2;
 		}

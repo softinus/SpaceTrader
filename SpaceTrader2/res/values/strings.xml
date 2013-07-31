@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="version">0.752c</string>
+    <string name="version">0.753d</string>
     <string name="hello">Hello World, SpaceTrader!</string>
     <string name="app_name">SpaceTrader2</string>
 

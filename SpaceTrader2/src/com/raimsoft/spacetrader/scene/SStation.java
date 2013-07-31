@@ -147,8 +147,8 @@ public class SStation extends SBase
 		Music.start();
 		
 		//float fConst= GC.GetPositionTimeConstF();		
-		arrShopItems[0]= new BaseItem(mContext, gl, EItems.E_BOX, GC.GetPositionTimeConstF(0));
-		arrShopItems[1]= new BaseItem(mContext, gl, EItems.E_MATERIAL, GC.GetPositionTimeConstF(1));
+		arrShopItems[0]= new BaseItem(mContext, gl, EItems.E_BOX, GC.GetPositionTimeConstF(1));
+		arrShopItems[1]= new BaseItem(mContext, gl, EItems.E_MATERIAL, GC.GetPositionTimeConstF(2));
 		
 		this.InventoryRefresh();	// DB에서 아이템 새로 가져옴
 		
