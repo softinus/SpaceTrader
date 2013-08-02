@@ -128,7 +128,7 @@ public class BaseFleet extends GameObject
 		{
 			if(nHP-3 > 0)
 			{
-				Sound.Play(2,1 );
+				Sound.Play(2,1);
 				nHP -= 3;
 			}
 			else
@@ -144,8 +144,8 @@ public class BaseFleet extends GameObject
 			objSpark.x= this.x;
 			objSpark.y= this.y;
 			//this.effect= 1;
-			this.fHandeling= 1.09f; 
-			this.fVelocity= 3.5f;
+			this.fHandeling= uInfo.GetHandling() / 2.0f;
+			this.fVelocity= uInfo.GetVelocity() / 4.0f;
 			//SetFireScale(0.75f);
 			//if(UHL.)
 			UHL.play(Launcher.IMPACT_METAL_66);
@@ -156,8 +156,8 @@ public class BaseFleet extends GameObject
 			{
 				objSpark.show= false;
 				//this.effect= 0;
-				this.fHandeling= 2.0f;
-				this.fVelocity= 13.0f;
+				this.fHandeling= uInfo.GetHandling();
+				this.fVelocity= uInfo.GetVelocity();
 			}
 			//SetFireScale(1.0f);
 		}

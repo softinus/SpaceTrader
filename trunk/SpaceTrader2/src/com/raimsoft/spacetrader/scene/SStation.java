@@ -123,6 +123,7 @@ public class SStation extends SBase
 	private GameObject objTradeItem= new GameObject();					// 거래 중인 물품
 	
 	private RainbowMessageBox msgBox;
+	private RainbowMessageBox okBox;
 	
 	private MediaPlayer Music;
 	
@@ -152,6 +153,10 @@ public class SStation extends SBase
 		msgBox= new RainbowMessageBox(gl, mContext);
 		msgBox.SetMessageBox(1, sprMessage, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY/2, 0, 0);
 		msgBox.scroll= false;
+		
+		okBox= new RainbowMessageBox(gl, mContext);
+		okBox.SetMessageBox(0, sprMessage, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY/2, 0, 0);
+		okBox.scroll= false;
 		
 		//float fConst= GC.GetPositionTimeConstF();		
 		arrShopItems[0]= new BaseItem(mContext, gl, EItems.E_BOX, GC.GetPositionTimeConstF(1));
@@ -469,11 +474,23 @@ public class SStation extends SBase
 		if(msgBox.GetShow())
 			msgBox.DrawSprite(gInfo);	// 메세지 박스
 		
+		if(okBox.GetShow())
+			okBox.DrawSprite(gInfo);	// 메세지 박스
+		
 	}
 	@Override
 	public void Update() 
 	{
 		super.Update();
+		
+		okBox.UpdateObjects(0.0f);
+		int nOk= okBox.CheckOverButtons();
+		if(nOk==0)
+		{
+			okBox.SetShow(false);
+		}
+		if(okBox.GetShow())	// 메세지박스 떠있으면 전부 무시
+			return;
 		
 		msgBox.UpdateObjects(0.0f);
 		int nRes= msgBox.CheckOverButtons();
@@ -487,26 +504,48 @@ public class SStation extends SBase
 			case 1:
 				nPay= this.CalcRepairCost();
 				
-				uInfo.SetCurrHull(uInfo.GetShipHull());
-				prgHull.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.GetCurrHull()+" / "+uInfo.GetShipHull());
-				prgHull.energy= ((float)uInfo.GetCurrHull() / (float)uInfo.GetShipHull()) * 100.0f;
-				uInfo.AddGold(-1*nPay);
-				
-				PC.SetShipHull(uInfo.GetCurrHull());
-				PC.PayGold( nPay );	
+				if(uInfo.GetGold() < nPay) // 자산보다 비용이 더 많으면...
+				{
+					msgBox.SetShow(false);
+					
+					okBox.SetButtonTextScr(22f, "골드가 부족합니다.", "확인", "");
+					okBox.SetBoxPosition(0);
+					okBox.SetShow(true);					
+				}
+				else
+				{
+					uInfo.SetCurrHull(uInfo.GetShipHull());
+					prgHull.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.GetCurrHull()+" / "+uInfo.GetShipHull());
+					prgHull.energy= ((float)uInfo.GetCurrHull() / (float)uInfo.GetShipHull()) * 100.0f;
+					uInfo.AddGold(-1*nPay);
+					PC.SetShipHull(uInfo.GetCurrHull());
+					PC.PayGold( nPay );	
+				}
 				break;
 			case 2:
 				break;
 			case 3:
-				nPay= this.CalcRefuelCost();				
+				nPay= this.CalcRefuelCost();
 				
-				uInfo.setCurrFuel(uInfo.getShipMaxFuel());				
-				prgFuel.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.getCurrFuel()+" / "+uInfo.getShipMaxFuel());
-				prgFuel.energy= ((float)uInfo.getCurrFuel() / (float)uInfo.getShipMaxFuel()) * 100.0f;				
-				uInfo.AddGold(-1*nPay);				
-				
-				PC.SetShipFuel(uInfo.getShipMaxFuel());
-				PC.PayGold( nPay );	
+				if(uInfo.GetGold() < nPay) // 자산보다 비용이 더 많으면...
+				{
+					msgBox.SetShow(false);
+					
+					okBox.SetButtonTextScr(22f, "골드가 부족합니다.", "확인", "");
+					okBox.SetBoxPosition(0);
+					okBox.SetShow(true);	
+				}
+				else
+				{
+					uInfo.setCurrFuel(uInfo.getShipMaxFuel());				
+					prgFuel.SetText(0, 140, 3, 0.75f, 0.75f, 0.75f, 22f, uInfo.getCurrFuel()+" / "+uInfo.getShipMaxFuel());
+					prgFuel.energy= ((float)uInfo.getCurrFuel() / (float)uInfo.getShipMaxFuel()) * 100.0f;				
+					uInfo.AddGold(-1*nPay);				
+					
+					PC.SetShipFuel(uInfo.getShipMaxFuel());
+					PC.PayGold( nPay );
+					
+				}
 				break;
 			}
 
@@ -585,10 +624,8 @@ public class SStation extends SBase
 
 				
 				
-				if(btnTradeButtonTrade.CheckOver())
-				{
-					m_bTrading= false;
-					
+				if(btnTradeButtonTrade.CheckOver() && m_nTradeAmount!=0)
+				{					
 					if(m_bBuying)					
 					{
 						uInfo.BuyItems(m_TradingItemData.eType.ordinal(), m_nTradeAmount);
@@ -606,6 +643,7 @@ public class SStation extends SBase
 						m_nTradeAmount= 0;
 					}
 					
+					m_bTrading= false;
 					this.InventoryRefresh();
 				}
 
@@ -645,7 +683,7 @@ public class SStation extends SBase
 				
 				if(btnTradeButtonM10.CheckOver())
 				{
-					if(m_nTradeAmount-1 >= 0)
+					if(m_nTradeAmount-10 >= 0)
 						m_nTradeAmount -= 10;
 				}
 				
@@ -778,6 +816,12 @@ public class SStation extends SBase
 	public void onBackPressed()
 	{
 		super.onBackPressed();
+		
+		if( okBox.GetShow() )	// 메세지 떠있으면
+		{
+			okBox.SetShow(false);	// 메세지 끈다.
+			return;
+		}
 		
 		if( msgBox.GetShow() )	// 메세지 떠있으면
 		{

@@ -319,7 +319,7 @@ public class UserInfo
 	
 	public int getCurrFuelPercent()
 	{
-		return (int) (nCurrFuel / nShipMaxFuel * 100.0f);
+		return (int) ((float)nCurrFuel / (float)nShipMaxFuel * 100.0f);
 	}
 	
 	/**

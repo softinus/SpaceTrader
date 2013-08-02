@@ -370,10 +370,6 @@ public class SSystemMap  extends SBase
 		{
 			okBox.SetShow(false);
 		}
-		else if(nRes==1)
-		{
-			okBox.SetShow(false);
-		}
 		if(okBox.GetShow())	// 메세지박스 떠있으면 전부 무시
 			return;
 		
@@ -393,12 +389,11 @@ public class SSystemMap  extends SBase
 				int nFuelCurr= uInfo.getCurrFuelPercent();
 				if( nFuelCost > nFuelCurr )	// 현재 연료량보다 소모량이 더 크면..
 				{
-//					Toast toast = Toast.makeText(mContext, "연료가 부족합니다.", Toast.LENGTH_SHORT);
-//					toast.setGravity(Gravity.CENTER, 0, 0);
-//					toast.show();
+					msgBox.SetShow(false);
+					
 					okBox.SetButtonTextScr(22f, "연료가 부족합니다.", "확인", "");
 					okBox.SetBoxPosition((int)gInfo.ScrollX);
-					okBox.SetShow(true);
+					okBox.SetShow(true);					
 				}
 				else
 				{
