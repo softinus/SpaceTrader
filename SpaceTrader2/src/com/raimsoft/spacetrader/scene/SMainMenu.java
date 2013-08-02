@@ -80,7 +80,7 @@ public class SMainMenu extends SBase
 			if(s_uInfo.GetLogin())
 			{
 				if(s_uInfo.GetShipType() == EnumShip.E_NULL_INFO )	// 처음 가입된 회원이면
-					this.SetScene(EnumScene.E_GAME_GALAXYMAP);	// 갤럭시 선택화면으로
+					this.SetScene(EnumScene.E_GAME_STORY);	// 스토리 -> 갤럭시 -> 시스템
 				else
 					this.SetScene(EnumScene.E_GAME_SYSTEMMAP);	// 기존 회원이면 마지막 시스템 화면으로
 			}
@@ -95,7 +95,7 @@ public class SMainMenu extends SBase
 		
 		if( btnRank.CheckOver() )
 		{
-			this.SetScene(EnumScene.E_GAME_GALAXYMAP);
+			//this.SetScene(EnumScene.E_GAME_GALAXYMAP);
 		}
 		
 		if( btnOption.CheckOver() )

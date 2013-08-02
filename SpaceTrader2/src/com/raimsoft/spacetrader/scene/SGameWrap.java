@@ -31,6 +31,7 @@ import com.raimsoft.spacetrader.obj.Star;
 import com.raimsoft.spacetrader.obj.fleets.BaseFleet;
 import com.raimsoft.spacetrader.obj.fleets.TraningShip1;
 import com.raimsoft.spacetrader.obj.fleets.TraningShip2;
+import com.raimsoft.spacetrader.obj.items.BaseItem;
 
 public class SGameWrap extends SBase
 {	
@@ -42,7 +43,8 @@ public class SGameWrap extends SBase
 	private Sprite sprShip= new Sprite();
 	private Sprite sprMetoer= new Sprite();
 	private Sprite sprMissile= new Sprite();
-	private Sprite sprStation= new Sprite();
+	private Sprite sprStation= new Sprite();	
+	private Sprite sprItems= new Sprite();	// 드롭아이템들
 
 	
 	private boolean bReleased= false;
@@ -53,6 +55,7 @@ public class SGameWrap extends SBase
 	private Radar objRader;						// 레이더
 	private ProgressMeter objProgress;			// 프로그레스바
 	private GameObject	objStation;				// 스테이션
+	private List<BaseItem> arrItems;			// 드롭아이템들
 	
 	
 	private CrashParticlesManager crashMgr;		// 파티클 매니저
@@ -105,6 +108,7 @@ public class SGameWrap extends SBase
 		sprMissile.LoadSprite(gl, mContext, R.drawable.resource_2, "missile_1.spr");
 		sprStation.LoadSprite(gl, mContext, R.drawable.station_dummy1, "station_1.spr");
 		//sprCrashEffect.LoadSprite(gl, mContext, R.drawable.meteor, "meteor_crash.spr");
+		sprItems.LoadSprite(gl, mContext, R.drawable.list_items, "list_items.spr");
 		crashMgr= new CrashParticlesManager(gl, mContext, gInfo);
 		
 		objRader= new Radar(gl, gInfo, mContext);
@@ -147,7 +151,7 @@ public class SGameWrap extends SBase
 		for(Star GO : qStar)
 			GO.DrawSprite(gInfo);
 		
-		if(objProgress.GetPercentToDestination() >= 70.0f)
+		if(objProgress.GetPercentToDestination() >= 70.0f)	// 70% 이상 도착하면 스테이션 보여줌
 			objStation.DrawSprite(gInfo);		
 				
 		for(Meteor MTO : qMetoer)
@@ -172,7 +176,7 @@ public class SGameWrap extends SBase
 		
 		super.Update();
 		
-		if(!objProgress.bArrived)
+		if(!objProgress.bArrived)	// 도착할 때까지 별 업데이트
 			this.UpdateStar();
 		
 		this.UpdateMetoer();
