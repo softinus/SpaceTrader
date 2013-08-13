@@ -5,12 +5,19 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import bayaba.engine.lib.GameInfo;
 
-import com.immersion.uhl.Launcher;
-import com.raimsoft.spacetrader.scene.*;
+import com.raimsoft.spacetrader.scene.EnumScene;
+import com.raimsoft.spacetrader.scene.SBase;
+import com.raimsoft.spacetrader.scene.SGalaxyMap;
+import com.raimsoft.spacetrader.scene.SGameWrap;
+import com.raimsoft.spacetrader.scene.SLogo;
+import com.raimsoft.spacetrader.scene.SMainMenu;
+import com.raimsoft.spacetrader.scene.SStartStory;
+import com.raimsoft.spacetrader.scene.SStation;
+import com.raimsoft.spacetrader.scene.SSystemMap;
 
 public class Game
 {	
-	Launcher UHL;
+	//Launcher UHL;
 	public Context mContext;
 	public GameInfo gInfo;
 	private SBase currScene;					// 현재 씬

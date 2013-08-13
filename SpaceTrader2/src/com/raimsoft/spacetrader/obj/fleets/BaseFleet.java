@@ -152,7 +152,7 @@ public class BaseFleet extends GameObject
 		}
 		else
 		{
-			if(this.fHandeling==1.09f)	// 부딪힌 바로 다음에만 변경해줌
+			if(this.fHandeling==(uInfo.GetHandling() / 2.0f))	// 부딪힌 바로 다음에만 변경해줌
 			{
 				objSpark.show= false;
 				//this.effect= 0;
