@@ -1,5 +1,6 @@
 package com.raimsoft.spacetrader.scene;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -32,6 +33,7 @@ import com.raimsoft.spacetrader.obj.fleets.BaseFleet;
 import com.raimsoft.spacetrader.obj.fleets.TraningShip1;
 import com.raimsoft.spacetrader.obj.fleets.TraningShip2;
 import com.raimsoft.spacetrader.obj.items.BaseItem;
+import com.raimsoft.spacetrader.obj.items.EItems;
 
 public class SGameWrap extends SBase
 {	
@@ -55,7 +57,7 @@ public class SGameWrap extends SBase
 	private Radar objRader;						// 레이더
 	private ProgressMeter objProgress;			// 프로그레스바
 	private GameObject	objStation;				// 스테이션
-	private List<BaseItem> arrItems;			// 드롭아이템들
+	private List<BaseItem> arrItems= new ArrayList<BaseItem>();			// 드롭아이템들
 	
 	
 	private CrashParticlesManager crashMgr;		// 파티클 매니저
@@ -154,6 +156,9 @@ public class SGameWrap extends SBase
 		if(objProgress.GetPercentToDestination() >= 70.0f)	// 70% 이상 도착하면 스테이션 보여줌
 			objStation.DrawSprite(gInfo);		
 				
+		for(BaseItem BI : arrItems)
+			BI.DrawSprite(gInfo);			
+		
 		for(Meteor MTO : qMetoer)
 			MTO.DrawSprite(gl, gInfo);
 				
@@ -179,6 +184,7 @@ public class SGameWrap extends SBase
 		if(!objProgress.bArrived)	// 도착할 때까지 별 업데이트
 			this.UpdateStar();
 		
+		this.UpdateDropItems();
 		this.UpdateMetoer();
 		this.UpdateShip();
 		this.UpdateMissile();
@@ -245,10 +251,15 @@ public class SGameWrap extends SBase
 				crashMgr.MakeEffect(MTO.x, MTO.y);
 				objMissile.SetFire(false, true);
 				MTO.SetCrash(true, (int)MTO.x, (int)MTO.y);
+				
+				BaseItem BI= new BaseItem();
+				BI.SetObject(sprItems, 0, 0, MTO.x, MTO.y, 0, EItems.E_MATERIAL.ordinal());
+				BI.scalex= 0.5f; BI.scaley= 0.5f;
+				arrItems.add(BI);				
 			}
 		}
 		
-		for(Meteor MTO : qMetoer)
+		for(Meteor MTO : qMetoer)	// 메테오 큐 돌면서
 		{
 			boolean bCheck= crashMgr.IsNeedParticleCrashCheck();
 			if(!bCheck) break;	// 파티클 아무것도 없으면 검사안함.
@@ -437,6 +448,19 @@ public class SGameWrap extends SBase
 				star.scaley= fRandomScale;
 				qStar.offer(star);
 			}
+		}
+	}
+	
+	private void UpdateDropItems()
+	{
+		for(int i=0; i<arrItems.size(); ++i)
+		{
+			BaseItem BI= arrItems.get(i);
+			if( BI.y > gInfo.ScreenY + BI.GetYsize()/2 )
+			{
+				arrItems.remove(i);
+			}
+			BI.y+= objShip.GetVelocity()/2.5f;
 		}
 	}
 	
