@@ -6,11 +6,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.Log;
+import bayaba.engine.lib.Font;
 import bayaba.engine.lib.GameInfo;
 import bayaba.engine.lib.GameObject;
 import bayaba.engine.lib.Sprite;
@@ -26,6 +25,7 @@ import com.raimsoft.spacetrader.data.Global;
 import com.raimsoft.spacetrader.data.GlobalInput;
 import com.raimsoft.spacetrader.data.UserInfo;
 import com.raimsoft.spacetrader.obj.CrashParticlesManager;
+import com.raimsoft.spacetrader.obj.FlowFontManager;
 import com.raimsoft.spacetrader.obj.Meteor;
 import com.raimsoft.spacetrader.obj.Missile;
 import com.raimsoft.spacetrader.obj.ProgressMeter;
@@ -35,7 +35,6 @@ import com.raimsoft.spacetrader.obj.fleets.BaseFleet;
 import com.raimsoft.spacetrader.obj.fleets.TraningShip1;
 import com.raimsoft.spacetrader.obj.fleets.TraningShip2;
 import com.raimsoft.spacetrader.obj.items.BaseItem;
-import com.raimsoft.spacetrader.obj.items.EItems;
 import com.raimsoft.spacetrader.util.ParseConnector;
 
 public class SGameWrap extends SBase
@@ -71,6 +70,7 @@ public class SGameWrap extends SBase
 	private Random rand = new Random();
 	private MediaPlayer Music;
 	//private Launcher UHL;
+	private FlowFontManager flowMgr;
 		
 	public SGameWrap(Context _context, GameInfo _Info)
 	{
@@ -80,6 +80,7 @@ public class SGameWrap extends SBase
 		this.eMode= EnumScene.E_GAME_WRAP;
 		
 		uInfo= UserInfo.GetInstance();
+		arrItems= new ArrayList<BaseItem>();
 	}
 	
 	@Override
@@ -131,7 +132,6 @@ public class SGameWrap extends SBase
 		
 		
 		
-		
 		for(int i=0; i<=50; ++i)
 			qStar.offer(new Star());
 		
@@ -164,6 +164,11 @@ public class SGameWrap extends SBase
 		
 		for(Meteor MTO : qMetoer)
 			MTO.DrawSprite(gl, gInfo);
+		
+//		for(BaseItem BI : arrItems)
+//		{
+//			BI.DrawSprite(gInfo);
+//		}
 				
 		objMissile.DrawSprite(gInfo);
 		objShip.DrawSprite(gInfo);
@@ -174,6 +179,7 @@ public class SGameWrap extends SBase
 		objRader.DrawObjects(gInfo);
 		objProgress.DrawObjects(gInfo);
 		
+		flowMgr.DrawFlowFonts();
 		
 	}
 
@@ -196,6 +202,8 @@ public class SGameWrap extends SBase
 		objRader.UpdateObjects();
 		objProgress.UpdateObjects();
 		objMissile.UpdateObjects(gInfo);
+		
+		flowMgr.UpdateFlowFonts();
 	}
 	
 	
@@ -227,6 +235,18 @@ public class SGameWrap extends SBase
 		}
 	}
 	
+	/**
+	 * 아이템 드롭함
+	 * @param x : 충돌x
+	 * @param y : 충돌y
+	 */
+	private void MakeDropItem(float x, float y)
+	{
+		BaseItem item= new BaseItem();
+		item.SetObject(sprItems, 0, 0, x, y, 0, 1);
+		arrItems.add(item);
+	}
+	
 	// 미사일 발사
 	private void FireMissile()
 	{
@@ -256,6 +276,7 @@ public class SGameWrap extends SBase
 				MTO.SetCrash(true, (int)MTO.x, (int)MTO.y);
 				
 				DropItem(MTO);				
+				//this.MakeDropItem(MTO.x, MTO.y);
 			}
 		}
 		
@@ -478,11 +499,13 @@ public class SGameWrap extends SBase
 			
 			BI.y+= objShip.GetVelocity()/2.5f;
 			
-			if( objShip.CheckPos( (int)BI.x , (int)BI.y ) && !objProgress.bArrived )	// 메테오와 함선 충돌체크
+			if( objShip.CheckPos( (int)BI.x , (int)BI.y ) && !objProgress.bArrived )	// 아이템과 함선 충돌체크
 			{
 				uInfo.BuyItems(BI.itemData.eType.ordinal(), 1);
 				ParseConnector PC= new ParseConnector();
 				PC.GetItem(BI.itemData.eType.ordinal(), 1);
+				
+				flowMgr.AddFlowFont(BI.x, BI.y, BI.itemData.strItemName+ " x1");
 				
 				arrItems.remove(i);
 				return;

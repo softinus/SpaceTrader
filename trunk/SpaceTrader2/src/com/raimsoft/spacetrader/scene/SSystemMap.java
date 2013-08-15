@@ -253,6 +253,7 @@ public class SSystemMap  extends SBase
 		txtInfo.BeginFont();		
 			if(objPanel.show)	// 패널이 보일 때만 정보가 보인다.
 			{
+				//txtInfo.DrawFont(gl, 0, 0, 23.0f, "행성");
 				txtInfo.DrawFont(gl, 20, gInfo.ScreenY-100, 23.0f, "행성-"+nSelectionIndex );
 				txtInfo.DrawFont(gl, 20, gInfo.ScreenY-40, 28.0f, arrPlanet.get(nSelectionIndex).strName );	
 			}		
