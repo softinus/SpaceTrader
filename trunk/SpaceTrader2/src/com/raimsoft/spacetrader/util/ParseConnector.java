@@ -92,6 +92,59 @@ public class ParseConnector
 	}
 	
 	/**
+	 * 아이템 얻은 것 서버에 추가
+	 * @param nItemType : 아이템 타입
+	 * @param nItemAmount : 아이템 양
+	 */
+	public void GetItem(final int nItemType, final int nItemAmount)
+	{
+		if(nItemAmount==0)
+			return;
+		
+		final ParseUser user= ParseUser.getCurrentUser();
+
+		ParseQuery<ParseObject> query2= ParseQuery.getQuery(Global.PO_TABLE_OWNITEMS);	// 소유 데이터를 찾는다.
+		query2.whereEqualTo(Global.PO_USER_ID, user);
+		query2.findInBackground(new FindCallback<ParseObject>()
+		{			
+			@Override
+			public void done(List<ParseObject> objects, ParseException e)
+			{
+				boolean bHaveType= false;
+				for(ParseObject PO : objects)		// 서버 소유아이템 리스트 돌면서
+				{
+					int nServerItemKey= PO.getInt(Global.PO_ITEM_KEY);
+					int nServerItemCount= -1 * PO.getInt(Global.PO_ITEM_COUNT);
+					if(nServerItemKey==nItemType)	// 같은 타입 있으면
+					{
+						PO.increment(Global.PO_ITEM_COUNT, nItemAmount);	// 추가해줌						
+						PO.saveInBackground();
+						bHaveType= true;
+						break;
+					}
+				}
+				
+				
+				if(!bHaveType)	// 같은 타입 얻었는데 없으면 추가.
+				{
+					ParseObject ownItems = new ParseObject(Global.PO_TABLE_OWNITEMS);
+					ownItems.put(Global.PO_ITEM_KEY,   nItemType);
+					ownItems.put(Global.PO_ITEM_COUNT, nItemAmount);
+					ownItems.put(Global.PO_USER_ID, user);
+					try {
+						ownItems.save();
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+				
+			}
+		});
+	}
+	
+	/**
 	 * 아이템을 거래한 것을 서버에 알림.
 	 * @param nPay : 지불한 총 금액 (샀으면 -, 팔았으면 -)
 	 * @param nItemType : 거래한 아이템 타입
@@ -102,11 +155,9 @@ public class ParseConnector
 		if(nItemAmount==0)
 			return;
 		
-		Log.d(":::::::::::ParseConnector:::::::::::", "111111111111");
 		final ParseUser user= ParseUser.getCurrentUser();
 		ParseQuery<ParseObject> query= ParseQuery.getQuery(Global.PO_TABLE_USERINFO);	// 유저 데이터를 찾는다.
 		query.whereEqualTo(Global.PO_USER_ID, user);
-		Log.d(":::::::::::ParseConnector:::::::::::", "22222222222");
 		query.getFirstInBackground(new GetCallback<ParseObject>()
 		{				
 			@Override
@@ -115,14 +166,11 @@ public class ParseConnector
 				PO.increment(Global.PO_MOENY, nPay);	// 메모리 -> 서버
 				
 				PO.saveInBackground();
-				Log.d(":::::::::::ParseConnector:::::::::::", "33333333333");
 			}
 		});
 		
-		Log.d(":::::::::::ParseConnector:::::::::::", "aaaaaaaaaa");
 		ParseQuery<ParseObject> query2= ParseQuery.getQuery(Global.PO_TABLE_OWNITEMS);	// 소유 데이터를 찾는다.
 		query2.whereEqualTo(Global.PO_USER_ID, user);
-		Log.d(":::::::::::ParseConnector:::::::::::", "bbbbbbbbb");
 		query2.findInBackground(new FindCallback<ParseObject>()
 		{			
 			@Override
@@ -146,7 +194,6 @@ public class ParseConnector
 					}
 				}
 				
-				Log.d(":::::::::::ParseConnector:::::::::::", "ccccccccccc");
 				
 				if(!bHaveType && bBuy)	// 같은 타입 샀는데 없으면 추가.
 				{

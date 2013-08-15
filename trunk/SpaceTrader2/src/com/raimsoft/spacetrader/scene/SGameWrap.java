@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.Log;
@@ -34,6 +36,7 @@ import com.raimsoft.spacetrader.obj.fleets.TraningShip1;
 import com.raimsoft.spacetrader.obj.fleets.TraningShip2;
 import com.raimsoft.spacetrader.obj.items.BaseItem;
 import com.raimsoft.spacetrader.obj.items.EItems;
+import com.raimsoft.spacetrader.util.ParseConnector;
 
 public class SGameWrap extends SBase
 {	
@@ -252,10 +255,7 @@ public class SGameWrap extends SBase
 				objMissile.SetFire(false, true);
 				MTO.SetCrash(true, (int)MTO.x, (int)MTO.y);
 				
-				BaseItem BI= new BaseItem();
-				BI.SetObject(sprItems, 0, 0, MTO.x, MTO.y, 0, EItems.E_MATERIAL.ordinal());
-				BI.scalex= 0.5f; BI.scaley= 0.5f;
-				arrItems.add(BI);				
+				DropItem(MTO);				
 			}
 		}
 		
@@ -276,9 +276,23 @@ public class SGameWrap extends SBase
 //					BOOM.dead= true;
 					MTO.SetCrash(true, (int)MTO.x, (int)MTO.y); 
 					crashMgr.MakeEffect(MTO.x, MTO.y);
+					
+					DropItem(MTO);
 				}
 			}
 		}
+	}
+
+	private void DropItem(Meteor MTO)
+	{
+		BaseItem BI= new BaseItem();
+		//BI.SetObject(sprItems, 0, 0, MTO.x, MTO.y, 0, EItems.E_MATERIAL.ordinal());
+		Random rnd= new Random();
+		int nItemType= rnd.nextInt(2);
+		BI.SetObject(sprItems, 0, 0, MTO.x, MTO.y, 0, nItemType);
+		BI.itemData.SetItemType(nItemType);
+		BI.scalex= 0.6f; BI.scaley= 0.6f;
+		arrItems.add(BI);
 	}
 	
 	
@@ -456,12 +470,25 @@ public class SGameWrap extends SBase
 		for(int i=0; i<arrItems.size(); ++i)
 		{
 			BaseItem BI= arrItems.get(i);
-			if( BI.y > gInfo.ScreenY + BI.GetYsize()/2 )
+			if( BI.y > gInfo.ScreenY + BI.GetYsize()/2 )	// 끝까지 내려왔으면 제거
 			{
 				arrItems.remove(i);
+				return;
 			}
+			
 			BI.y+= objShip.GetVelocity()/2.5f;
-		}
+			
+			if( objShip.CheckPos( (int)BI.x , (int)BI.y ) && !objProgress.bArrived )	// 메테오와 함선 충돌체크
+			{
+				uInfo.BuyItems(BI.itemData.eType.ordinal(), 1);
+				ParseConnector PC= new ParseConnector();
+				PC.GetItem(BI.itemData.eType.ordinal(), 1);
+				
+				arrItems.remove(i);
+				return;
+			}
+		}	
+		
 	}
 	
 	private void UpdateMetoer()
