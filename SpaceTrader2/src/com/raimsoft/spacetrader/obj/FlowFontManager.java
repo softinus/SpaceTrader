@@ -4,23 +4,38 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.content.Context;
+
+import com.raimsoft.spacetrader.R;
+import com.raimsoft.spacetrader.util.SoundManager;
+
 public class FlowFontManager
 {
 	ArrayList<FlowFont> arrFlow= new ArrayList<FlowFont>();
 	GL10 mGL= null;
+	Context mContext= null;
+	SoundManager soundMgr;
 	
-	public FlowFontManager(GL10 mGL)
+	public FlowFontManager(GL10 mGL, Context context)
 	{
 		super();
-		this.mGL = mGL;
+		this.mGL = mGL; 
+		this.mContext= context;
+		
+		 soundMgr= new SoundManager(mContext);
+		 
+		 soundMgr.Create();
+		 soundMgr.Load(0, R.raw.pick_items);
 	}
 
 	public void AddFlowFont(float x, float y, String strContent)
 	{
+		soundMgr.Play(0);
+		
 		FlowFont font= new FlowFont();
 		font.AddFlowFont(x, y, strContent);
 		
-		arrFlow.add(font);
+		arrFlow.add(font);		
 	}
 	
 	public void DrawFlowFonts()
@@ -45,10 +60,22 @@ public class FlowFontManager
 			if(!FF.bDraw)	// 그리는 상태가 아니면 건너 뛴다.
 				continue;
 			
-			if(FF.nStartY - FF.y >= 30)
+			if(FF.nStartY - FF.y >= 38)
 				FF.bDraw= false;
 			
-			FF.y -= 3;
+			FF.y -= 2.5f;
 		}
+	}
+	
+	public void Release()
+	{
+		for(FlowFont FF : arrFlow)
+		{
+			FF= null;
+		}		
+		arrFlow.clear();
+		
+		mContext= null;
+		mGL= null;		
 	}
 }

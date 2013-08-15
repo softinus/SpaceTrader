@@ -12,7 +12,11 @@ public class FlowFont extends Font
 
 	public void AddFlowFont(float x, float y, String strContent)
 	{
-		this.strContent= strContent;
+		if(strContent==null)
+			this.strContent="x";
+		else
+			this.strContent= strContent;
+		
 		this.nStartX= this.x= x;
 		this.nStartY= this.y= y;
 		
