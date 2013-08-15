@@ -130,7 +130,7 @@ public class SGameWrap extends SBase
 //		objStation.scaley= 0.85f;
 		
 		
-		
+		flowMgr= new FlowFontManager(gl, mContext);
 		
 		for(int i=0; i<=50; ++i)
 			qStar.offer(new Star());
