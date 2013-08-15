@@ -99,6 +99,7 @@ public class SGalaxyMap extends SBase
 				userInfo.put(Global.PO_MOENY, 350);
 				userInfo.put(Global.PO_SHIP_TYPE, EnumShip.E_TRAINING_SHIP_1.ordinal());
 				userInfo.put(Global.PO_SHIP_HULL, 3500);
+				userInfo.put(Global.PO_SHIP_FUEL, 200);
 				userInfo.put(Global.PO_CROOD_WORLD_X, (int)tX);
 				userInfo.put(Global.PO_CROOD_WORLD_Y, (int)tY);
 				userInfo.put(Global.PO_CROOD_SYSTEM_MAP_PLANET, 1);
