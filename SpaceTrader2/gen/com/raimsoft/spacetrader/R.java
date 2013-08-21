@@ -61,11 +61,12 @@ public final class R {
         public static final int space_music=0x7f04000c;
         public static final int spaceship_engine=0x7f04000d;
         public static final int spaceship_spark=0x7f04000e;
-        public static final int station2=0x7f04000f;
-        public static final int systemmap_music=0x7f040010;
-        public static final int systems_offline=0x7f040011;
-        public static final int systems_online=0x7f040012;
-        public static final int warp=0x7f040013;
+        public static final int station1=0x7f04000f;
+        public static final int station2=0x7f040010;
+        public static final int systemmap_music=0x7f040011;
+        public static final int systems_offline=0x7f040012;
+        public static final int systems_online=0x7f040013;
+        public static final int warp=0x7f040014;
     }
     public static final class string {
         public static final int app_name=0x7f050002;
