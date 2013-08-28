@@ -96,18 +96,18 @@ public class SGameWrap extends SBase
 		
 		if(uInfo.GetShipType() == EnumShip.E_TRAINING_SHIP_1)
 		{
-			sprShip.LoadSprite(gl, mContext, R.drawable.resource_2, "ship_1.spr");
+			sprShip.LoadSprite(gl, mContext, "fleets.spr");
 			objShip= new TraningShip1(gl, mContext);
+			objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY+60, 0, 0 );
 		}
 		else if(uInfo.GetShipType() == EnumShip.E_TRAINING_SHIP_2)
 		{
-			sprShip.LoadSprite(gl, mContext, R.drawable.resource_2, "ship_2.spr");
+			sprShip.LoadSprite(gl, mContext, "fleets.spr");
 			objShip= new TraningShip2(gl, mContext);
+			objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY+60, 1, 0 );
 		}
-		objShip.SetObject( sprShip, 0, 0, gInfo.ScreenX/2, gInfo.ScreenY+60, 0, 0 );
+		
 		objShip.nHP= uInfo.GetCurrHull();	// 저장된 체력을 불러옴
-		objShip.scalex= 0.6f;
-		objShip.scaley= 0.6f;
 		
 		sprStar.LoadSprite( gl, mContext, R.drawable.resource_2, "star_1.spr" );
 		sprMetoer.LoadSprite( gl, mContext, R.drawable.resource_2, "meteor.spr" );

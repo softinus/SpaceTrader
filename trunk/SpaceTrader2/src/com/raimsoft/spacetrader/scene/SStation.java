@@ -201,20 +201,19 @@ public class SStation extends SBase {
 		sprPlanets.LoadSprite(gl, mContext, R.drawable.planets, "planets.spr");
 		// /==
 
+		sprShip1.LoadSprite(gl, mContext, "fleets.spr");
+		
 		// / 함선 정보
 		if (uInfo.GetShipType() == EnumShip.E_TRAINING_SHIP_1)
-			sprShip1.LoadSprite(gl, mContext, R.drawable.resource_2,
-					"ship_1.spr");
+			objShip.SetObject(sprShip1, 0, 0, 140, 275, 0, 0);
 		else if (uInfo.GetShipType() == EnumShip.E_TRAINING_SHIP_2)
-			sprShip1.LoadSprite(gl, mContext, R.drawable.resource_2,
-					"ship_2.spr");
-
+			objShip.SetObject(sprShip1, 0, 0, 140, 275, 1, 0);
+			
 		objTradeTarget.SetObject(sprShip1, 0, 0, 65, 460, 0, 0); // 거래창에서 거래 대상
 																	// 함선
 
-		objShip.SetObject(sprShip1, 0, 0, 140, 275, 0, 0);
-		sprProgress.LoadSprite(gl, mContext, R.drawable.progress,
-				"progress_station.spr");
+		
+		sprProgress.LoadSprite(gl, mContext, R.drawable.progress, "progress_station.spr");
 
 		prgBG1.SetButton(mContext, sprProgress, 240, 520, 0);
 		prgBG2.SetButton(mContext, sprProgress, 240, 590, 0);
