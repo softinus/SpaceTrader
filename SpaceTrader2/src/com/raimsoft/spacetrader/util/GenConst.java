@@ -2,6 +2,8 @@ package com.raimsoft.spacetrader.util;
 
 import java.util.GregorianCalendar;
 
+import android.util.Log;
+
 import com.raimsoft.spacetrader.data.UserInfo;
 
 public class GenConst
@@ -97,7 +99,7 @@ public class GenConst
 		}
 		else
 		{
-			float fParam1 = (nHour % nYear * nItems) * (nDay*nItems + 10 % nHour) + nMonth;
+			float fParam1 = (nHour % nYear) * (nDay*nItems + 10 % nHour) + nMonth;
             float fParam2 = (((x % nHour) + (y % nHour)) / (nItems*3 + p + 2)) + nItems;
 			
 			fRes= fParam1 / fParam2;
@@ -119,6 +121,10 @@ public class GenConst
         
         float fTemp = ((fNextConst - fRes) * ((float)nMinute / 60.0f));   // 다음Hour와 현재Hour의 차이만큼 interpolation함.
         float fFinalConst = fRes + fTemp;
+        
+        
+        Log.d("Croodinate : ", ""+x+","+y+":"+p);
+        Log.d("Final const : ", ""+nYear+"_"+nMonth+"_"+nDay+"_"+nHour+"_"+nMinute+" => "+fFinalConst);
         
         return fFinalConst;
 	}
