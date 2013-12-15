@@ -44,8 +44,8 @@ namespace WindowsApplication1
             nYear = MyDateTime.Year;
             nMonth = MyDateTime.Month;
             nDay = MyDateTime.Day;
-            nHour = MyDateTime.Hour + 1;
-            nMin = MyDateTime.Minute;
+            nHour = MyDateTime.Hour;
+            nMin = MyDateTime.Minute + 1;
 
             txtCroodX.Text = nCroodX.ToString();
             txtCroodY.Text = nCroodY.ToString();

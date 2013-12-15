@@ -30,9 +30,9 @@ namespace WindowsApplication1
             }
             else if (_eType == EItems.E_MAT)
             {
-                nMinPrice = 105;
-                nFixPrice = 160;
-                nMaxPrice = 230;
+                nMinPrice = 29;
+                nFixPrice = 45;
+                nMaxPrice = 74;
             }
             else if (_eType == EItems.E_GAS)
             {

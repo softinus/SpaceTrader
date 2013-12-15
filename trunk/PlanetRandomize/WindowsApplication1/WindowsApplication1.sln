@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "spacetrader_pricengine", "WindowsApplication1\spacetrader_pricengine.csproj", "{D6999998-77AB-4995-92A8-3EB67B8358C5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DF2CF875-A572-4B0A-96F3-6DC485D65C3C} = {DF2CF875-A572-4B0A-96F3-6DC485D65C3C}
