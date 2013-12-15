@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.0
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.SpaceTrader_Unity2.CSharp", "UnityVS.SpaceTrader_Unity2.CSharp.csproj", "{E42A6604-F032-B201-4F31-9B024AD8DA6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.SpaceTrader_Unity2.CSharp.Editor", "UnityVS.SpaceTrader_Unity2.CSharp.Editor.csproj", "{78F9C87F-C791-19AE-9D3F-3D0452E8A928}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E42A6604-F032-B201-4F31-9B024AD8DA6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E42A6604-F032-B201-4F31-9B024AD8DA6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E42A6604-F032-B201-4F31-9B024AD8DA6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E42A6604-F032-B201-4F31-9B024AD8DA6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78F9C87F-C791-19AE-9D3F-3D0452E8A928}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78F9C87F-C791-19AE-9D3F-3D0452E8A928}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78F9C87F-C791-19AE-9D3F-3D0452E8A928}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78F9C87F-C791-19AE-9D3F-3D0452E8A928}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
